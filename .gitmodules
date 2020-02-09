@@ -1,0 +1,3 @@
+[submodule "lib/lawo-ember-plus"]
+	path = lib/lawo-ember-plus
+	url = https://github.com/Lawo/ember-plus.git

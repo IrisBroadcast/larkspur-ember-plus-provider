@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Product>EmberLib.net EmberLib.Framing</Product>
+    <Company>Lawo GmbH</Company>
+    <Copyright>Copyright © Lawo GmbH</Copyright>
+    <AssemblyVersion>1.8.3.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\xBerLib\BerLib.csproj" />
+    <ProjectReference Include="..\xEmberLib\EmberLib.csproj" />
+  </ItemGroup>
+
+</Project>

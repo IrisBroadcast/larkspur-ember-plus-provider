@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyVersion>1.8.3.0</AssemblyVersion>
+    <Product>EmberLib.net EmberLib</Product>
+    <Copyright>Copyright © Lawo GmbH</Copyright>
+    <Company>Lawo GmbH</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\xBerLib\BerLib.csproj" />
+  </ItemGroup>
+
+</Project>

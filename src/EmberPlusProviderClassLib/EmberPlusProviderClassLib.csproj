@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NLog" Version="4.6.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xBerLib\BerLib.csproj" />
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib.Framing\EmberLib.Framing.csproj" />
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib.Glow\EmberLib.Glow.csproj" />
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib\EmberLib.csproj" />
+  </ItemGroup>
+
+</Project>
