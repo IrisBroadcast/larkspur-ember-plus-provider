@@ -7,26 +7,32 @@ using NLog;
 
 namespace EmberPlusProviderClassLib
 {
-    public class EmberTree : IDisposable
+    /*public class EmberTree : IDisposable
     {
         protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public EmberPlusProvider Provider;
+        public EmberProvider Provider;
 
-        public EmberTree(int port, string emberTreeIdentifier, string emberTreeDescription)
+        public EmberTree(int port = 9001,
+            string emberTreeIdentifier = "Identifier",
+            string emberTreeDescription = "Description",
+            string emberTreePoductName = "Product Name",
+            string emberTreeCompanyName = "Company Name",
+            string emberTreeApplicationVersion = "1.0.0")
         {
-            Provider = new EmberPlusProvider(port, emberTreeIdentifier, emberTreeDescription);
+            Provider = new EmberProvider(port, emberTreeIdentifier, emberTreeDescription);
+            Provider.CreateIdentityNode(0, "NGEmberProvider", "Sveriges Radio", ApplicationSettings.Version);
         }
 
         protected T GetElement<T>(int[] path) where T : class
         {
-            var element = Provider.dispatcher.Root.ResolveChild(path, out var dynamicPathHandler);
+            var element = Provider.Dispatcher.Root.ResolveChild(path, out var dynamicPathHandler);
             return element as T;
         }
 
         protected T GetElement<T>(string identifierPath) where T : class
         {
-            var element = Provider.dispatcher.Root.ResolveChild(identifierPath);
+            var element = Provider.Dispatcher.Root.ResolveChild(identifierPath);
             return element as T;
         }
 
@@ -44,5 +50,5 @@ namespace EmberPlusProviderClassLib
             }
         }
 
-    }
+    }*/
 }

@@ -3,21 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
 using EmberLib.Glow;
 using EmberPlusProviderClassLib;
 using EmberPlusProviderClassLib.EmberHelpers;
+using EmberPlusProviderClassLib.Helpers;
 using EmberPlusProviderClassLib.Model;
 using EmberPlusProviderClassLib.Model.Parameters;
 using LarkspurEmberWebProvider.Models;
-using EmberPlusProviderClassLib.Helpers;
-using NGEmberProvider.Lib.Communication;
-using NGEmberProvider.Lib.Helpers;
-using NGEmberProvider.Lib.Models;
-using NGEmberProvider.Lib.Models.Configuration;
 using NLog;
-
-
 
 namespace LarkspurEmberWebProvider
 {
@@ -41,8 +34,8 @@ namespace LarkspurEmberWebProvider
         public event Action Restart;      // Triggas d� EmberProvidern ska startas om.
         public event EventHandler TreeChanged;  // Triggas d� n�got v�rde i Embertr�det �ndrats.
 
-        public delegate void SlotUpdateEventHandler(SlotInfo e);
-        public event SlotUpdateEventHandler CodecSlotChanged;      // Triggas d� en kodarslot �ndrats i Embertr�det.
+        //public delegate void SlotUpdateEventHandler(SlotInfo e);
+        //public event SlotUpdateEventHandler CodecSlotChanged;      // Triggas d� en kodarslot �ndrats i Embertr�det.
 
         public delegate void StudioInfoUpdateEventHandler(string studio);
         public event StudioInfoUpdateEventHandler StudioInfoChanged; // Triggas d� n�gon studio-parameter �ndrats
@@ -70,8 +63,6 @@ namespace LarkspurEmberWebProvider
         /// </summary>
         /// <param name="port"></param>
         /// <param name="config"></param>
-        /// <param name="persistedParameters"></param>
-        /// <param name="codecStatusList"></param>
         //        public LarkspurEmberTree(int port, Configuration config, List<ParameterInfo> persistedParameters, IList<CodecStatus> codecStatusList)
         //            : base(port, "NG Ember Provider", "Next Generation Ember Plus Provider")
         public LarkspurEmberTree(int port, Configuration config)
@@ -86,7 +77,7 @@ namespace LarkspurEmberWebProvider
             CreateUtilitiesNode();
 
             // Codec pool list
-            var codecPoolListNode = Provider.AddChildNode(RootIdentifiers.CodecPools);
+            /*var codecPoolListNode = Provider.AddChildNode(RootIdentifiers.CodecPools);
             config.CodecPools?.Each((codecPool, index) =>
             {
                 try
@@ -144,19 +135,19 @@ namespace LarkspurEmberWebProvider
                 {
                     log.Error("Error in creating RegionsNode, " + e.Message);
                 }
-            });
+            });*/
 
             // Everything went well
             log.Debug("Ember provider created and listening on port {0}", port);
 
             // Update nodes created with loaded parameters
-            RestoreParameters(persistedParameters);
+            //RestoreParameters(persistedParameters);
 
             // Re:evaluate node values
-            UpdatePoolCodecNodes(codecStatusList);
-            UpdateStudioCodecSlots(codecStatusList);
-            UpdatePoolCodecsOwner();
-            UpdatePoolTxSourceNodes();
+            //UpdatePoolCodecNodes(codecStatusList);
+            //UpdateStudioCodecSlots(codecStatusList);
+            //UpdatePoolCodecsOwner();
+            //UpdatePoolTxSourceNodes();
 
             Provider.Dispatcher.GlowRootReady += OnEmberTreeChanged;
         }
@@ -239,12 +230,13 @@ namespace LarkspurEmberWebProvider
                 new[] { Function.CreateStringArgument("magicString (=restart)") },
                 new[] { Function.CreateBooleanArgument("success") },
                 RestartFunction);
-            */
+            
             utilNode.AddFunction(
                 UtilitiesIdentifiers.ReloadWebGuiUrls,
                 null,
                 new[] { Function.CreateBooleanArgument("success") },
                 ReloadWebGuiUrlsFunction);
+            */
         }
 
         /*
@@ -601,11 +593,11 @@ namespace LarkspurEmberWebProvider
                 new[] { Function.CreateBooleanArgument("success") },
                 IncreaseDecreaseGainFunction);
         }
-        #endregion
         */
+        #endregion
 
-        /*
         #region Update methods for initiation or intervals
+        /*
         private void UpdateDisplayTypeNode(Node node, WebGuiUrls webGuiUrls)
         {
             if (webGuiUrls != null)
@@ -783,8 +775,8 @@ namespace LarkspurEmberWebProvider
                 }
             }
         }
-        #endregion
         */
+        #endregion
 
         #region Handlers on change
         /// <summary>
@@ -823,6 +815,7 @@ namespace LarkspurEmberWebProvider
                 log.Warn(ex, "Exception when handling ember tree change");
             }
         }
+
         /*
         private async Task HandleSlotSipIdUpdate(ParameterBase parameter)
         {
@@ -1050,21 +1043,21 @@ namespace LarkspurEmberWebProvider
                 }
             }
         }
-        #endregion
         */
+        #endregion
 
-        /*
         #region Set methods
+        /*
         public void SetMaintenanceMode(string studioId, bool inMaintenance)
         {
             var studioNode = GetStudioNodeByStudioId(studioId);
             studioNode?.UpdateParameter(StudioNodeIdentifiers.InMaintenance, inMaintenance);
         }
-        #endregion
         */
+        #endregion
 
-        /*
         #region Get methods
+        /*
         public SlotInfo GetSlotInfo(string studio, string slot)
         {
             var slotNode = GetSlotNode(studio, slot);
@@ -1238,11 +1231,11 @@ namespace LarkspurEmberWebProvider
                 .Select(p => new AudioStatusSubscription() { IdentifierPath = p.Parent.IdentifierPath, SipAddress = p.Value })
                 .ToList();
         }
-        #endregion
         */
+        #endregion
 
-            /*
         #region General methods
+        /*
         public void RestoreParameters(List<ParameterInfo> persistedParameters)
         {
             if (persistedParameters == null)
@@ -1300,8 +1293,8 @@ namespace LarkspurEmberWebProvider
         {
             return GetStudioCodecSlots().Any(cn => cn.HasStringParameterWithValue(CodecSlotNodeIdentifiers.SipId, sipAddress));
         }
-        #endregion
         */
+        #endregion
+
     }
 }
-

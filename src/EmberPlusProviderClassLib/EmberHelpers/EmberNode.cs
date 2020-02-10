@@ -5,9 +5,9 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 {
     public class EmberNode : Node
     {
-        protected readonly EmberProvider Provider;
+        protected readonly EmberTreeProvider Provider;
 
-        public EmberNode(int number, Element parent, string identifier, EmberProvider provider) : base(number, parent, identifier)
+        public EmberNode(int number, Element parent, string identifier, EmberTreeProvider provider) : base(number, parent, identifier)
         {
             Provider = provider;
         }

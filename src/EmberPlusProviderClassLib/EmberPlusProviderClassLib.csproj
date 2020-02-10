@@ -15,4 +15,7 @@
     <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib\EmberLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
 </Project>

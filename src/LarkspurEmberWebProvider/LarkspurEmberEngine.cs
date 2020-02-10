@@ -7,16 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using EmberPlusProviderClassLib.Model.Parameters;
-using Newtonsoft.Json;
-using NGEmberProvider.Lib.Communication;
-using NGEmberProvider.Lib.EmberTree;
-using NGEmberProvider.Lib.Helpers;
-using NGEmberProvider.Lib.Models;
-using NGEmberProvider.Lib.Models.Configuration;
-using NGEmberProvider.Service.WebApi;
 using NLog;
 using Timer = System.Timers.Timer;
 using EmberPlusProviderClassLib.Helpers;
+using LarkspurEmberWebProvider.Models;
 
 namespace LarkspurEmberWebProvider
 {
@@ -131,13 +125,14 @@ namespace LarkspurEmberWebProvider
 
                     // Initiate EmBER+ tree
                     //_emberTree = new LarkspurEmberTree(ApplicationSettings.EmberPort, config, persistedParameters, codecStatusList);
-                    _emberTree = new LarkspurEmberTree(ApplicationSettings.EmberPort, config);
-                    _emberTree.CodecSlotChanged += EmberTree_PublishCodecSlotUpdate;
+                    var config = new Configuration();
+                    _emberTree = new LarkspurEmberTree(9003, config);
+                    //_emberTree.CodecSlotChanged += EmberTree_PublishCodecSlotUpdate;
                     _emberTree.Restart += Restart;
-                    _emberTree.StudioInfoChanged += EmberTree_StudioInfoChanged;
-                    _emberTree.TxChanged += EmberTree_OnTxChanged();
-                    _emberTree.TreeChanged += EmberTree_OnTreeChanged();
-                    _emberTree.ConnectedToChanged += _emberTree_ConnectedToChanged;
+                    //_emberTree.StudioInfoChanged += EmberTree_StudioInfoChanged;
+                    //_emberTree.TxChanged += EmberTree_OnTxChanged();
+                    //_emberTree.TreeChanged += EmberTree_OnTreeChanged();
+                    //_emberTree.ConnectedToChanged += _emberTree_ConnectedToChanged;
 
                     // Started
                     EmberTreeState = true;
@@ -154,7 +149,7 @@ namespace LarkspurEmberWebProvider
             }
         }
 
-        private void _emberTree_ConnectedToChanged(string identifierPath, string sipAddress)
+        /*private void _emberTree_ConnectedToChanged(string identifierPath, string sipAddress)
         {
             Task.Run(async () =>
             {
@@ -172,13 +167,13 @@ namespace LarkspurEmberWebProvider
 
         private EventHandler EmberTree_OnTxChanged()
         {
-            return EventHandlerHelper.ThrottledEventHandler((sender, e) => { EmberHub.TxUpdate(); }, 50);
+            //return EventHandlerHelper.ThrottledEventHandler((sender, e) => { EmberHub.TxUpdate(); }, 50);
         }
 
         private EventHandler EmberTree_OnTreeChanged()
         {
-            return EventHandlerHelper.ThrottledEventHandler((sender, e) => { SaveTree(); }, 2000);
-        }
+            //return EventHandlerHelper.ThrottledEventHandler((sender, e) => { SaveTree(); }, 2000);
+        }*/
 
         public void Restart()
         {
@@ -191,7 +186,7 @@ namespace LarkspurEmberWebProvider
 
         public async Task ReloadWebGuiUrls()
         {
-            await _emberTree.ReloadUrls();
+            //await _emberTree.ReloadUrls();
         }
 
         public void TeardownEmberTree()
@@ -201,10 +196,10 @@ namespace LarkspurEmberWebProvider
             if (_emberTree != null)
             {
                 _emberTree.Restart -= Restart;
-                _emberTree.CodecSlotChanged -= EmberTree_PublishCodecSlotUpdate;
-                _emberTree.StudioInfoChanged -= EmberTree_StudioInfoChanged;
-                _emberTree.TxChanged -= EmberTree_OnTxChanged();
-                _emberTree.TreeChanged -= EmberTree_OnTreeChanged();
+                //_emberTree.CodecSlotChanged -= EmberTree_PublishCodecSlotUpdate;
+                //_emberTree.StudioInfoChanged -= EmberTree_StudioInfoChanged;
+                //_emberTree.TxChanged -= EmberTree_OnTxChanged();
+                //_emberTree.TreeChanged -= EmberTree_OnTreeChanged();
                 _emberTree.Dispose();
                 _emberTree = null;
                 EmberTreeState = false;
@@ -214,7 +209,7 @@ namespace LarkspurEmberWebProvider
                 log.Warn("EmBER+ tree was already null, so no need to tear it down");
             }
         }
-
+        /*
         private void EmberTree_StudioInfoChanged(string studio)
         {
             try
@@ -319,6 +314,6 @@ namespace LarkspurEmberWebProvider
             {
                 log.Error(ex, "Could not save persistent EmBER+ tree to: {0}", persistenceFile);
             }
-        }
+        }*/
     }
 }

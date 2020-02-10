@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using EmberPlusProviderClassLib.EmberHelpers;
+using EmberPlusProviderClassLib.Model;
 
 namespace LarkspurEmberWebProvider.Models
 {
@@ -87,5 +89,43 @@ namespace LarkspurEmberWebProvider.Models
         public List<Tx> TxPool { get; set; }
         public List<Studio> Studios { get; set; }
         public List<Region> Regions { get; set; }
+    }
+
+
+    public class SlotInfo
+    {
+        public string StudioNodeIdentifier { get; set; }
+        public string StudioId { get; set; }
+        public string Slot { get; set; }
+        public string SipAddress { get; set; }
+        public string DisplayName { get; set; }
+        public bool IsOnAir { get; set; }
+        public bool IsInCall { get; set; }
+        public bool IsInPhoneCall { get; set; }
+        public string ConnectedToSipId { get; set; }
+        public string ConnectedToDisplayName { get; set; }
+        public string ConnectedToLocation { get; set; }
+
+
+        public static SlotInfo CreateFromNode(Node slot)
+        {
+            var studioNode = slot?.Parent.ParentNode();
+
+            return studioNode != null ? new SlotInfo
+            {
+                StudioNodeIdentifier = studioNode.Identifier,
+                StudioId = studioNode.GetStringParameterValue(StudioNodeIdentifiers.StudioId),
+                Slot = slot.Identifier,
+                SipAddress = slot.GetStringParameterValue(CodecSlotNodeIdentifiers.SipId),
+                DisplayName = slot.GetStringParameterValue(CodecSlotNodeIdentifiers.DisplayName),
+                IsOnAir = slot.GetBoooleanParameterValue(CodecSlotNodeIdentifiers.IsOnAir),
+                IsInCall = slot.GetBoooleanParameterValue(CodecSlotNodeIdentifiers.IsInCall),
+                IsInPhoneCall = slot.GetBoooleanParameterValue(CodecSlotNodeIdentifiers.IsInPhoneCall),
+                ConnectedToSipId = slot.GetStringParameterValue(CodecSlotNodeIdentifiers.ConnectedToSipId),
+                ConnectedToDisplayName = slot.GetStringParameterValue(CodecSlotNodeIdentifiers.ConnectedToDisplayName),
+                ConnectedToLocation = slot.GetStringParameterValue(CodecSlotNodeIdentifiers.ConnectedToLocation),
+            } : null;
+        }
+
     }
 }
