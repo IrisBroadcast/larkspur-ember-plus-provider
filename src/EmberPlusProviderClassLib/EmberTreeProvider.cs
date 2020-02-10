@@ -20,7 +20,7 @@ namespace EmberPlusProviderClassLib
         public Dispatcher Dispatcher { get; protected set; }
         protected GlowListener listener;
 
-        public EmberTreeProvider(int port = 9001,
+        public EmberTreeProvider(int port = 9003,
             string emberTreeIdentifier = "Identifier",
             string emberTreeDescription = "Description",
             string emberTreePoductName = "Product Name",

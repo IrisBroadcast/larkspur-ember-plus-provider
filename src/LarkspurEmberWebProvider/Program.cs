@@ -9,8 +9,11 @@ namespace LarkspurEmberWebProvider
 {
     public class Program
     {
+        private static LarkspurEmberEngine _emberEngine;
+
         public static void Main(string[] args)
         {
+            _emberEngine = new LarkspurEmberEngine();
             CreateHostBuilder(args).Build().Run();
         }
 

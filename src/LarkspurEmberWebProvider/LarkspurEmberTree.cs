@@ -66,7 +66,7 @@ namespace LarkspurEmberWebProvider
         //        public LarkspurEmberTree(int port, Configuration config, List<ParameterInfo> persistedParameters, IList<CodecStatus> codecStatusList)
         //            : base(port, "NG Ember Provider", "Next Generation Ember Plus Provider")
         public LarkspurEmberTree(int port, Configuration config)
-            : base(port, "NG Ember Provider", "Next Generation Ember Plus Provider")
+            : base(port)
         {
             _config = config;
 
@@ -216,6 +216,7 @@ namespace LarkspurEmberWebProvider
             utilNode.AddStringParameter(UtilitiesIdentifiers.Server, Environment.MachineName);
             utilNode.AddStringParameter(UtilitiesIdentifiers.StartTime, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
+            Provider.AddChildNode(RootIdentifiers.Studios);
             /*
             // Log level function
             utilNode.AddFunction(
