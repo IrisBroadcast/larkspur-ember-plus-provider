@@ -131,14 +131,17 @@ namespace EmberPlusProviderClassLib.Model
         {
             return Tuple.Create(name, GlowParameterType.Boolean);
         }
+
         public static Tuple<string, int> CreateIntegerArgument(string name)
         {
             return Tuple.Create(name, GlowParameterType.Integer);
         }
+
         public static GlowValue CreateArgumentValue(bool value)
         {
             return new GlowValue(value);
         }
+
         public static GlowValue CreateArgumentValue(int value)
         {
             return new GlowValue(value);

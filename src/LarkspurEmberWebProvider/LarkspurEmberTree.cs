@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
-using EmberLib.Glow;
-using EmberPlusProviderLib;
-using EmberPlusProviderLib.EmberHelpers;
-using EmberPlusProviderLib.Model;
-using EmberPlusProviderLib.Model.Parameters;
-using NGEmberProvider.Lib.Communication;
-using NGEmberProvider.Lib.enums;
-using NGEmberProvider.Lib.Helpers;
-using NGEmberProvider.Lib.Models;
-using NGEmberProvider.Lib.Models.Configuration;
-using NLog;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using EmberLib.Glow;
+using EmberPlusProviderClassLib;
+using EmberPlusProviderClassLib.EmberHelpers;
+using EmberPlusProviderClassLib.Model;
+using EmberPlusProviderClassLib.Model.Parameters;
+using LarkspurEmberWebProvider.Models;
+using EmberPlusProviderClassLib.Helpers;
+using NGEmberProvider.Lib.Communication;
+using NGEmberProvider.Lib.Helpers;
+using NGEmberProvider.Lib.Models;
+using NGEmberProvider.Lib.Models.Configuration;
+using NLog;
+
+
 
 namespace LarkspurEmberWebProvider
 {
-    public class LarkspurEmberTree : EmberPlusProviderLib.EmberTree
+    //public class LarkspurEmberTree : EmberPlusProviderClassLib.EmberTree
+    public class LarkspurEmberTree : EmberPlusProviderClassLib.EmberTreeProvider
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
@@ -65,12 +65,22 @@ namespace LarkspurEmberWebProvider
         #endregion
 
         #region Initiation
-        public LarkspurEmberTree(int port, Configuration config, List<ParameterInfo> persistedParameters, IList<CodecStatus> codecStatusList) : base(port, "NG Ember Provider", "Next Generation Ember Plus Provider")
+        /// <summary>
+        /// Initiates the application EmBER+ tree
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="config"></param>
+        /// <param name="persistedParameters"></param>
+        /// <param name="codecStatusList"></param>
+        //        public LarkspurEmberTree(int port, Configuration config, List<ParameterInfo> persistedParameters, IList<CodecStatus> codecStatusList)
+        //            : base(port, "NG Ember Provider", "Next Generation Ember Plus Provider")
+        public LarkspurEmberTree(int port, Configuration config)
+            : base(port, "NG Ember Provider", "Next Generation Ember Plus Provider")
         {
             _config = config;
 
             // Identity node
-            Provider.CreateIdentityNode(0, "NGEmberProvider", "Sveriges Radio", ApplicationSettings.Version);
+            //Provider.CreateIdentityNode(0, "NGEmberProvider", "Sveriges Radio", ApplicationSettings.Version);
 
             // Utility node
             CreateUtilitiesNode();
@@ -143,58 +153,17 @@ namespace LarkspurEmberWebProvider
             RestoreParameters(persistedParameters);
 
             // Re:evaluate node values
-            UpdatePoolCodecNodes(codecStatusList); // TODO: Hmm should this codecStatusList be here? 
+            UpdatePoolCodecNodes(codecStatusList);
             UpdateStudioCodecSlots(codecStatusList);
             UpdatePoolCodecsOwner();
             UpdatePoolTxSourceNodes();
 
-            Provider.dispatcher.GlowRootReady += OnEmberTreeChanged;
+            Provider.Dispatcher.GlowRootReady += OnEmberTreeChanged;
         }
         #endregion
 
+        /*
         #region Add function methods
-        private async Task<GlowValue[]> LogLevelFunction(GlowValue[] args)
-        {
-            try
-            {
-                bool debug = args[0].Boolean;
-
-                var level = debug ? LogLevel.Debug : LogLevel.Info;
-                log.Info("Setting log level to {0}", level.Name);
-
-                //foreach (var logLevel in LogLevel.AllLevels)
-                //{
-                //    log.Log(logLevel, "Pre. Testing logging with level {0}", logLevel.Name);
-                //}
-
-                foreach (var rule in LogManager.Configuration.LoggingRules)
-                {
-                    if (debug)
-                    {
-                        rule.EnableLoggingForLevels(LogLevel.Trace, LogLevel.Fatal);
-                    }
-                    else
-                    {
-                        rule.DisableLoggingForLevel(LogLevel.Trace);
-                        rule.DisableLoggingForLevel(LogLevel.Debug);
-                    }
-                }
-
-                LogManager.ReconfigExistingLoggers();
-
-                //foreach (var logLevel in LogLevel.AllLevels)
-                //{
-                //    log.Log(logLevel, "Post. Testing logging with level {0}", logLevel.Name);
-                //}
-
-                return new[] { Function.CreateArgumentValue(true) };
-            }
-            catch (Exception)
-            {
-                return new[] { Function.CreateArgumentValue(false) };
-            }
-        }
-
         public async Task<GlowValue[]> RestartFunction(GlowValue[] args)
         {
             try
@@ -247,6 +216,7 @@ namespace LarkspurEmberWebProvider
             }
         }
         #endregion
+        */
 
         #region Creation & Initiation methods
         private void CreateUtilitiesNode()
@@ -255,19 +225,20 @@ namespace LarkspurEmberWebProvider
             utilNode.AddStringParameter(UtilitiesIdentifiers.Server, Environment.MachineName);
             utilNode.AddStringParameter(UtilitiesIdentifiers.StartTime, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
+            /*
             // Log level function
             utilNode.AddFunction(
                 UtilitiesIdentifiers.LogLevel,
                 new[] { Function.CreateBooleanArgument("debug") },
                 new[] { Function.CreateBooleanArgument("success") },
                 LogLevelFunction);
-            /*
-                        // Restart function
-                        utilNode.AddFunction(
-                            UtilitiesIdentifiers.Restart,
-                            new[] { Function.CreateStringArgument("magicString (=restart)") },
-                            new[] { Function.CreateBooleanArgument("success") },
-                            RestartFunction);
+            
+            // Restart function
+            utilNode.AddFunction(
+                UtilitiesIdentifiers.Restart,
+                new[] { Function.CreateStringArgument("magicString (=restart)") },
+                new[] { Function.CreateBooleanArgument("success") },
+                RestartFunction);
             */
             utilNode.AddFunction(
                 UtilitiesIdentifiers.ReloadWebGuiUrls,
@@ -276,6 +247,7 @@ namespace LarkspurEmberWebProvider
                 ReloadWebGuiUrlsFunction);
         }
 
+        /*
         private void CreateStudioNode(EmberNode parentNode, int index, Studio studio)
         {
             EmberNode studioNode = parentNode.AddSubNode(index, studio.NodeIdentifier);
@@ -630,7 +602,9 @@ namespace LarkspurEmberWebProvider
                 IncreaseDecreaseGainFunction);
         }
         #endregion
+        */
 
+        /*
         #region Update methods for initiation or intervals
         private void UpdateDisplayTypeNode(Node node, WebGuiUrls webGuiUrls)
         {
@@ -810,12 +784,16 @@ namespace LarkspurEmberWebProvider
             }
         }
         #endregion
+        */
 
         #region Handlers on change
+        /// <summary>
+        /// Triggered on all changes to parameter's in EmBER+ tree
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void OnEmberTreeChanged(object sender, Dispatcher.GlowRootReadyArgs e)
         {
-            // Triggas d� Embertr�det �ndrats.
-
             try
             {
                 ParameterBase changedParameter = e.Root.FirstOrDefault() is GlowQualifiedParameter glowParameter
@@ -828,14 +806,14 @@ namespace LarkspurEmberWebProvider
 
                     Task.Run(async () =>
                     {
-                        await HandleSlotSipIdUpdate(changedParameter);
+                        /*await HandleSlotSipIdUpdate(changedParameter);
                         await HandleSlotIsOnAirUpdate(changedParameter);
                         await HandleSlotIsInCallUpdate(changedParameter);
                         await HandleSlotConnectedToSipIdUpdate(changedParameter);
                         await HandleLoggedInUserUpdate(changedParameter);
                         await HandleStudioUpdate(changedParameter);
                         await HandleTxUpdate(changedParameter);
-                        await HandleModifyRegionUpdate(changedParameter);
+                        await HandleModifyRegionUpdate(changedParameter);*/
                         TreeChanged?.Invoke(this, new EventArgs());
                     });
                 }
@@ -845,7 +823,7 @@ namespace LarkspurEmberWebProvider
                 log.Warn(ex, "Exception when handling ember tree change");
             }
         }
-
+        /*
         private async Task HandleSlotSipIdUpdate(ParameterBase parameter)
         {
             var regExp = new Regex(string.Format(SlotParameterPattern, CodecSlotNodeIdentifiers.SipId));
@@ -1072,9 +1050,10 @@ namespace LarkspurEmberWebProvider
                 }
             }
         }
-
         #endregion
+        */
 
+        /*
         #region Set methods
         public void SetMaintenanceMode(string studioId, bool inMaintenance)
         {
@@ -1082,7 +1061,9 @@ namespace LarkspurEmberWebProvider
             studioNode?.UpdateParameter(StudioNodeIdentifiers.InMaintenance, inMaintenance);
         }
         #endregion
+        */
 
+        /*
         #region Get methods
         public SlotInfo GetSlotInfo(string studio, string slot)
         {
@@ -1258,7 +1239,9 @@ namespace LarkspurEmberWebProvider
                 .ToList();
         }
         #endregion
+        */
 
+            /*
         #region General methods
         public void RestoreParameters(List<ParameterInfo> persistedParameters)
         {
@@ -1318,7 +1301,7 @@ namespace LarkspurEmberWebProvider
             return GetStudioCodecSlots().Any(cn => cn.HasStringParameterWithValue(CodecSlotNodeIdentifiers.SipId, sipAddress));
         }
         #endregion
-
+        */
     }
 }
 

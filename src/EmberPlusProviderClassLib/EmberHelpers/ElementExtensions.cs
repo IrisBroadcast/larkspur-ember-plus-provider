@@ -55,19 +55,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
                 }
                 element = child;
             }
-
             return element;
-        }
-
-        public static IEnumerable<Node> ChildNodes(this Element node)
-        {
-            return node.Children.OfType<Node>();
-        }
-
-        public static Element GetChildElement(this Element node, string name)
-        {
-            name = (name ?? string.Empty).ToLower();
-            return node.Children.FirstOrDefault(c => c.Identifier.ToLower() == name);
         }
 
         public static Node GetChildNode(this Element node, ValueType identifier)
@@ -81,18 +69,34 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return node.Children.FirstOrDefault(c => c.Identifier.ToLower() == name) as Node;
         }
 
-        public static IEnumerable<Element> GetChildElements(this Element node, string name)
+        /*public static Element GetChildElement(this Element node, string name)
+        {
+            name = (name ?? string.Empty).ToLower();
+            return node.Children.FirstOrDefault(c => c.Identifier.ToLower() == name);
+        }*/
+
+        /*public static IEnumerable<Element> GetChildElements(this Element node, string name)
         {
             name = (name ?? string.Empty).ToLower();
             return node.Children.Where(c => c.Identifier.ToLower() == name);
-        }
+        }*/
 
-        public static IEnumerable<Node> GetChildNodes(this Element node, string name)
+        /*public static IEnumerable<Node> GetChildNodes(this Element node, string name)
         {
             name = (name ?? string.Empty).ToLower();
             return node.Children.Where(c => c.Identifier.ToLower() == name) as IEnumerable<Node>;
+        }*/
+
+        public static IEnumerable<Node> ChildNodes(this Element node)
+        {
+            return node.Children.OfType<Node>();
         }
 
+        /// <summary>
+        /// Used for fetching or saving fields that have changable info, that should be saved or read and is persistable. 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         public static IEnumerable<ParameterBase> GetWritableChildParameters(this Element element)
         {
             // Returnera alla skrivbara parametrar

@@ -5,14 +5,14 @@ using EmberPlusProviderClassLib.Model;
 
 namespace EmberPlusProviderClassLib
 {
-    public class EmberPlusProvider : IDisposable
+    public class EmberProvider : IDisposable
     {
         public Node ProviderRoot { get; protected set; }
         public Dispatcher dispatcher { get; protected set; }
 
         protected GlowListener listener;
 
-        public EmberPlusProvider(int port, string identifier, string description)
+        public EmberProvider(int port, string identifier, string description)
         {
             int maxPackageLength = ProtocolParameters.MaximumPackageLength;
             dispatcher = new Dispatcher { Root = Node.CreateRoot() };
