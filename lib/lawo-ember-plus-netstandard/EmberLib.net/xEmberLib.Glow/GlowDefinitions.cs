@@ -51,8 +51,9 @@ namespace EmberLib.Glow
       /// <summary>
       /// The version of the Glow DTD implemented by this library
       /// </summary>
-      public const ushort Version = 0x0232;
-   }
+      //public const ushort Version = 0x0232;
+      public const ushort Version = 0x0228;
+    }
 
 
    /// <summary>

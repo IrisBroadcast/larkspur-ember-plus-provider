@@ -22,8 +22,6 @@ namespace LarkspurEmberWebProvider
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-
-
             //_emberEngine = new LarkspurEmberEngine();
 
             // Configure Web API Self hosting
@@ -47,7 +45,6 @@ namespace LarkspurEmberWebProvider
             //    _emberEngine.TeardownEmberTree();
             //    _emberEngine = null;
             //}
-
         }
     }
 }
