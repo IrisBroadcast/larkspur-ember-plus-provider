@@ -38,6 +38,7 @@ namespace EmberPlusProviderClassLib.Model
         TResult Visit(Node element, TState state);
         TResult Visit(BooleanParameter element, TState state);
         TResult Visit(IntegerParameter element, TState state);
+        TResult Visit(RealParameter element, TState state);
         TResult Visit(StringParameter element, TState state);
         TResult Visit(OneToNMatrix element, TState state);
         TResult Visit(NToNMatrix element, TState state);
@@ -78,6 +79,12 @@ namespace EmberPlusProviderClassLib.Model
         }
 
         object IElementVisitor<object, object>.Visit(IntegerParameter element, object state)
+        {
+            _onParameter?.Invoke(element);
+            return null;
+        }
+
+        object IElementVisitor<object, object>.Visit(RealParameter element, object state)
         {
             _onParameter?.Invoke(element);
             return null;
