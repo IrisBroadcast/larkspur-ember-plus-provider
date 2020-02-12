@@ -46,5 +46,5 @@ Then you should start the service:
 > sc start LarkspurService
 
 ## Responsible Maintainers
-- [Fredrik Bergholtz](https://github.com/freber???)
+- [Fredrik Bergholtz](https://github.com/fredrikbergholtz-sr)
 - [Roger Sandholm](https://github.com/Roog)
