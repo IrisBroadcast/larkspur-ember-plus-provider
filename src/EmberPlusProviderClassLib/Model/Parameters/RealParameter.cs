@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,9 +64,9 @@ namespace EmberPlusProviderClassLib.Model.Parameters
                     Value = b;
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
-                Log.Warn($"Failed to set parameter {Identifier} value to {newValue}");
+                Debug.WriteLine($"Failed to set real parameter {Identifier} value to {newValue}");
             }
         }
     }

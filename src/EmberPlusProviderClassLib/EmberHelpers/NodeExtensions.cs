@@ -1,17 +1,15 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NLog;
 using EmberLib.Glow;
 using EmberPlusProviderClassLib.Model;
 using EmberPlusProviderClassLib.Model.Parameters;
+using System.Diagnostics;
 
 namespace EmberPlusProviderClassLib.EmberHelpers
 {
     public static class NodeExtensions
     {
-        static readonly Logger log = LogManager.GetCurrentClassLogger();
-
         public static EmberNode AddSubNode(this Node node, ValueType identifier, EmberPlusProvider provider)
         {
             return AddSubNode(node, (int)identifier, identifier.ToString(), provider);
@@ -68,7 +66,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             var p = node.GetParameter<StringParameter>(index);
             if (p != null && p.Value != newValue)
             {
-                log.Info($"Setting node '{p.IdentifierPath}' to '{newValue}'");
+                Debug.WriteLine($"Setting node '{p.IdentifierPath}' to '{newValue}'");
                 p.Value = newValue;
                 return true;
             }
@@ -85,7 +83,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             var p = node.GetParameter<BooleanParameter>(index);
             if (p != null && p.Value != newValue)
             {
-                log.Info($"Setting node '{p.IdentifierPath}' to '{newValue}'");
+                Debug.WriteLine($"Setting node '{p.IdentifierPath}' to '{newValue}'");
                 p.Value = newValue;
                 return true;
             }
@@ -102,7 +100,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             var p = node.GetParameter<IntegerParameter>(index);
             if (p != null && p.Value != newValue)
             {
-                log.Info($"Setting node '{p.IdentifierPath}' to '{newValue}'");
+                Debug.WriteLine($"Setting node '{p.IdentifierPath}' to '{newValue}'");
                 p.Value = newValue;
                 return true;
             }

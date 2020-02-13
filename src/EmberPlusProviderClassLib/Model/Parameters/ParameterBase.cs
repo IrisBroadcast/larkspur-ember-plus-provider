@@ -28,13 +28,10 @@
  */
 #endregion
 
-using NLog;
-
 namespace EmberPlusProviderClassLib.Model.Parameters
 {
 	public abstract class ParameterBase : Element
 	{
-		public static readonly Logger Log = LogManager.GetCurrentClassLogger();
 		public Dispatcher Dispatcher { get; }
 		public bool IsWriteable { get; }
 

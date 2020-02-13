@@ -29,6 +29,7 @@
  #endregion
 
 using System;
+using System.Diagnostics;
 
 namespace EmberPlusProviderClassLib.Model.Parameters
 {
@@ -59,9 +60,9 @@ namespace EmberPlusProviderClassLib.Model.Parameters
                     Value = l;
                 }
             }
-            catch (Exception)
+            catch(Exception)
             {
-                Log.Warn($"Failed to set parameter {Identifier} value to {newValue}");
+                Debug.WriteLine($"Failed to set integer parameter {Identifier} value to {newValue}");
             }
         }
     }

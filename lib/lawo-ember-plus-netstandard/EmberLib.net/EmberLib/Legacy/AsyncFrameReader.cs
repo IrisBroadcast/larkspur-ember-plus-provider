@@ -84,6 +84,12 @@ namespace EmberLib.Legacy
             Reset();
 
             ResetFraming();
+
+            Debug.WriteLine($"Exception: EmberLib/Legacy/AsyncFrameReader/ReadByte");
+         }
+         catch(Exception ex)
+         {
+            Debug.WriteLine($"Exception: EmberLib/Legacy/AsyncFrameReader/ReadByte: {ex.Message}");
          }
       }
 

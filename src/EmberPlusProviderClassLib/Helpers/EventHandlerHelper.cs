@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NLog;
 
 namespace EmberPlusProviderClassLib.Helpers
 {
     public class EventHandlerHelper
     {
-        // Fördröjer triggning av event med x ms.
+        /// <summary>
+        /// Delays an event trigger with x ms.
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="throttleTimeInMilliseconds"></param>
+        /// <returns></returns>
         public static EventHandler ThrottledEventHandler(EventHandler handler, int throttleTimeInMilliseconds)
         {
             bool throttling = false;

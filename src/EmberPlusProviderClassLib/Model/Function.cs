@@ -31,15 +31,13 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NLog;
 using EmberLib.Glow;
+using System.Diagnostics;
 
 namespace EmberPlusProviderClassLib.Model
 {
     public class Function : Element
     {
-        protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         public Function(int number, Element parent, string identifier, Tuple<string, int>[] arguments, Tuple<string, int>[] result, Func<GlowValue[], Task<GlowValue[]>> coreFunc)
         : base(number, parent, identifier)
         {
@@ -93,7 +91,7 @@ namespace EmberPlusProviderClassLib.Model
             if (invocationId == null && HasResult)
                 throw new ArgumentException("Function with result called without invocation id!");
 
-            Log.Debug($"Invoking function {IdentifierPath}");
+            Debug.WriteLine($"Invoking function {IdentifierPath}");
 
             var result = await _coreFunc(arguments);
 
@@ -166,7 +164,7 @@ namespace EmberPlusProviderClassLib.Model
                 if (values.Length != expected.Length)
                     throw new ArgumentException();
 
-                for (int index = 0; index < values.Length; index++)
+                for(int index = 0; index < values.Length; index++)
                 {
                     if (values[index].Type != expected[index].Item2)
                         throw new ArgumentException();

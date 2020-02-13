@@ -254,9 +254,10 @@ namespace EmberLib.Framing.S101
                 {
                     _stream.Dispose();
                 }
-                catch(ObjectDisposedException)
+                //catch(ObjectDisposedException)
+                catch(Exception ex)
                 {
-                    // TODO: Maybe catch this...
+                    Debug.WriteLine($"Exception: RxFrame Dispose: {ex.Message}");
                 }
 
                 _stream = null;

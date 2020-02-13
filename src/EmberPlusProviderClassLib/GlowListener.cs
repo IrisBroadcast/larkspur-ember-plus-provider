@@ -30,16 +30,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-using NLog;
 
 namespace EmberPlusProviderClassLib
 {
     public class GlowListener : IDisposable
     {
-        protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         public GlowListener(int port, int maxPackageLength, Dispatcher dispatcher)
         {
             Port = port;
@@ -88,10 +86,11 @@ namespace EmberPlusProviderClassLib
             }
             catch (SocketException ex)
             {
-                Log.Error(ex, "Accept error");
+                Debug.WriteLine($"Exception: GlowListener/AcceptCallback/SocketException {ex.Message}");
             }
-            catch (ObjectDisposedException)
+            catch (ObjectDisposedException ex)
             {
+                Debug.WriteLine($"Exception: GlowListener/AcceptCallback/ObjectDisposedException {ex.Message}");
             }
         }
 
@@ -117,12 +116,14 @@ namespace EmberPlusProviderClassLib
                         CloseClient(client);
                     }
                 }
-                catch (SocketException)
+                catch (SocketException ex)
                 {
+                    Debug.WriteLine($"Exception: GlowListener/ReceiveCallback/SocketException {ex.Message}");
                     CloseClient(client);
                 }
-                catch (ObjectDisposedException)
+                catch (ObjectDisposedException ex)
                 {
+                    Debug.WriteLine($"Exception: GlowListener/ReceiveCallback/ObjectDisposedException {ex.Message}");
                 }
             }
         }
@@ -133,10 +134,11 @@ namespace EmberPlusProviderClassLib
             {
                 lock (_sync)
                 {
+                    // INFO:
                     // This part is changed from original code. Original code had a
                     // foreach that caused an exception, because the list can change
                     // during enumeration.
-                    for (int index = 0; index < _clients.Count; index++)
+                    for(int index = 0; index < _clients.Count; index++)
                     {
                         var client = _clients[index];
                         if (client != null && client != e.SourceClient)
@@ -149,7 +151,7 @@ namespace EmberPlusProviderClassLib
                             }
                             catch (Exception ex)
                             {
-                                Log.Error(ex, "Exception in Dispatcher_GlowRootReady when updating client. {0}", client);
+                                Debug.Write(ex, $"Exception in Dispatcher_GlowRootReady when updating client. {client}");
                             }
                         }
                     }
@@ -157,7 +159,7 @@ namespace EmberPlusProviderClassLib
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Exception in Dispatcher_GlowRootReady");
+                Debug.Write(ex, "Exception in Dispatcher_GlowRootReady");
             }
         }
         #endregion

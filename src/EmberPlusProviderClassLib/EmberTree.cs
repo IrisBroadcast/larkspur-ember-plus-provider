@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using EmberPlusProviderClassLib.EmberHelpers;
 using EmberPlusProviderClassLib.Model.Parameters;
-using NLog;
 
 namespace EmberPlusProviderClassLib
 {
     public class EmberTree : IDisposable
     {
-        protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
         public EmberPlusProvider Provider;
 
         public EmberTree(int port, string emberTreeIdentifier = "Identifier", string emberTreeDescription = "Description")

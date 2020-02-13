@@ -722,7 +722,6 @@ namespace BerLib
          return values.ToArray();
       }
 
-
       public static DateTime DecodeGeneralizedTime(IBerInput input, int length)
       {
          var str = DecodeAsciiString(input, length);
@@ -751,8 +750,7 @@ namespace BerLib
          }
          catch(Exception ex)
          {
-            Debug.WriteLine(ex);
-
+            Debug.WriteLine($"Exception: BerLib/BerEncoding/DecodeGeneralizedTime: {ex.Message}");
             return DateTime.MinValue;
          }
       }

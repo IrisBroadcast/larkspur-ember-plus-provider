@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 using System.Xml;
@@ -124,6 +125,7 @@ namespace EmberPlusProviderClassLib
                     IndentChars = "  ",
                 };
 
+                // INFO: Think this one prints out the tree
                 using(var writer = XmlWriter.Create(Console.Out, settings))
                     XmlExport.Export(root, writer);
 
@@ -131,18 +133,19 @@ namespace EmberPlusProviderClassLib
             }
             else
             {
-                Console.WriteLine("Unexpected Ember Root: {0} ({1})", e.Root, e.Root.GetType());
+                Debug.WriteLine($"Unexpected Ember Root: Client/GlowReader_RootReady: {e.Root} Type: {e.Root.GetType()}");
+                Console.WriteLine($"Unexpected Ember Root: Client/GlowReader_RootReady: {e.Root} Type: {e.Root.GetType()}");
             }
         }
 
         void GlowReader_Error(object sender, GlowReader.ErrorArgs e)
         {
-            Console.WriteLine("GlowReader error {0}: {1}", e.ErrorCode, e.Message);
+            Debug.WriteLine($"Exception: Client/GlowReader_Error: {e.Message} ErrorCode: {e.ErrorCode}");
         }
 
         void GlowReader_FramingError(object sender, EmberLib.Framing.FramingReader.FramingErrorArgs e)
         {
-            Console.WriteLine("GlowReader framing error: {0}", e.Message);
+            Debug.WriteLine($"Exception: Client/GlowReader_FramingError: {e.Message}");
         }
 
         void GlowReader_KeepAliveRequestReceived(object sender, FramingReader.KeepAliveRequestReceivedArgs e)
@@ -175,8 +178,9 @@ namespace EmberPlusProviderClassLib
                     {
                         socket.Send(e.FramedPackage, e.FramedPackageLength, SocketFlags.None);
                     }
-                    catch(SocketException)
+                    catch(SocketException ex)
                     {
+                        Debug.WriteLine($"Exception: Client/CreateOutput/SocketException: {ex.Message}");
                         host?.CloseClient(this);
                     }
                 }
@@ -206,8 +210,9 @@ namespace EmberPlusProviderClassLib
                 {
                     socket.Close();
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Debug.WriteLine($"Exception: Client/Dispose: {ex.Message}");
                 }
             }
 

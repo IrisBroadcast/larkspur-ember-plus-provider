@@ -29,6 +29,7 @@
  #endregion
 
 using System;
+using System.Diagnostics;
 using System.Linq;
 using EmberLib;
 using EmberLib.Glow;
@@ -243,8 +244,9 @@ namespace EmberPlusProviderClassLib
                                 {
                                     invocationResult = await function.Invoke(invocation);
                                 }
-                                catch
+                                catch(Exception ex)
                                 {
+                                    Debug.WriteLine($"Exception: Dispatcher/OnCommand/Invoke: {ex.Message}");
                                     if (invocation != null && invocation.InvocationId != null)
                                     {
                                         invocationResult = GlowInvocationResult.CreateRoot(invocation.InvocationId.Value);

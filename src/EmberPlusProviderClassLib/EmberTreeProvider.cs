@@ -5,14 +5,12 @@
 //using EmberPlusProviderClassLib.Model;
 //using EmberPlusProviderClassLib.Model.Parameters;
 //using EmberLib.Framing;
-//using NLog;
+
 // SENASTE
 //namespace EmberPlusProviderClassLib
 //{
 //    public class EmberTreeProvider : IDisposable
 //    {
-//        protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
 //        //public EmberProvider Provider;
 
 //        public EmberTreeProvider Provider;
