@@ -22,7 +22,7 @@ namespace LarkspurEmberWebProvider
         public static LarkspurEmberEngine SingleInstance => _instance;
         private LarkspurEmberTree _emberTree;
 
-        private static Timer _checkPoolCodecsTimer; // Statisk klassvariabel för att undvika att GC slänger timern.
+        //private static Timer _checkPoolCodecsTimer; // Statisk klassvariabel för att undvika att GC slänger timern.
 
         //private CcmListener _ccmListener;
         //private CodecControlListener _codecControlHubListener;
@@ -76,29 +76,6 @@ namespace LarkspurEmberWebProvider
             });
         }
 
-        //private void CheckPoolCodecStatus(object sender, ElapsedEventArgs e)
-        //{
-        //    _checkPoolCodecsTimer.Enabled = false;
-        //    Task.Run(async () =>
-        //    {
-        //        try
-        //        {
-        //            log.Debug("Performing periodic pool codec check");
-        //            var codecStatusList = await CcmService.GetCodecStatusListAsync();
-        //            _emberTree.UpdatePoolCodecNodes(codecStatusList);
-
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            log.Warn(ex, "Exception when performing periodic pool codec check");
-        //        }
-        //        finally
-        //        {
-        //            _checkPoolCodecsTimer.Enabled = true;
-        //        }
-        //    });
-        //}
-
         public async Task InitEmberTree()
         {
             bool done = false;
@@ -125,10 +102,10 @@ namespace LarkspurEmberWebProvider
 
                     // Initiate EmBER+ tree
                     //_emberTree = new LarkspurEmberTree(ApplicationSettings.EmberPort, config, persistedParameters, codecStatusList);
-                    var config = new Configuration();
-                    _emberTree = new LarkspurEmberTree(9003, config);
+                    //var config = new Configuration();
+                    _emberTree = new LarkspurEmberTree(9003);
                     //_emberTree.CodecSlotChanged += EmberTree_PublishCodecSlotUpdate;
-                    _emberTree.Restart += Restart;
+                    //_emberTree.Restart += Restart;
                     //_emberTree.StudioInfoChanged += EmberTree_StudioInfoChanged;
                     //_emberTree.TxChanged += EmberTree_OnTxChanged();
                     //_emberTree.TreeChanged += EmberTree_OnTreeChanged();
@@ -148,32 +125,6 @@ namespace LarkspurEmberWebProvider
                 }
             }
         }
-
-        /*private void _emberTree_ConnectedToChanged(string identifierPath, string sipAddress)
-        {
-            Task.Run(async () =>
-            {
-                if (!string.IsNullOrEmpty(sipAddress))
-                {
-                    await _codecControlHubListener.Subscribe(new AudioStatusSubscription()
-                    { IdentifierPath = identifierPath, SipAddress = sipAddress });
-                }
-                else
-                {
-                    await _codecControlHubListener.Unsubscribe(identifierPath);
-                }
-            });
-        }
-
-        private EventHandler EmberTree_OnTxChanged()
-        {
-            //return EventHandlerHelper.ThrottledEventHandler((sender, e) => { EmberHub.TxUpdate(); }, 50);
-        }
-
-        private EventHandler EmberTree_OnTreeChanged()
-        {
-            //return EventHandlerHelper.ThrottledEventHandler((sender, e) => { SaveTree(); }, 2000);
-        }*/
 
         public void Restart()
         {
@@ -195,7 +146,7 @@ namespace LarkspurEmberWebProvider
 
             if (_emberTree != null)
             {
-                _emberTree.Restart -= Restart;
+                //_emberTree.Restart -= Restart;
                 //_emberTree.CodecSlotChanged -= EmberTree_PublishCodecSlotUpdate;
                 //_emberTree.StudioInfoChanged -= EmberTree_StudioInfoChanged;
                 //_emberTree.TxChanged -= EmberTree_OnTxChanged();
@@ -209,111 +160,5 @@ namespace LarkspurEmberWebProvider
                 log.Warn("EmBER+ tree was already null, so no need to tear it down");
             }
         }
-        /*
-        private void EmberTree_StudioInfoChanged(string studio)
-        {
-            try
-            {
-                StudioInfoLight studioInfo = GetStudioInfo(studio);
-                log.Info("StudioInfoChanged event for {0}", studioInfo);
-                EmberHub.StudioInfoUpdate(studioInfo);
-            }
-            catch (Exception ex)
-            {
-                log.Warn(ex, "Exception when updating studio info");
-            }
-        }
-
-        private void OnCodecStatusChanged(CodecStatus codecStatus)
-        {
-            try
-            {
-                if (_emberTree.HasCodecWithSipAddress(codecStatus.SipAddress))
-                {
-                    log.Info("Received codec status. Sip address={0}, state={1}", codecStatus.SipAddress, codecStatus.State);
-                    _emberTree.UpdatePoolCodecs(codecStatus);
-                    _emberTree.UpdateStudioCodecSlots(codecStatus);
-                }
-                else
-                {
-                    log.Debug("Ignoring received codec status for sip address {0} because not part of tree ", codecStatus.SipAddress);
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Warn(ex, "Exception when updating codec status OnCodecStatusChanged");
-            }
-        }
-
-        private void OnAudioStatusChanged(List<AudioStatusSubscription> subscriptions, AudioStatusResponse audioStatus)
-        {
-            try
-            {
-                log.Trace($"AudioStatus parsing subscriptions, count: '{subscriptions.Count}'");
-                // Should this be checked if its interesting
-                foreach (var subscription in subscriptions)
-                {
-                    // TODO: This is done way to much, is there some error here?
-                    log.Trace($"AudioStatus received for sub: {subscription.IdentifierPath}");
-                    _emberTree.UpdateInputGainAndEnabled(subscription.IdentifierPath, audioStatus);
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Warn(ex, "Exception when updating audio status");
-            }
-        }
-
-        void EmberTree_PublishCodecSlotUpdate(SlotInfo slotInfo)
-        {
-            EmberHub.CodecSlotUpdate(slotInfo);
-        }
-
-        public void SetMaintenanceMode(string studioId, bool inMaintenance)
-        {
-            if (_emberTree != null)
-            {
-                _emberTree.SetMaintenanceMode(studioId, inMaintenance);
-            }
-            else
-            {
-                log.Warn("Can't set maintenance mode, there is no EmBER+ tree available");
-            }
-        }
-
-        public static SlotInfo GetSlotInfo(string studio, string slot) { return SingleInstance._emberTree.GetSlotInfo(studio, slot); }
-        public static SlotInfo GetSlotInfoByStudioIdentifier(string studioIdentifier, string slot) { return SingleInstance._emberTree.GetSlotInfoByStudioIdentifier(studioIdentifier, slot); }
-        public static string GetStudioSlotSipAddress(string studio, string slot) { return SingleInstance._emberTree.GetStudioSlotSipAddres(studio, slot); }
-        public static List<SlotInfo> GetStudioSlots(string studio) { return SingleInstance._emberTree.GetStudioSlots(studio); }
-        public static StudioInfoLight GetStudioInfo(string studio) { return SingleInstance._emberTree.GetStudioInfo(studio); }
-        public static List<StudioInfoLight> GetStudioInfoList() { return SingleInstance._emberTree.GetStudioInfoList(); }
-        public static List<StudioStates> GetStudioStatesList() { return SingleInstance._emberTree.GetStudioStatesList(); }
-        public static List<TxInfo> GetTxInfoList() { return SingleInstance._emberTree.GetTxInfos(); }
-        public static List<TxSourceInfo> GetTxInfoForStudio(string studio) { return SingleInstance._emberTree.GetTxInfoForStudio(studio); }
-        public static void RequestRestart() { SingleInstance.Restart(); }
-        public static async Task<List<string>> CheckAvailableStudiosAsync() { return await SingleInstance._emberTree.CheckAvailableStudiosAsync(); }
-        public static void SetMaintenance(string studioId, bool inMaintenance) { SingleInstance.SetMaintenanceMode(studioId, inMaintenance); }
-        public static async Task ReloadUrlsAsync() { await SingleInstance.ReloadWebGuiUrls(); }
-
-        private void SaveTree()
-        {
-            var persistenceFile = ApplicationSettings.PersistenceFile;
-            log.Info("Saving EmBER+ tree to: \"{0}\"", persistenceFile);
-
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(persistenceFile))
-                {
-                    IList<ParameterBase> writeableParameters = _emberTree?.GetWritableParameters();
-                    var parameterList = writeableParameters?.Select(p => new ParameterInfo(p)).ToList() ?? new List<ParameterInfo>();
-                    var json = JsonConvert.SerializeObject(parameterList);
-                    writer.Write(json);
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error(ex, "Could not save persistent EmBER+ tree to: {0}", persistenceFile);
-            }
-        }*/
     }
 }

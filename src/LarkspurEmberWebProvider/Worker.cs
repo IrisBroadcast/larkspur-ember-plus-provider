@@ -12,8 +12,8 @@ namespace LarkspurEmberWebProvider
     {
         private readonly ILogger<Worker> _logger;
 
-        private static IDisposable _server;
-        private static LarkspurEmberEngine _emberEngine;
+        //private static IDisposable _server;
+        //private static LarkspurEmberEngine _emberEngine;
 
         public Worker(ILogger<Worker> logger)
         {
@@ -22,9 +22,7 @@ namespace LarkspurEmberWebProvider
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-
-
-            _emberEngine = new LarkspurEmberEngine();
+            //_emberEngine = new LarkspurEmberEngine();
 
             // Configure Web API Self hosting
             //_server = WebApp.Start<Startup>(ApplicationSettings.WebApiUrl);
@@ -36,18 +34,17 @@ namespace LarkspurEmberWebProvider
                 await Task.Delay(1000, stoppingToken);
             }
 
-            if (_server != null)
-            {
-                _server?.Dispose();
-                _server = null;
-            }
+            //if (_server != null)
+            //{
+            //    _server?.Dispose();
+            //    _server = null;
+            //}
 
-            if (_emberEngine != null)
-            {
-                _emberEngine.TeardownEmberTree();
-                _emberEngine = null;
-            }
-
+            //if (_emberEngine != null)
+            //{
+            //    _emberEngine.TeardownEmberTree();
+            //    _emberEngine = null;
+            //}
         }
     }
 }

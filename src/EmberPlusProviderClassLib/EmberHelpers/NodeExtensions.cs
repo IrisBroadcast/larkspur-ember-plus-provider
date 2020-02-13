@@ -12,33 +12,33 @@ namespace EmberPlusProviderClassLib.EmberHelpers
     {
         static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        public static EmberNode AddSubNode(this Node node, ValueType identifier, EmberTreeProvider provider)
+        public static EmberNode AddSubNode(this Node node, ValueType identifier, EmberPlusProvider provider)
         {
             return AddSubNode(node, (int)identifier, identifier.ToString(), provider);
         }
 
-        public static EmberNode AddSubNode(this Node node, int index, string identifier, EmberTreeProvider provider)
+        public static EmberNode AddSubNode(this Node node, int index, string identifier, EmberPlusProvider provider)
         {
             NodeAsserter.AssertIdentifierValid(identifier);
             return new EmberNode(index, node, identifier, provider);
         }
 
-        public static void AddStringParameter(this Node node, int index, string identifier, EmberTreeProvider provider, bool isWriteable, string value = "", string description = "")
+        public static void AddStringParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWriteable, string value = "", string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
-            new StringParameter(index, node, identifier, provider.Dispatcher, isWriteable) { Value = value, Description = description};
+            new StringParameter(index, node, identifier, provider.dispatcher, isWriteable) { Value = value, Description = description};
         }
 
-        public static void AddIntegerParameter(this Node node, int index, string identifier, EmberTreeProvider provider, int min, int max, bool isWriteable, int value = 0, string description = "")
+        public static void AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, int min, int max, bool isWriteable, int value = 0, string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
-            new IntegerParameter(index, node, identifier, provider.Dispatcher, min, max, isWriteable) { Value = value, Description = description };
+            new IntegerParameter(index, node, identifier, provider.dispatcher, min, max, isWriteable) { Value = value, Description = description };
         }
 
-        public static void AddBooleanParameter(this Node node, int index, string identifier, EmberTreeProvider provider, bool isWriteable, bool value = false, string description = "")
+        public static void AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWriteable, bool value = false, string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
-            new BooleanParameter(index, node, identifier, provider.Dispatcher, isWriteable) { Value = value, Description = description };
+            new BooleanParameter(index, node, identifier, provider.dispatcher, isWriteable) { Value = value, Description = description };
         }
 
         public static void AddFunction(this Node node, ValueType identifier, Tuple<string, int>[] arguments, Tuple<string, int>[] result, Func<GlowValue[], Task<GlowValue[]>> coreFunc)

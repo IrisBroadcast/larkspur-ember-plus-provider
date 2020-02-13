@@ -5,19 +5,19 @@ using EmberPlusProviderClassLib.Model;
 
 namespace EmberPlusProviderClassLib
 {
-    /*public class EmberProvider : IDisposable
+    public class EmberPlusProvider : IDisposable
     {
         public Node ProviderRoot { get; protected set; }
-        public Dispatcher Dispatcher { get; protected set; }
+        public Dispatcher dispatcher { get; protected set; }
 
         protected GlowListener listener;
 
-        public EmberProvider(int port, string identifier, string description)
+        public EmberPlusProvider(int port, string identifier, string description)
         {
             int maxPackageLength = ProtocolParameters.MaximumPackageLength;
-            Dispatcher = new Dispatcher { Root = Node.CreateRoot() };
-            ProviderRoot = new Node(1, Dispatcher.Root, identifier) { Description = description };
-            listener = new GlowListener(port, maxPackageLength, Dispatcher);
+            dispatcher = new Dispatcher { Root = Node.CreateRoot() };
+            ProviderRoot = new Node(1, dispatcher.Root, identifier) { Description = description };
+            listener = new GlowListener(port, maxPackageLength, dispatcher);
         }
 
         public void CreateIdentityNode(int number, string product, string company, string version)
@@ -45,5 +45,5 @@ namespace EmberPlusProviderClassLib
                 listener = null;
             }
         }
-    }*/
+    }
 }

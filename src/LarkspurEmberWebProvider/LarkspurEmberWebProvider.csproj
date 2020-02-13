@@ -12,7 +12,5 @@
   <ItemGroup>
     <ProjectReference Include="..\EmberPlusProviderClassLib\EmberPlusProviderClassLib.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+
 </Project>

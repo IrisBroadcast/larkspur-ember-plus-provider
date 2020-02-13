@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using EmberLib.Framing;
 using EmberLib.Glow.Framing;
 
@@ -11,6 +8,7 @@ namespace EmberPlusProviderClassLib
 {
     public static class EmberVersion
     {
+
         public static string GlowDtdVersion
         {
             get
