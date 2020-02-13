@@ -9,10 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xBerLib\BerLib.csproj" />
-    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib.Framing\EmberLib.Framing.csproj" />
-    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib.Glow\EmberLib.Glow.csproj" />
-    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib\EmberLib.csproj" />
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\BerLib\BerLib.csproj" />
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\EmberLib.Framing\EmberLib.Framing.csproj" />
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\EmberLib.Glow\EmberLib.Glow.csproj" />
+    <ProjectReference Include="..\..\lib\lawo-ember-plus-netstandard\EmberLib.net\EmberLib\EmberLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -41,10 +41,10 @@ namespace EmberLib.Framing.S101
 
         void OnMessageReceived(MessageReceivedArgs oArgs, bool reset)
         {
-            if (MessageReceived != null)
+            if(MessageReceived != null)
                 MessageReceived(this, oArgs);
 
-            if (reset)
+            if(reset)
             {
                 _isInFrame = false;
                 _stream.SetLength(0);
@@ -67,11 +67,11 @@ namespace EmberLib.Framing.S101
         /// <param name="framingErrorCallback">callback function that is invoked everytime a framing error is encountered</param>
         public void ReceiveByte(byte b, MessageCallback framingErrorCallback)
         {
-            if (_isInFrame == false)
+            if(_isInFrame == false)
             {
-                if (b == Constants.Bof)
+                if(b == Constants.Bof)
                 {
-                    if (_outOfFrameByteCount > 0 && framingErrorCallback != null)
+                    if(_outOfFrameByteCount > 0 && framingErrorCallback != null)
                         framingErrorCallback(string.Format("S101: {0} out of frame data bytes!", _outOfFrameByteCount));
 
                     _isInFrame = true;
@@ -83,9 +83,9 @@ namespace EmberLib.Framing.S101
                     _isDataLinkEscaped = false;
                     _crc = Crc.InitialValue;
                 }
-                else if (b == Constants.Invalid)
+                else if(b == Constants.Invalid)
                 {
-                    if (_outOfFrameByteCount > 0 && framingErrorCallback != null)
+                    if(_outOfFrameByteCount > 0 && framingErrorCallback != null)
                         framingErrorCallback(string.Format("S101: {0} out of frame data bytes!", _outOfFrameByteCount));
 
                     _isInFrame = true;
@@ -105,7 +105,7 @@ namespace EmberLib.Framing.S101
                 return;
             }
 
-            if (_usesNonEscapingFraming)
+            if(_usesNonEscapingFraming)
             {
                 ReceiveByteWithoutEscaping(b, framingErrorCallback);
             }
@@ -138,11 +138,11 @@ namespace EmberLib.Framing.S101
 
         void ReceiveByteWithoutEscaping(byte b, MessageCallback framingErrorCallback)
         {
-            if (_payloadLengthLength == -1)
+            if(_payloadLengthLength == -1)
             {
                 _payloadLengthLength = b;
 
-                if (_payloadLengthLength == 0)
+                if(_payloadLengthLength == 0)
                 {
                     OnMessageReceived(new MessageReceivedArgs(0, new byte[0], true), true);
                 }
@@ -150,7 +150,7 @@ namespace EmberLib.Framing.S101
                 return;
             }
 
-            if (_payloadLengthLength > 0)
+            if(_payloadLengthLength > 0)
             {
                 _payloadLength <<= 8;
                 _payloadLength |= b;
@@ -160,7 +160,7 @@ namespace EmberLib.Framing.S101
             {
                 _stream.WriteByte(b);
 
-                if (_stream.Length == _payloadLength)
+                if(_stream.Length == _payloadLength)
                 {
                     var memory = _stream.ToArray();
 
@@ -172,30 +172,30 @@ namespace EmberLib.Framing.S101
 
         void ReceiveByteWithEscaping(byte b, MessageCallback framingErrorCallback)
         {
-            if (b == Constants.Bof)
+            if(b == Constants.Bof)
             {
-                if (framingErrorCallback != null)
+                if(framingErrorCallback != null)
                     framingErrorCallback("S101: BOF in frame!");
 
                 _stream.SetLength(0);
                 _isDataLinkEscaped = false;
                 _crc = Crc.InitialValue;
 
-                if (_outOfFrameByteCount > 0 && framingErrorCallback != null)
+                if(_outOfFrameByteCount > 0 && framingErrorCallback != null)
                     framingErrorCallback(String.Format("S101: {0} out of frame data bytes!", _outOfFrameByteCount));
 
                 _outOfFrameByteCount = 0;
                 return;
             }
 
-            if (b == Constants.Eof)
+            if(b == Constants.Eof)
             {
                 var length = (int)_stream.Length;
                 _stream.Write(Constants.Eofs, 0, Constants.Eofs.Length);
 
-                if (length >= 3)
+                if(length >= 3)
                 {
-                    if (_crc == 0xF0B8)
+                    if(_crc == 0xF0B8)
                     {
                         _stream.SetLength(length - 2);
                         var memory = _stream.ToArray();
@@ -203,13 +203,13 @@ namespace EmberLib.Framing.S101
                     }
                     else
                     {
-                        if (framingErrorCallback != null)
+                        if(framingErrorCallback != null)
                             framingErrorCallback("S101: CRC error!");
                     }
                 }
-                else if (length == 0)
+                else if(length == 0)
                 {
-                    if (framingErrorCallback != null)
+                    if(framingErrorCallback != null)
                         framingErrorCallback("S101: EOF out of frame!");
                 }
 
@@ -218,15 +218,15 @@ namespace EmberLib.Framing.S101
                 return;
             }
 
-            if (b == Constants.Ce)
+            if(b == Constants.Ce)
             {
                 _isDataLinkEscaped = true;
                 return;
             }
 
-            if (b >= Constants.Invalid)
+            if(b >= Constants.Invalid)
             {
-                if (framingErrorCallback != null)
+                if(framingErrorCallback != null)
                     framingErrorCallback("S101: Invalid character received!");
 
                 _isInFrame = false;
@@ -234,7 +234,7 @@ namespace EmberLib.Framing.S101
                 return;
             }
 
-            if (_isDataLinkEscaped)
+            if(_isDataLinkEscaped)
             {
                 _isDataLinkEscaped = false;
                 b ^= 0x20;
@@ -248,14 +248,15 @@ namespace EmberLib.Framing.S101
         #region IDisposable Members
         public void Dispose()
         {
-            if (_stream != null)
+            if(_stream != null)
             {
                 try
                 {
                     _stream.Dispose();
                 }
-                catch (ObjectDisposedException)
+                catch(ObjectDisposedException)
                 {
+                    // TODO: Maybe catch this...
                 }
 
                 _stream = null;

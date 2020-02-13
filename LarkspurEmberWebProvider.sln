@@ -18,13 +18,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmberPlusProviderClassLib",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ember-plus", "ember-plus", "{0332B55E-DE3D-42F3-AA4B-8D113EB3B6CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerLib", "lib\lawo-ember-plus-netstandard\EmberLib.net\xBerLib\BerLib.csproj", "{2E6FBAFB-DEC3-4A96-BF34-A40265F21F7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BerLib", "lib\lawo-ember-plus-netstandard\EmberLib.net\BerLib\BerLib.csproj", "{2E6FBAFB-DEC3-4A96-BF34-A40265F21F7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmberLib", "lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib\EmberLib.csproj", "{9C4ABE8B-72FF-4BB1-AE4B-7124E5B3BB94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmberLib", "lib\lawo-ember-plus-netstandard\EmberLib.net\EmberLib\EmberLib.csproj", "{9C4ABE8B-72FF-4BB1-AE4B-7124E5B3BB94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmberLib.Framing", "lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib.Framing\EmberLib.Framing.csproj", "{5A06082B-26C4-4F78-84E8-EE97015F0187}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmberLib.Framing", "lib\lawo-ember-plus-netstandard\EmberLib.net\EmberLib.Framing\EmberLib.Framing.csproj", "{5A06082B-26C4-4F78-84E8-EE97015F0187}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmberLib.Glow", "lib\lawo-ember-plus-netstandard\EmberLib.net\xEmberLib.Glow\EmberLib.Glow.csproj", "{A57FAA3F-DFB4-4A79-9B6A-F3222140C595}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmberLib.Glow", "lib\lawo-ember-plus-netstandard\EmberLib.net\EmberLib.Glow\EmberLib.Glow.csproj", "{A57FAA3F-DFB4-4A79-9B6A-F3222140C595}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
