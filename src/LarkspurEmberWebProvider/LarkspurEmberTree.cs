@@ -70,7 +70,17 @@ namespace LarkspurEmberWebProvider
         {
 
             // Identity node
-            Provider.CreateIdentityNode(0, "NGEmberProvider", "Sveriges Radio", "0.0.1");
+            //Provider.CreateIdentityNode(0, "NGEmberProvider", "Sveriges Radio", "0.0.1");
+
+            var identity = new Node(0, Provider.ProviderRoot, "identity")
+            {
+                SchemaIdentifier = "de.l-s-b.emberplus.identity"
+            };
+
+            identity.AddStringParameter(1, "product", Provider, false, "NGEmberProvider");
+            identity.AddStringParameter(2, "company", Provider, false, "Sveriges Radio");
+            identity.AddStringParameter(3, "version", Provider, false, "0.0.1");
+
 
             //var child = Provider.AddChildNode(RootIdentifiers.CodecPools);
             //var codecPoolNode = child.AddSubNode(0, $"CodecPool_");
@@ -82,7 +92,7 @@ namespace LarkspurEmberWebProvider
             // Everything went well
             log.Debug("Ember provider created and listening on port {0}", port);
 
-            //Provider.dispatcher.GlowRootReady += OnEmberTreeChanged;
+            Provider.dispatcher.GlowRootReady += OnEmberTreeChanged;
         }
         #endregion
 
@@ -129,29 +139,29 @@ namespace LarkspurEmberWebProvider
         {
             try
             {
-                //ParameterBase changedParameter = e.Root.FirstOrDefault() is GlowQualifiedParameter glowParameter
-                //        ? GetElement<ParameterBase>(glowParameter.Path)
-                //        : null;
+                ParameterBase changedParameter = e.Root.FirstOrDefault() is GlowQualifiedParameter glowParameter
+                        ? GetElement<ParameterBase>(glowParameter.Path)
+                        : null;
 
-                //if (changedParameter != null)
-                //{
-                //    //log.Debug("EmberTree node {0} changed", changedParameter.IdentifierPath);
+                if (changedParameter != null)
+                {
+                    log.Debug("EmberTree node {0} changed", changedParameter.IdentifierPath);
 
-                //    TreeChanged?.Invoke(this, new EventArgs());
+                    TreeChanged?.Invoke(this, new EventArgs());
 
-                //    //Task.Run( () =>
-                //    //{
-                //    //    /*await HandleSlotSipIdUpdate(changedParameter);
-                //    //    await HandleSlotIsOnAirUpdate(changedParameter);
-                //    //    await HandleSlotIsInCallUpdate(changedParameter);
-                //    //    await HandleSlotConnectedToSipIdUpdate(changedParameter);
-                //    //    await HandleLoggedInUserUpdate(changedParameter);
-                //    //    await HandleStudioUpdate(changedParameter);
-                //    //    await HandleTxUpdate(changedParameter);
-                //    //    await HandleModifyRegionUpdate(changedParameter);*/
-                //    //    TreeChanged?.Invoke(this, new EventArgs());
-                //    //});
-                //}
+                    //Task.Run( () =>
+                    //{
+                    //    /*await HandleSlotSipIdUpdate(changedParameter);
+                    //    await HandleSlotIsOnAirUpdate(changedParameter);
+                    //    await HandleSlotIsInCallUpdate(changedParameter);
+                    //    await HandleSlotConnectedToSipIdUpdate(changedParameter);
+                    //    await HandleLoggedInUserUpdate(changedParameter);
+                    //    await HandleStudioUpdate(changedParameter);
+                    //    await HandleTxUpdate(changedParameter);
+                    //    await HandleModifyRegionUpdate(changedParameter);*/
+                    //    TreeChanged?.Invoke(this, new EventArgs());
+                    //});
+                }
             }
             catch (Exception ex)
             {

@@ -40,7 +40,5 @@ namespace EmberPlusProviderClassLib
                 Provider = null;
             }
         }
-
     }
-
 }

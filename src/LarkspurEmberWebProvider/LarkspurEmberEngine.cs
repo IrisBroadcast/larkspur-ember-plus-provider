@@ -18,11 +18,11 @@ namespace LarkspurEmberWebProvider
     {
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
-        private static LarkspurEmberEngine _instance;
-        public static LarkspurEmberEngine SingleInstance => _instance;
+        public static LarkspurEmberEngine SingleInstance { get; private set; }
         private LarkspurEmberTree _emberTree;
 
-        //private static Timer _checkPoolCodecsTimer; // Statisk klassvariabel för att undvika att GC slänger timern.
+        //private static Timer _checkPoolCodecsTimer;
+        //// Statisk klassvariabel för att undvika att GC slänger timern.
 
         //private CcmListener _ccmListener;
         //private CodecControlListener _codecControlHubListener;
@@ -46,7 +46,7 @@ namespace LarkspurEmberWebProvider
 
         public LarkspurEmberEngine()
         {
-            _instance = this;
+            SingleInstance = this;
 
             // Initiate EmBER+ tree
             InitEmberTree().ContinueWith(task =>
