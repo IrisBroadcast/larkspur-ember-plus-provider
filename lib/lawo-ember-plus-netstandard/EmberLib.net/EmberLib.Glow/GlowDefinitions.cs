@@ -5,7 +5,7 @@
    Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-
+// XXX: Changes has been made, GlowDTD Version
 using BerLib;
 
 namespace EmberLib.Glow
@@ -51,8 +51,9 @@ namespace EmberLib.Glow
       /// <summary>
       /// The version of the Glow DTD implemented by this library
       /// </summary>
-      public const ushort Version = 0x0232;
-   }
+      //public const ushort Version = 0x0232;
+      public const ushort Version = 0x0228;
+    }
 
 
    /// <summary>
