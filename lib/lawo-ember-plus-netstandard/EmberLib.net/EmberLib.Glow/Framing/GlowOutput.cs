@@ -35,7 +35,7 @@ namespace EmberLib.Glow.Framing
       /// <param name="slotId">The S101 slot id. Default is 0.</param>
       /// <param name="packageReadyHandler">A callback that is attached to the PackageReady event. May be null.</param>
       public GlowOutput(bool useEscaping, int maximumPackageLength, int slotId, EventHandler<PackageReadyArgs> packageReadyHandler)
-      : base(useEscaping, maximumPackageLength, slotId, Dtd.Glow, packageReadyHandler)
+      : base(maximumPackageLength, slotId, Dtd.Glow, packageReadyHandler)
       {
          _applicationBytes = CreateApplicationBytes();
       }
@@ -58,7 +58,7 @@ namespace EmberLib.Glow.Framing
       /// <param name="slotId">The S101 slot id. Default is 0.</param>
       /// <param name="packageReadyHandler">A callback that is attached to the PackageReady event. May be null.</param>
       public GlowOutput(bool useEscaping, int slotId, EventHandler<PackageReadyArgs> packageReadyHandler)
-      : base(useEscaping, ProtocolParameters.MaximumPackageLength, slotId, Dtd.Glow, packageReadyHandler)
+      : base(ProtocolParameters.MaximumPackageLength, slotId, Dtd.Glow, packageReadyHandler)
       {
          _applicationBytes = CreateApplicationBytes();
       }
