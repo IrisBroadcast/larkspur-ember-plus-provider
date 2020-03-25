@@ -46,7 +46,6 @@ namespace EmberPlusProviderClassLib.Model
         : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, null, null)
         {
             _xpointParameters = new Dictionary<int,Dictionary<int,XpointParams>>();
-            // TODO: maybe add a for loop instead to prevent this
             foreach(var target in targets)
             {
                 var dict = new Dictionary<int, XpointParams>();
