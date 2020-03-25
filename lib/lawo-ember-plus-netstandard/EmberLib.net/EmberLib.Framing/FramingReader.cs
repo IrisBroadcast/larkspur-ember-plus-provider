@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace EmberLib.Framing
@@ -149,7 +150,8 @@ namespace EmberLib.Framing
 
       protected virtual void OnFramingError(FramingErrorArgs e)
       {
-         if(FramingError != null)
+        Debug.WriteLine($"Error: FramingReader / OnFramingError", e);
+        if (FramingError != null)
             FramingError(this, e);
       }
       #endregion

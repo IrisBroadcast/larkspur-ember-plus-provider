@@ -9,7 +9,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 #if NO_SERIALIZATION
 #else
 using System.Runtime.Serialization;
@@ -37,7 +37,8 @@ namespace BerLib
       protected BerException(SerializationInfo info, StreamingContext context)
       : base(info, context)
       {
-         ErrorCode = info.GetInt32("BerException.ErrorCode");
+          Debug.WriteLine($"Exception: BerException thrown");
+          ErrorCode = info.GetInt32("BerException.ErrorCode");
       }
 
       [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
