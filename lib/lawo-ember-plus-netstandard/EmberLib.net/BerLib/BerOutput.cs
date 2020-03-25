@@ -37,7 +37,6 @@ namespace BerLib
       void Flush();
    }
 
-
    /// <summary>
    /// Abstract base class for output types that buffer data to be written
    /// in memory.
@@ -115,7 +114,6 @@ namespace BerLib
       #endregion
    }
 
-
    /// <summary>
    /// Provides buffered writing to a stream.
    /// </summary>
@@ -161,7 +159,6 @@ namespace BerLib
       Stream _stream;
       #endregion
    }
-
 
    /// <summary>
    /// Provides non-buffered writing to memory.

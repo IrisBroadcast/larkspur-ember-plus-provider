@@ -27,7 +27,6 @@ namespace BerLib
       byte ReadByte();
    }
 
-
    /// <summary>
    /// Abstract base class for buffered BerInput implementations.
    /// Uses in-memory buffer for block-wise reading from inner input.
@@ -69,7 +68,6 @@ namespace BerLib
       #endregion
    }
 
-
    /// <summary>
    /// Provides buffered reading from a stream.
    /// </summary>
@@ -105,7 +103,6 @@ namespace BerLib
       Stream _stream;
       #endregion
    }
-
 
    /// <summary>
    /// Provides non-buffered reading from memory.

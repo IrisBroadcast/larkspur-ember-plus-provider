@@ -172,7 +172,7 @@ namespace BerLib
       // encoded result.
       //
       // ====================================================================
-
+      #region Encode Functions
       public static int EncodeTag(IBerOutput output, BerTag tag)
       {
          var number = tag.Number;
@@ -314,8 +314,9 @@ namespace BerLib
 
          return size;
       }
+      #endregion
 
-      // value encodings
+      #region Value Encodings
       public static int EncodeBoolean(IBerOutput output, bool value)
       {
          output.WriteByte((byte)(value ? 0xFF : 0));
@@ -479,6 +480,7 @@ namespace BerLib
 
          return EncodeAsciiString(output, sBuffer);
       }
+      #endregion
 
 
       // ====================================================================
@@ -486,7 +488,7 @@ namespace BerLib
       // Decode functions
       //
       // ====================================================================
-
+      #region DecodeFunctions
       public static BerTag DecodeTag(IBerInput input)
       {
          var tagByte = input.ReadByte();
@@ -754,6 +756,7 @@ namespace BerLib
             return DateTime.MinValue;
          }
       }
+      #endregion
 
       #region Implementation
       static byte[] ReadString(IBerInput input, ref int length)
@@ -866,6 +869,6 @@ namespace BerLib
 
          return value;
       }
-      #endregion
+      #endregion Implementation
    }
 }

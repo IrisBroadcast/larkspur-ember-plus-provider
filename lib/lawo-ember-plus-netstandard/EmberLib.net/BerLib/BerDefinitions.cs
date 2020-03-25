@@ -234,7 +234,6 @@ namespace BerLib
       /// </summary>
       public const int IndefiniteLength = -1;
 
-
       /// <summary>
       /// Gets the name of the type passed in <paramref name="type"/> in PascalCase
       /// (e.g. 'ObjectIdentifier' if type equals 6).
