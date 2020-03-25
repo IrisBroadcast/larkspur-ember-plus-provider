@@ -86,8 +86,7 @@ namespace EmberLib.Xml
          BerTag tag;
          EmberNode node = null;
 
-         if(BerTag.TryParse(tagName, out tag)
-         && typeName != null)
+         if(BerTag.TryParse(tagName, out tag) && typeName != null)
          {
             uint type;
 
@@ -152,10 +151,14 @@ namespace EmberLib.Xml
                   case BerType.Sequence:
                   {
                      if(tag == Legacy.EmberFrame.FrameTag)
+                     {
+                        Debug.WriteLine($"Warning: CreateNode / EmberFrame is obsolete");
                         node = new Legacy.EmberFrame();
+                     }
                      else
-                        node = new EmberSequence(tag);
-
+                     {
+                        node = new EmberSequence(tag, null);
+                     }
                      break;
                   }
 #pragma warning restore 618
@@ -173,7 +176,7 @@ namespace EmberLib.Xml
 
                      if(node == null)
                      {
-                        Debug.WriteLine("Unknown BER value type: " + type);
+                        Debug.WriteLine($"Warning: Unknown BER value type: {type}");
 
                         node = new EmberContainer(tag, null, type);
                      }

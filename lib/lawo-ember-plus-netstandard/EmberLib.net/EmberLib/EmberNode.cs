@@ -185,9 +185,15 @@ namespace EmberLib
             {
 #pragma warning disable 618 // EmberFrame is obsolete
                case BerType.Sequence:
-                  node = tag == Legacy.EmberFrame.FrameTag
-                         ? new Legacy.EmberFrame()
-                         : new EmberSequence(tag, null);
+                  if(tag == Legacy.EmberFrame.FrameTag)
+                  {
+                     Debug.WriteLine($"Warning: EmberNode / FromReader / EmberFrame is obsolete");
+                     node = new Legacy.EmberFrame();
+                  }
+                  else
+                  {
+                     node = new EmberSequence(tag, null);
+                  }
                   break;
 #pragma warning restore 618
 
@@ -202,7 +208,7 @@ namespace EmberLib
 
                      if(node == null)
                      {
-                        Debug.WriteLine("WARNING: Unknown BER container type: " + type);
+                        Debug.WriteLine($"Warning: Unknown BER container type: {type}");
 
                         node = new EmberContainer(tag, null, type);
                      }
@@ -250,7 +256,7 @@ namespace EmberLib
                   break;
 
                default:
-                  Debug.WriteLine("Unknown BER value type: " + type);
+                  Debug.WriteLine($"Unknown BER value type: {type}");
                   break;
             }
          }

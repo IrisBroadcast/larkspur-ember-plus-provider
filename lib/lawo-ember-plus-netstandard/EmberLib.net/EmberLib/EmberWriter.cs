@@ -55,6 +55,7 @@ namespace EmberLib
       public void WriteFrameBegin()
       {
 #pragma warning disable 618 // EmberFrame is obsolete
+         Debug.WriteLine($"Warning: EmberWriter / WriteFrameBegin / EmberFrame is obsolete");
          WriteContainerBegin(Legacy.EmberFrame.FrameTag, BerType.Sequence);
 #pragma warning restore 618
       }
