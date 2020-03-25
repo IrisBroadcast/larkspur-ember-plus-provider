@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using EmberLib.Framing;
 
@@ -75,6 +76,7 @@ namespace EmberLib.Glow.Framing
 
       protected virtual void OnError(ErrorArgs e)
       {
+         Debug.WriteLine($"Error: GlowReader / OnError", e);
          if(Error != null)
             Error(this, e);
       }
@@ -84,7 +86,10 @@ namespace EmberLib.Glow.Framing
       static AsyncDomReader CreateAsyncReader(EventHandler<AsyncDomReader.RootReadyArgs> rootReady)
       {
          if(rootReady == null)
-            throw new ArgumentNullException("rootReady");
+         {
+             Debug.WriteLine($"Exception: GlowReader / CreateAsyncReader");
+             throw new ArgumentNullException("rootReady");
+         }
 
          var reader = new AsyncDomReader(new GlowApplicationInterface());
          reader.RootReady += rootReady;
