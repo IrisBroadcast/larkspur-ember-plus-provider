@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using EmberLib.Framing;
 using EmberPlusProviderClassLib.EmberHelpers;
 using EmberPlusProviderClassLib.Model;
+using EmberPlusProviderClassLib.Model.Parameters;
 
 namespace EmberPlusProviderClassLib
 {
@@ -32,24 +35,40 @@ namespace EmberPlusProviderClassLib
             {
                 Debug.WriteLine("Exception: EmberPlusProviderCLassLib / EmberPlusProvider: ", ex.Message);
             }
-
         }
 
-        //public void CreateIdentityNode(int number, string product, string company, string version)
-        //{
-        //    var identity = new Node(number, ProviderRoot, "identity")
-        //    {
-        //        SchemaIdentifier = "de.l-s-b.emberplus.identity"
-        //    };
+        public void CreateIdentityNode(ValueType number, string product, string company, string version)
+        {
+            var identity = new Node((int)number, ProviderRoot, "identity")
+            {
+                SchemaIdentifier = "de.l-s-b.emberplus.identity"
+            };
 
-        //    identity.AddStringParameter(1, "product", this, false, product);
-        //    identity.AddStringParameter(2, "company", this, false, company);
-        //    identity.AddStringParameter(3, "version", this, false, version);
-        //}
+            identity.AddStringParameter(1, "product", this, false, product);
+            identity.AddStringParameter(2, "company", this, false, company);
+            identity.AddStringParameter(3, "version", this, false, version);
+        }
 
         public EmberNode AddChildNode(ValueType identifier)
         {
             return ProviderRoot.AddSubNode(identifier, this);
+        }
+
+        public T GetElement<T>(int[] path) where T : class
+        {
+            var element = ProviderRoot.ResolveChild(path, out var dynamicPathHandler);
+            return element as T;
+        }
+
+        public T GetElement<T>(string identifierPath) where T : class
+        {
+            var element = ProviderRoot.ResolveChild(identifierPath);
+            return element as T;
+        }
+
+        public IList<ParameterBase> GetWritableParameters()
+        {
+            return ProviderRoot.GetWritableChildParameters().ToList();
         }
 
         public void Dispose()
