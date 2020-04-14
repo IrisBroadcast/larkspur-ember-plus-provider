@@ -35,8 +35,8 @@ namespace EmberPlusProviderClassLib.Model.Parameters
 {
     public class IntegerParameter : Parameter<long>
     {
-        public IntegerParameter(int number, Element parent, string identifier, Dispatcher dispatcher, int min, int max, bool isWriteable)
-        : base(number, parent, identifier, dispatcher, isWriteable)
+        public IntegerParameter(int number, Element parent, string identifier, Dispatcher dispatcher, int min, int max, bool isWritable)
+        : base(number, parent, identifier, dispatcher, isWritable)
         {
             Minimum = min;
             Maximum = max;

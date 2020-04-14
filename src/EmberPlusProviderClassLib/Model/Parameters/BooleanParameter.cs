@@ -5,8 +5,8 @@ namespace EmberPlusProviderClassLib.Model.Parameters
 {
     public class BooleanParameter : Parameter<bool>
     {
-        public BooleanParameter(int number, Element parent, string identifier, Dispatcher dispatcher, bool isWriteable)
-        : base(number, parent, identifier, dispatcher, isWriteable)
+        public BooleanParameter(int number, Element parent, string identifier, Dispatcher dispatcher, bool isWritable)
+        : base(number, parent, identifier, dispatcher, isWritable)
         {
         }
 

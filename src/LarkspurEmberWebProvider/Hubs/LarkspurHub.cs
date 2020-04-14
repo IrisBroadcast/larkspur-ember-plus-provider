@@ -9,11 +9,23 @@ using System.Threading.Tasks;
 namespace LarkspurEmberWebProvider.Hubs
 {
     /// <summary>
-    /// Add all the HUB method's here
+    /// All the Websocket SignalR method's here
     /// </summary>
     public class LarkspurHub : Hub<ILarkspurHub>
     {
         private static LarkspurEmberEngine EmberEngine => LarkspurEmberEngine.SingleInstance;
+
+        public override async Task OnConnectedAsync()
+        {
+            Console.WriteLine("user connected");
+            await Clients.All.ChangesInEmberTree("Connected...");
+            //return Task.CompletedTask;
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            return Task.CompletedTask;
+        }
 
         public async Task SetGpio()
         {
@@ -23,7 +35,7 @@ namespace LarkspurEmberWebProvider.Hubs
     }
 
     /// <summary>
-    /// Add all the HUB event's here
+    /// All Websocket SignalR event's here
     /// </summary>
     public interface ILarkspurHub
     {

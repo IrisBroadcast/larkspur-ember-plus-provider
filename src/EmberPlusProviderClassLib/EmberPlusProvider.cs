@@ -36,11 +36,14 @@ namespace EmberPlusProviderClassLib
             try
             {
                 int maxPackageLength = ProtocolParameters.MaximumPackageLength;
-                dispatcher = new Dispatcher {Root = Node.CreateRoot()};
+                dispatcher = new Dispatcher { Root = Node.CreateRoot() };
                 ProviderRoot = new Node(1, dispatcher.Root, identifier) { Description = description };
                 listener = new GlowListener(port, maxPackageLength, dispatcher);
 
                 dispatcher.GlowRootReady += OnEmberTreeChanged;
+                string message = $"Initiated the EmBER+ provider on port: {port}, identifier: {identifier}, description: {description}";
+                Console.WriteLine(message);
+                Debug.WriteLine(message);
             }
             catch (Exception ex)
             {
@@ -50,7 +53,7 @@ namespace EmberPlusProviderClassLib
 
         private async Task OnHandleUtilitiesChanged(ParameterBase parameter)
         {
-            //var regExp = new Regex(string.Format(SlotParameterPattern, CodecSlotNodeIdentifiers.IsInCall));
+            //var regExp = new Regex(string.Format("(?<studio>[^/]*)/CodecSlots/(?<slot>[^/]*)/{0}$", RootIdentifiers.Utilities));
             //var match = regExp.Match(parameter.IdentifierPath);
 
             //if (match.Success)
@@ -61,27 +64,29 @@ namespace EmberPlusProviderClassLib
             //        //var slotInfo = SlotInfo.CreateFromNode(slotNode);
             //        //log.Debug("Slot IsInCall for {0}/{1} changed to \"{2}\"", slotInfo.StudioNodeIdentifier, slotInfo.Slot, slotInfo.IsInCall);
             //        //CodecSlotChanged?.Invoke(slotInfo);
-            //        
+
             //    });
 
             //}
+
             GpioChanged?.Invoke("MUHAHA");
         }
 
         protected void OnEmberTreeChanged(object sender, Dispatcher.GlowRootReadyArgs e)
         {
-            // Triggas d� Embertr�det �ndrats.
-
+            // Triggered on EmBER+ tree change
+            Console.WriteLine("OnEmberTreeChanged");
             try
             {
+                TreeChanged?.Invoke(this, new EventArgs()); // TODO: should this be done twice
                 ParameterBase changedParameter = e.Root.FirstOrDefault() is GlowQualifiedParameter glowParameter
                     ? GetElement<ParameterBase>(glowParameter.Path)
                     : null;
 
                 if (changedParameter != null)
                 {
-                    //log.Debug("EmberTree node {0} changed", changedParameter.IdentifierPath);
-
+                    Debug.WriteLine($"EmberTree node {changedParameter.IdentifierPath} changed. Type {changedParameter.GetType()}");
+                   
                     Task.Run(async () =>
                     {
                         await OnHandleUtilitiesChanged(changedParameter);
@@ -91,6 +96,7 @@ namespace EmberPlusProviderClassLib
             }
             catch (Exception ex)
             {
+                Console.WriteLine("ERROR parsing tree");
                 //log.Warn(ex, "Exception when handling ember tree change");
             }
         }

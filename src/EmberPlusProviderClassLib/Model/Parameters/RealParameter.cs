@@ -39,8 +39,8 @@ namespace EmberPlusProviderClassLib.Model.Parameters
 {
     public class RealParameter : Parameter<double>
     {
-        public RealParameter(int number, Element parent, string identifier, Dispatcher dispatcher, double min, double max, bool isWriteable)
-        : base(number, parent, identifier, dispatcher, isWriteable)
+        public RealParameter(int number, Element parent, string identifier, Dispatcher dispatcher, double min, double max, bool isWritable)
+        : base(number, parent, identifier, dispatcher, isWritable)
         {
             Minimum = min;
             Maximum = max;

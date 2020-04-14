@@ -46,28 +46,27 @@ namespace LarkspurEmberWebProvider
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             SingleInstance = this;
-            Console.WriteLine("Execute async running Larkspur EMber Engine");
+            log.Info("Execute async running Larkspur EmbBER+ Engine");
+
             // Initiate EmBER+ tree
             InitEmberTree().ContinueWith(task =>
             {
-
+                // TODO: do some essentials, like checking up on static data
             });
-
+            
             try
             {
                 while (!stoppingToken.IsCancellationRequested) // Keep the thread alive
                 {
-                    Console.WriteLine("While");
+                    // TODO: add an infinite delay?
                     await Task.Delay(1000, stoppingToken);
                 }
             }
             catch (TaskCanceledException)
             {
-                // EmBER+ Provider background service terminated.");
-                Console.WriteLine("TaskCancelation Exception");
+                log.Warn("EmBER+ Provider background service terminated.");
                 TeardownEmberTree();
             }
-
         }
 
         public async Task InitEmberTree()
@@ -121,18 +120,16 @@ namespace LarkspurEmberWebProvider
         }
 
         /// <summary>
-        /// EmBER+ tree events on changes
+        /// EmBER+ tree events on any changes, use this to persist data or similar.
         /// </summary>
-        /// <returns></returns>
         private EventHandler EmberTree_OnTreeChangedAsync()
         {
-            Console.WriteLine("Muhaha change");
-            //return _websocketHub.Clients.All.ChangesInEmberTree("whatatta");
             return EventHandlerHelper.ThrottledEventHandler((sender, e) =>
             {
                 // TODO: Persist tree
-                Console.WriteLine("You should save the tree");
-            }, 2000);
+                _websocketHub.Clients.All.ChangesInEmberTree("Hi!!!!!222");
+                Debug.WriteLine("You should save the tree");
+            }, 200);
         }
 
         /// <summary>
@@ -149,7 +146,7 @@ namespace LarkspurEmberWebProvider
 
         public void Engine_SetGpio()
         {
-            Console.WriteLine("Setting GPIO...");
+            Debug.WriteLine("Setting GPIO...");
         }
 
     }

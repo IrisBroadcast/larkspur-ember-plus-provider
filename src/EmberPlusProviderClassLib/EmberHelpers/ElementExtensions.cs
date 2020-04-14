@@ -96,7 +96,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
         public static IEnumerable<ParameterBase> GetWritableChildParameters(this Element element)
         {
             // Return all writable parameters
-            var parameters = element.Children.Where(child => child is ParameterBase && ((ParameterBase)child).IsWriteable).OfType<ParameterBase>();
+            var parameters = element.Children.Where(child => child is ParameterBase && ((ParameterBase)child).IsWritable).OfType<ParameterBase>();
             foreach (var parameter in parameters)
             {
                 yield return parameter;

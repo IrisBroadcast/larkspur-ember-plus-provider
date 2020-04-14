@@ -436,7 +436,7 @@ namespace EmberPlusProviderClassLib
 
             if (dirFieldMask == GlowFieldFlags.All)
             {
-                if (element.IsWriteable)
+                if (element.IsWritable)
                     glow.Access = GlowAccess.ReadWrite;
             }
 
@@ -467,7 +467,7 @@ namespace EmberPlusProviderClassLib
                 glow.Minimum = new GlowMinMax(element.Minimum);
                 glow.Maximum = new GlowMinMax(element.Maximum);
 
-                if (element.IsWriteable)
+                if (element.IsWritable)
                     glow.Access = GlowAccess.ReadWrite;
             }
 
@@ -498,7 +498,7 @@ namespace EmberPlusProviderClassLib
                 glow.Minimum = new GlowMinMax(element.Minimum);
                 glow.Maximum = new GlowMinMax(element.Maximum);
 
-                if (element.IsWriteable)
+                if (element.IsWritable)
                     glow.Access = GlowAccess.ReadWrite;
             }
 
@@ -526,7 +526,7 @@ namespace EmberPlusProviderClassLib
 
             if (dirFieldMask == GlowFieldFlags.All)
             {
-                if (element.IsWriteable)
+                if (element.IsWritable)
                     glow.Access = GlowAccess.ReadWrite;
             }
 

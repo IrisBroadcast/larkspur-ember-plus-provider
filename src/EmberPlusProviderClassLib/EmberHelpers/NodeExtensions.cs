@@ -21,22 +21,22 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return new EmberNode(index, node, identifier, provider);
         }
 
-        public static void AddStringParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWriteable, string value = "", string description = "")
+        public static void AddStringParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, string value = "", string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
-            new StringParameter(index, node, identifier, provider.dispatcher, isWriteable) { Value = value, Description = description};
+            new StringParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description};
         }
 
-        public static void AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, int min, int max, bool isWriteable, int value = 0, string description = "")
+        public static void AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, int min, int max, bool isWritable, int value = 0, string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
-            new IntegerParameter(index, node, identifier, provider.dispatcher, min, max, isWriteable) { Value = value, Description = description };
+            new IntegerParameter(index, node, identifier, provider.dispatcher, min, max, isWritable) { Value = value, Description = description };
         }
 
-        public static void AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWriteable, bool value = false, string description = "")
+        public static void AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
-            new BooleanParameter(index, node, identifier, provider.dispatcher, isWriteable) { Value = value, Description = description };
+            new BooleanParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description };
         }
 
         public static void AddFunction(this Node node, ValueType identifier, Tuple<string, int>[] arguments, Tuple<string, int>[] result, Func<GlowValue[], Task<GlowValue[]>> coreFunc)

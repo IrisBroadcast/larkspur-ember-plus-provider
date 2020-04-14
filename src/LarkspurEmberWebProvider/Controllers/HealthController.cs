@@ -3,28 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using LarkspurEmberWebProvider.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace LarkspurEmberWebProvider.Controllers
 {
-    public class ApplicationSettings
-    {
-        public string Name { get; set; }
-        public string LogFolder { get; set; }
-        public string ReleaseDate { get; set; }
-        public string Version { get; set; }
-        public string Environment { get; set; }
-        public string Server { get; set; }
-    }
-
     [ApiController]
     public class HealthController : ControllerBase
     {
         private readonly ApplicationSettings _appSettings;
 
         [HttpGet]
-        [Route("/")]
+        [Route("/start")]
         public async Task<IActionResult> Index()
         {
             try
@@ -64,7 +55,7 @@ namespace LarkspurEmberWebProvider.Controllers
         }
 
         [HttpGet]
-        [Route("health")]
+        [Route("/health")]
         public async Task<IActionResult> Health()
         {
             try
