@@ -1,0 +1,14 @@
+{
+  "Node1": {
+    "Leaf1": "LeafName,type,value,writable",
+    "Leaf2": "MyLeaf,boolean,true,true"
+  },
+  "Node2": {
+    "Leaf3": "LeafName,type,value,writable",
+    "Leaf4": "MyLeaf,boolean,true,true"
+  },
+  "Node3": {
+    "Leaf5": "LeafName,type,value,writable",
+    "Leaf6": "MyLeaf,boolean,true,true"
+  } 
+}

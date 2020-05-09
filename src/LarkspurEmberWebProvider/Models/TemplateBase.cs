@@ -29,30 +29,30 @@
 #endregion copyright
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 
 namespace LarkspurEmberWebProvider.Models
 {
-    public class ApplicationSettings
+    public class TemplateBase
     {
-        public string Name { get; set; }
-        public string LogFolder { get; set; }
-        public string ReleaseDate { get; set; }
-        public string Version { get; set; }
-        public string Environment { get; set; }
-        public string Server { get; set; }
-
-        public ApplicationSettingsEmberTree EmberTree { get; set; } = new ApplicationSettingsEmberTree();
+        public List<TemplateBaseLeaf> BaseLeafs { get; set; }
     }
 
-    public class ApplicationSettingsEmberTree
+    public class TemplateBaseLeaf
     {
-        public int Port { get; set; } = 9003;
-        public string Identifier { get; set; } = "Larkspur";
-        public string Description { get; set; } = "Larkspur";
-        public string Product { get; set; } = "Larkspur EmBER+ Provider";
-        public string Company { get; set; } = "IRIS Broadcast";
-        public string Version { get; set; } = "0.0.1";
-        public string TreeTemplateFile { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "treeTemplate.json");
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public List<TemplateNode> Nodes { get; set; }
+    }
+
+    public class TemplateNode
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Enum Type { get; set; }
+        public dynamic Value { get; set; }
+        public bool Writable { get; set; }
     }
 }

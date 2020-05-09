@@ -4,27 +4,40 @@ Larkspur Ember Web Provider
 * Web Site: https://www.irisbroadcast.org
 * Github: https://github.com/IrisBroadcast/LarkspurEmberWebProvider
 
-Creates a few EmBER+ nodes for using with controllers that know
-the EmBER+ protocol. The information/nodes is also available to
-access with SignalR and a REST application interface (API).
+Creates an EmBER+ tree with custom leafs and nodes. The information/nodes
+is also available to access with SignalR and a REST application interface (API).
 
 It's a standalone .NET Core Worker Service.
 
-Could be used to bridge EmBER+ information and control to and from
-the web.
+Could be used to bridge EmBER+ information and control to and from the web.
 
+EmBER+ is a control protocol developed and maintained by [Lawo](https://github.com/Lawo).
+Control and status is represented as nodes in a tree (XML-structure). You can
+have your device or application to be a provider or consumer. This application
+is a provider with a web-API backbone. Make your custom nodes writable or just readable.
+
+## Roadmap
+- Stability
+- Posibility to add functions
+- Adding the complete template idea, for structuring your custom EmBER+ tree without changing the "code".
 
 License
 =======
-Larkspur Ember Web Provider is using a library 'EmberLib.net' from Lawo GmbH
+Larkspur Ember Web Provider is using a library 'EmberLib.net' from Lawo GmbH.
 ```
 EmberLib.net -- .NET implementation of the Ember+ Protocol
 Copyright (c) 2012-2019 Lawo GmbH (http://www.lawo.com).
 Distributed under the Boost Software License, Version 1.0.
 ```
+There has been some modifications to the source code for .NET adaption. And we
+are not running on the latest commit. There is something not working with the
+101 communication implementation. The files in the library that are using an
+older version is marked in the header with 'XXX'.
 
-Larkspur Ember Web Provider is Copyright (c) 2019 Roger Sandholm & Fredrik Bergholtz, Stockholm, Sweden
+```
+Larkspur Ember Web Provider is Copyright (c) 2020 Roger Sandholm & Fredrik Bergholtz, Stockholm, Sweden
 The code is licensed under the BSD 3-clause license.
+```
 
 The license for Larkspur Ember Web Provider is in the LICENSE.txt file
 
@@ -46,5 +59,5 @@ Then you should start the service:
 > sc start LarkspurService
 
 ## Responsible Maintainers
-- [Fredrik Bergholtz](https://github.com/fredrikbergholtz-sr)
 - [Roger Sandholm](https://github.com/Roog)
+- [Fredrik Bergholtz](https://github.com/fredrikbergholtz-sr)

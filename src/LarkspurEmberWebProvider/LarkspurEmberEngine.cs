@@ -1,4 +1,35 @@
-﻿using System;
+﻿#region copyright
+/*
+ * Larkspur Ember Plus Provider
+ *
+ * Copyright (c) 2020 Roger Sandholm & Fredrik Bergholtz, Stockholm, Sweden
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. The name of the author may not be used to endorse or promote products
+ *    derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+#endregion copyright
+
+using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using EmberPlusProviderClassLib;
@@ -8,37 +39,32 @@ using NLog;
 using LarkspurEmberWebProvider.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Timer = System.Timers.Timer;
 
 namespace LarkspurEmberWebProvider
 {
     public class LarkspurEmberEngine : BackgroundService
     {
-
-        private readonly IServiceProvider _serviceProvider;
-        private readonly IHubContext<LarkspurHub, ILarkspurHub> _websocketHub;
-
         private static readonly Logger log = LogManager.GetCurrentClassLogger();
 
         public static LarkspurEmberEngine SingleInstance { get; private set; }
         private static EmberPlusProvider _emberTree;
 
-        //private static Timer _checkPoolCodecsTimer;
-        //// Statisk klassvariabel för att undvika att GC slänger timern.
+        private readonly ApplicationSettings _configuration;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IHubContext<LarkspurHub, ILarkspurHub> _websocketHub;
 
         public bool EmberTreeState = false;
 
-        public bool EmberTreeInitiatedState()
-        {
-            return SingleInstance.EmberTreeState;
-        }
-
-        public event EventHandler TreeChanged;
+        public event EventHandler TreeChangedEvent;
 
         public LarkspurEmberEngine(
+            IOptions<ApplicationSettings> configuration,
             IServiceProvider serviceProvider,
             IHubContext<LarkspurHub, ILarkspurHub> websocketHub)
         {
+            _configuration = configuration.Value;
             _serviceProvider = serviceProvider;
             _websocketHub = websocketHub;
         }
@@ -77,28 +103,34 @@ namespace LarkspurEmberWebProvider
                 try
                 {
                     log.Info("Initializing EmBER+ tree");
-                    Console.WriteLine("Initializing EmBER+ tree");
-
-                    //var config = await BackendService.GetConfiguration();
+                    Debug.WriteLine("Initializing EmBER+ tree");
 
                     // Initiate EmBER+ tree
-                    _emberTree = new EmberPlusProvider(9003, "Larkspur", "Larkspur");
+                    _emberTree = new EmberPlusProvider(
+                        _configuration.EmberTree.Port,
+                        _configuration.EmberTree.Identifier,
+                        _configuration.EmberTree.Description);
                     _emberTree.TreeChanged += EmberTree_OnTreeChangedAsync();
-                    _emberTree.CreateIdentityNode(RootIdentifiers.Identity, "Larkspur EmBER+ Provider", "IRIS Broadcast", "0.0.1");
+                    _emberTree.CreateIdentityNode(
+                        RootIdentifiers.Identity,
+                        _configuration.EmberTree.Product,
+                        _configuration.EmberTree.Company,
+                        _configuration.EmberTree.Version);
 
+                    // Get saved values
+                    //var template = TemplateParserHelper.ParseTemplateJsonFile(_configuration.EmberTree.TreeTemplateFile);
                     _emberTree.InitializeAllNodes(RootIdentifiers.Utilities);
 
-                    // Started
+                    _emberTree.SetUpFinalListeners();
                     EmberTreeState = true;
                     log.Info("EmBER+ tree initiated");
-                    Console.WriteLine("EmBER+ tree initiated");
                     done = true;
                 }
                 catch (Exception ex)
                 {
                     EmberTreeState = false;
                     log.Error(ex, "Exception when initializing EmBER+ tree");
-                    Thread.Sleep(2000);
+                    Thread.Sleep(4000);
                 }
             }
         }

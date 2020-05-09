@@ -67,12 +67,13 @@ namespace EmberPlusProviderClassLib.Model
                             ? argumentValues.ToArray()
                             : null;
 
-                // ******* Tillagd kod ****************************
-                // Funktioner utan  parametrar kan definieras på två sätt. Antingen args=null eller args=tom lista.
-                // Men EmberViewer v1.6.2 skickar args=null då funktionsparametrar saknas
-                // och EmberViewer v2.4.0 skickar args=tom lista då funktionsparametrar saknas
-                // För att båda modellerna ska fungera skapar vi tom lista om arg=null men förväntas vara tom lista
-                // och argumenten sätts till null om argumenten förväntas vara null men är tom lista.
+                // **********************************************
+                // Added code
+                // Functions without parameters can be defined in two (2) ways. Either 'args=null' or 'args=empty list'
+                // - EmberViewer v1.6.2 sends args=null when function parameter is missing
+                // - EmberViewer v2.4.0 sends args=empty list when function parameter is missing
+                // So that both models will work, we create an empty list if args=null
+                // and we create args=null if args=empty list
                 if (Arguments != null && Arguments.Length == 0 && arguments == null)
                 {
                     arguments = new GlowValue[0];
