@@ -52,8 +52,8 @@ namespace EmberPlusProviderClassLib
         /// <summary>
         /// Trigger if any parameter in the EmBER+ tree is changed
         /// </summary>
-        public event EventHandler TreeChanged;
-        public event Action<string> GpioChanged;
+        public delegate void ChangedTreeUpdateEventHandler(string identifierPath, string value);
+        public event ChangedTreeUpdateEventHandler ChangedTreeEvent;
 
         /// <summary>
         /// Creates the actual EmBER+ provider tree
@@ -88,84 +88,43 @@ namespace EmberPlusProviderClassLib
             dispatcher.GlowRootReady += OnEmberTreeChanged;
         }
 
-        private async Task OnHandleUtilitiesChanged(ParameterBase parameter)
-        {
-            //var regExp = new Regex(string.Format("(?<studio>[^/]*)/CodecSlots/(?<slot>[^/]*)/{0}$", RootIdentifiers.Utilities));
-            //var match = regExp.Match(parameter.IdentifierPath);
-
-            //if (match.Success)
-            //{
-            //    var slotNode = parameter.Parent as Node;
-            //    await Task.Delay(100).ContinueWith(t =>
-            //    {
-            //        //var slotInfo = SlotInfo.CreateFromNode(slotNode);
-            //        //log.Debug("Slot IsInCall for {0}/{1} changed to \"{2}\"", slotInfo.StudioNodeIdentifier, slotInfo.Slot, slotInfo.IsInCall);
-            //        //CodecSlotChanged?.Invoke(slotInfo);
-
-            //    });
-
-            //}
-
-            GpioChanged?.Invoke("MUHAHA");
-        }
-
         protected void OnEmberTreeChanged(object sender, Dispatcher.GlowRootReadyArgs e)
         {
             // Triggered on EmBER+ tree change
             Console.WriteLine("OnEmberTreeChanged");
             try
             {
-                TreeChanged?.Invoke(this, new EventArgs()); // TODO: should this be done twice
-                var test = e.Root.FirstOrDefault() as GlowQualifiedParameter;
-                Console.WriteLine($"HAS VALIDATE {e.Root.HasValidationErrors}");
-
-
-
-
-
-
-                //if (test != null)
-                //{
-                //    Console.WriteLine("YES it issss");
-                //    Console.WriteLine($"{test.Path.ToString()}");
-                //    var elem = GetElement<ParameterBase>(test.Path);
-
-
-                //    var element = ProviderRoot.ResolveChild(test.Path, out var dynamicPathHandler);
-                //    Console.WriteLine(dynamicPathHandler.ToString());
-
-                //    var slotNode = (Node)element.Parent;
-                //    var sipAddress = slotNode.GetBoooleanParameterValue("gpio");
-                //        Console.WriteLine($"Muhaha {sipAddress.ToString()}");
-
-                //}
-                //ParameterBase changedParameter = e.Root.FirstOrDefault() is GlowQualifiedParameter glowParameter
-                //    ? GetElement<ParameterBase>(glowParameter.Path)
-                //    : null;
-
                 GlowQualifiedParameter glowParameter = e.Root.FirstOrDefault() as GlowQualifiedParameter;
-
                 ParameterBase changedParameter = GetElement<ParameterBase>(glowParameter?.Path);
 
-                Console.WriteLine("=======");
                 if (glowParameter != null)
                 {
-                    Console.WriteLine($"EmberTree node {glowParameter.Value.ToString()} //IdentifierPath changed. {changedParameter.IdentifierPath}");
+                    Console.WriteLine($"EmberTree node {glowParameter.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
                     Debug.WriteLine($"INFO {glowParameter.GetType().ToString()}");
                     Task.Run(async () =>
                     {
-                        Console.WriteLine($"EmberTree node {glowParameter.Value.ToString()} //IdentifierPath changed. {changedParameter.IdentifierPath}");
-                        await OnHandleUtilitiesChanged(changedParameter);
-                        TreeChanged?.Invoke(this, new EventArgs());
+                        Console.WriteLine($"EmberTree node {glowParameter.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
+                        await OnHandleValuesChanged(changedParameter);
+
+                        // TODO: Add event for saving tree
                     });
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("ERROR parsing tree");
-                Debug.WriteLine(ex, "ERR");
-                //log.Warn(ex, "Exception when handling ember tree change");
+                Console.Write(ex);
             }
+        }
+
+        private async Task OnHandleValuesChanged(ParameterBase parameter)
+        {
+            var stringParameter = parameter as StringParameter;
+            var message = stringParameter?.Value;
+
+            //var identifierPath = parameter.Parent.IdentifierPath;
+            var identifierPath = parameter.IdentifierPath;
+            ChangedTreeEvent?.Invoke(identifierPath, message);
         }
 
         public void CreateIdentityNode(ValueType number, string product, string company, string version)
@@ -182,11 +141,11 @@ namespace EmberPlusProviderClassLib
 
         public void InitializeAllNodes(ValueType number)
         {
-            //var node = new Node((int) number, ProviderRoot, "Utilities");
+            // Here would be the p
             var node = AddChildNode(number);
             node.AddBooleanParameter(1, "gpio", this, true);
-            node.AddStringParameter(2, "hall", this, true, "default");
-            node.AddStringParameter(3, "next", this, true, "default");
+            node.AddStringParameter(2, "stringparam", this, true, "default");
+            node.AddStringParameter(3, "anotherstringparam", this, true, "default");
         }
 
         public EmberNode AddChildNode(ValueType identifier)
@@ -196,19 +155,19 @@ namespace EmberPlusProviderClassLib
 
         public T GetElement<T>(int[] path) where T : class
         {
-            var element = ProviderRoot.ResolveChild(path, out var dynamicPathDummyHandler);
+            var element = dispatcher.Root.ResolveChild(path, out var dynamicPathDummyHandler);
             return element as T;
         }
 
         public T GetElement<T>(string identifierPath) where T : class
         {
-            var element = ProviderRoot.ResolveChild(identifierPath);
+            var element = dispatcher.Root.ResolveChild(identifierPath);
             return element as T;
         }
 
         public IList<ParameterBase> GetWritableParameters()
         {
-            return ProviderRoot.GetWritableChildParameters().ToList();
+            return dispatcher.Root.GetWritableChildParameters().ToList();
         }
 
         public void Dispose()

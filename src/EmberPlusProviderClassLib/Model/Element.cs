@@ -132,18 +132,17 @@ namespace EmberPlusProviderClassLib.Model
             foreach(var number in path)
             {
                 var child = (from elem in element.Children
-                            where elem.Number == number
-                            select elem)
-                            .FirstOrDefault();
-
-                if(child == null)
+                        where elem.Number == number
+                        select elem)
+                    .FirstOrDefault();
+                
+                if (child == null)
                 {
-                    if(element is IDynamicPathHandler)
+                    if (element is IDynamicPathHandler)
                         dynamicPathHandler = (IDynamicPathHandler)element;
 
                     return null;
                 }
-
                 element = child;
             }
 

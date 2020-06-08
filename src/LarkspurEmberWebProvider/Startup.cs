@@ -32,6 +32,7 @@ using LarkspurEmberWebProvider.Hubs;
 using LarkspurEmberWebProvider.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,7 +75,10 @@ namespace LarkspurEmberWebProvider
                 app.UseDeveloperExceptionPage();
             }
 
-            // For the web-components
+            // To serve the index.html file
+            app.UseDefaultFiles();
+
+            // For the web-components serving wwwroot
             app.UseStaticFiles();
 
             app.UseRouting();

@@ -57,8 +57,6 @@ namespace LarkspurEmberWebProvider
 
         public bool EmberTreeState = false;
 
-        public event EventHandler TreeChangedEvent;
-
         public LarkspurEmberEngine(
             IOptions<ApplicationSettings> configuration,
             IServiceProvider serviceProvider,
@@ -110,7 +108,7 @@ namespace LarkspurEmberWebProvider
                         _configuration.EmberTree.Port,
                         _configuration.EmberTree.Identifier,
                         _configuration.EmberTree.Description);
-                    _emberTree.TreeChanged += EmberTree_OnTreeChangedAsync();
+                    _emberTree.ChangedTreeEvent += EmberTreeOnTreeDataAsync;
                     _emberTree.CreateIdentityNode(
                         RootIdentifiers.Identity,
                         _configuration.EmberTree.Product,
@@ -141,6 +139,7 @@ namespace LarkspurEmberWebProvider
 
             if (_emberTree != null)
             {
+                _emberTree.ChangedTreeEvent -= EmberTreeOnTreeDataAsync;
                 _emberTree.Dispose();
                 _emberTree = null;
                 EmberTreeState = false;
@@ -154,14 +153,35 @@ namespace LarkspurEmberWebProvider
         /// <summary>
         /// EmBER+ tree events on any changes, use this to persist data or similar.
         /// </summary>
-        private EventHandler EmberTree_OnTreeChangedAsync()
+        //private EventHandler EmberTree_OnTreeChangedAsync()
+        //{
+        //    return EventHandlerHelper.ThrottledEventHandler((sender, e) =>
+        //    {
+        //        // TODO: Persist tree
+        //        Debug.WriteLine("You should save the tree");
+        //    }, 200);
+        //}
+
+        /// <summary>
+        /// EmBER+ tree events on any changes, use this to persist data or similar.
+        /// </summary>
+        private void EmberTreeOnTreeDataAsync(string identifierPath, string message)
         {
-            return EventHandlerHelper.ThrottledEventHandler((sender, e) =>
-            {
-                // TODO: Persist tree
-                _websocketHub.Clients.All.ChangesInEmberTree("Hi!!!!!222");
-                Debug.WriteLine("You should save the tree");
-            }, 200);
+            // TODO: Persist tree
+            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
+            Debug.WriteLine("", message);
+        }
+
+        private void EmberTree_OnTreeChangedDataAsync(string identifierPath, bool message)
+        {
+            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
+            Debug.WriteLine("", message);
+        }
+
+        private void EmberTree_OnTreeChangedDataAsync(string identifierPath, int message)
+        {
+            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
+            Debug.WriteLine("", message);
         }
 
         /// <summary>

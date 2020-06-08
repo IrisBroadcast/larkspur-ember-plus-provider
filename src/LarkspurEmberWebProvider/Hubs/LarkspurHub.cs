@@ -45,7 +45,7 @@ namespace LarkspurEmberWebProvider.Hubs
         public override async Task OnConnectedAsync()
         {
             Console.WriteLine("user connected");
-            await Clients.All.ChangesInEmberTree("Connected...");
+            await Clients.All.ChangesInEmberTree("Connected...", true);
             //return Task.CompletedTask;
         }
 
@@ -57,7 +57,7 @@ namespace LarkspurEmberWebProvider.Hubs
         public async Task SetGpio()
         {
             EmberEngine.Engine_SetGpio();
-            await Clients.All.ChangesInEmberTree("ReceiveMessage");
+            await Clients.All.ChangesInEmberTree("ReceiveMessage", "");
         }
     }
 
@@ -66,6 +66,6 @@ namespace LarkspurEmberWebProvider.Hubs
     /// </summary>
     public interface ILarkspurHub
     {
-        Task ChangesInEmberTree(string message);
+        Task ChangesInEmberTree<T>(string path, T value);
     }
 }

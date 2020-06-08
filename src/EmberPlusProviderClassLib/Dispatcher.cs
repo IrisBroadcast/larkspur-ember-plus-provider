@@ -61,7 +61,18 @@ namespace EmberPlusProviderClassLib
         protected virtual void OnGlowRootReady(GlowRootReadyArgs oArgs)
         {
             if (GlowRootReady != null)
+            {
+                Debug.WriteLine("GlowRootIsReady {0}", oArgs.Root.ToString());
                 GlowRootReady(this, oArgs);
+            }
+            else
+            {
+                Debug.WriteLine("GlowRootIsNotReady Root.HasValidationErrors: {0}, Root.BerTypeNumber: {1}, Root.Count(children): {2}",
+                    oArgs.Root.HasValidationErrors,
+                    oArgs.Root.BerTypeNumber,
+                    oArgs.Root.Count);
+                return;
+            }
         }
         #endregion
 

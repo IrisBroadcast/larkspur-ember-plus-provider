@@ -66,25 +66,10 @@ namespace LarkspurEmberWebProvider
             //    host.Run();
             //}
 
-
             try
             {
-                //_emberEngine = new LarkspurEmberEngine();
-
                 CreateHostBuilder(args).Build().Run();
-
-                
-
-                //Console.WriteLine("Ruby Ember+ Dummy v{0}.{1} (GlowDTD v{2} - EmBER v{3})",
-                //    typeof(Program).Assembly.GetName().Version.Major,
-                //    typeof(Program).Assembly.GetName().Version.Minor,
-                //    EmberVersion.GlowDtdVersion,
-                //    EmberVersion.EmberEncodingVersion);
-                //Console.WriteLine("\nPress Enter to quit...");
-                //Console.ReadLine();
-
-
-
+                Console.WriteLine("Started Larkspur EmBER+ Web provider");
             }
             catch (Exception ex)
             {
