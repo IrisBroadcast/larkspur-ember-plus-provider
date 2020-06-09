@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EmberLib.Framing;
@@ -52,7 +53,7 @@ namespace EmberPlusProviderClassLib
         /// <summary>
         /// Trigger if any parameter in the EmBER+ tree is changed
         /// </summary>
-        public delegate void ChangedTreeUpdateEventHandler(string identifierPath, string value);
+        public delegate void ChangedTreeUpdateEventHandler(string identifierPath, dynamic value);
         public event ChangedTreeUpdateEventHandler ChangedTreeEvent;
 
         /// <summary>
@@ -119,12 +120,27 @@ namespace EmberPlusProviderClassLib
 
         private async Task OnHandleValuesChanged(ParameterBase parameter)
         {
-            var stringParameter = parameter as StringParameter;
-            var message = stringParameter?.Value;
-
-            //var identifierPath = parameter.Parent.IdentifierPath;
+            // Path
             var identifierPath = parameter.IdentifierPath;
-            ChangedTreeEvent?.Invoke(identifierPath, message);
+
+            // Check if it is string parameter
+            var stringParameter = parameter as StringParameter;
+            if (stringParameter != null)
+            {
+                ChangedTreeEvent?.Invoke(identifierPath, stringParameter.Value);
+            }
+
+            var boolParameter = parameter as BooleanParameter;
+            if (boolParameter != null)
+            {
+                ChangedTreeEvent?.Invoke(identifierPath, boolParameter.Value);
+            }
+
+            var intParameter = parameter as IntegerParameter;
+            if (intParameter != null)
+            {
+                ChangedTreeEvent?.Invoke(identifierPath, (int)intParameter.Value);
+            }
         }
 
         public void CreateIdentityNode(ValueType number, string product, string company, string version)

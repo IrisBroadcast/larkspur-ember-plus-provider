@@ -165,6 +165,13 @@ namespace LarkspurEmberWebProvider
         /// <summary>
         /// EmBER+ tree events on any changes, use this to persist data or similar.
         /// </summary>
+        private void EmberTreeOnTreeDataAsync(string identifierPath, dynamic message)
+        {
+            // TODO: Persist tree
+            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
+            Debug.WriteLine("", message);
+        }
+
         private void EmberTreeOnTreeDataAsync(string identifierPath, string message)
         {
             // TODO: Persist tree
