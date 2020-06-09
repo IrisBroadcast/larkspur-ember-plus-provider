@@ -172,25 +172,6 @@ namespace LarkspurEmberWebProvider
             Debug.WriteLine("", message);
         }
 
-        private void EmberTreeOnTreeDataAsync(string identifierPath, string message)
-        {
-            // TODO: Persist tree
-            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
-            Debug.WriteLine("", message);
-        }
-
-        private void EmberTree_OnTreeChangedDataAsync(string identifierPath, bool message)
-        {
-            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
-            Debug.WriteLine("", message);
-        }
-
-        private void EmberTree_OnTreeChangedDataAsync(string identifierPath, int message)
-        {
-            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
-            Debug.WriteLine("", message);
-        }
-
         /// <summary>
         /// Methods
         /// </summary>
