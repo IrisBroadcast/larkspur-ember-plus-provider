@@ -55,7 +55,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public void AddEnumParameter(ValueType emberTreeIdentifiers, Type enumType, bool isWriteable = false, string description = "")
         {
-            this.AddIntegerParameter((int)emberTreeIdentifiers, emberTreeIdentifiers.ToString(), Provider, 0, Enum.GetValues(enumType).Length, isWriteable, 0, description);
+            this.AddIntegerParameter((int)emberTreeIdentifiers, emberTreeIdentifiers.ToString(), Provider, isWriteable, 0, 0, Enum.GetValues(enumType).Length, description);
         }
 
         public void AddStringParameter(ValueType identifier, string value = "", bool isWriteable = false, string description = "")
@@ -68,9 +68,9 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             this.AddBooleanParameter((int)identifier, identifier.ToString(), Provider, isWriteable, value, description);
         }
 
-        public void AddIntegerParameter(ValueType identifier, bool isWriteable = false, int min = 0, int max = 255, int value = 0, string description = "")
+        public void AddIntegerParameter(ValueType identifier, bool isWriteable = false, int value = 0, int min = 0, int max = 255, string description = "")
         {
-            this.AddIntegerParameter((int)identifier, identifier.ToString(), Provider, min, max, isWriteable, value, description);
+            this.AddIntegerParameter((int)identifier, identifier.ToString(), Provider, isWriteable, value, min, max, description);
         }
 
         public override string ToString()

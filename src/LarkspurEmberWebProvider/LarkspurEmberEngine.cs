@@ -29,11 +29,13 @@
 #endregion copyright
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using EmberPlusProviderClassLib;
 using EmberPlusProviderClassLib.Helpers;
+using EmberPlusProviderClassLib.Model.Parameters;
 using LarkspurEmberWebProvider.Hubs;
 using NLog;
 using LarkspurEmberWebProvider.Models;
@@ -153,23 +155,32 @@ namespace LarkspurEmberWebProvider
         /// <summary>
         /// EmBER+ tree events on any changes, use this to persist data or similar.
         /// </summary>
-        //private EventHandler EmberTree_OnTreeChangedAsync()
-        //{
-        //    return EventHandlerHelper.ThrottledEventHandler((sender, e) =>
-        //    {
-        //        // TODO: Persist tree
-        //        Debug.WriteLine("You should save the tree");
-        //    }, 200);
-        //}
-
-        /// <summary>
-        /// EmBER+ tree events on any changes, use this to persist data or similar.
-        /// </summary>
         private void EmberTreeOnTreeDataAsync(string identifierPath, dynamic message)
         {
-            // TODO: Persist tree
             _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
             Debug.WriteLine("", message);
+
+            // TODO: Persist tree
+            //    return EventHandlerHelper.ThrottledEventHandler((sender, e) =>
+            //    {
+            //        // TODO: Persist tree
+            //        Debug.WriteLine("You should save the tree");
+            //    }, 200);
+        }
+
+        /// <summary>
+        /// Returns a representation of the current parameter state of the tree
+        /// </summary>
+        private void EmberTreeInitialState()
+        {
+            Dictionary<string, dynamic> obj = new Dictionary<string, dynamic>();
+            foreach (ParameterBase parameter in _emberTree.GetChildParameterElements())
+            {
+                log.Debug(parameter.IdentifierPath, parameter.GetValue().ToString());
+                obj.Add(parameter.IdentifierPath, parameter.GetValue());
+            }
+
+            _websocketHub.Clients.All.RawEmberTree(obj);
         }
 
         /// <summary>
@@ -184,10 +195,15 @@ namespace LarkspurEmberWebProvider
             });
         }
 
-        public void Engine_SetGpio()
+        public void RequestInitialState()
         {
-            Debug.WriteLine("Setting GPIO...");
+            EmberTreeInitialState();
         }
+
+        //public void Engine_SetGpio()
+        //{
+        //    Debug.WriteLine("Setting GPIO...");
+        //}
 
     }
 }

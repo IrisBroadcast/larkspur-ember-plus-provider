@@ -159,9 +159,9 @@ namespace EmberPlusProviderClassLib
         {
             // Here would be the p
             var node = AddChildNode(number);
-            node.AddBooleanParameter(1, "gpio", this, true);
-            node.AddStringParameter(2, "stringparam", this, true, "default");
-            node.AddStringParameter(3, "anotherstringparam", this, true, "default");
+            node.AddBooleanParameter(1, "booleanParam", this, true);
+            node.AddStringParameter(2, "stringParam", this, true, "default");
+            node.AddIntegerParameter(3, "integerParam", this, true, 125, 0, 255);
         }
 
         public EmberNode AddChildNode(ValueType identifier)
@@ -184,6 +184,11 @@ namespace EmberPlusProviderClassLib
         public IList<ParameterBase> GetWritableParameters()
         {
             return dispatcher.Root.GetWritableChildParameters().ToList();
+        }
+
+        public IList<ParameterBase> GetChildParameterElements()
+        {
+            return dispatcher.Root.GetAllChildParameters().ToList();
         }
 
         public void Dispose()

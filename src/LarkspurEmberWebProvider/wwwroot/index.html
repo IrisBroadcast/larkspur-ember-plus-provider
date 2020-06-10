@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style type="text/css">
+        body {
+            font-family: arial, sans-serif;
+            font-size: 10px;
+        }
+
+        .tree-state-list {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            font-size: 2em;
+        }
+
+        .tree-state-list li {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-gap: 2em;
+        }
+
+        .tree-path {
+            font-weight: normal;
+        }
+
+        .tree-value {
+            font-weight: bold;
+            color: #0bbc0b;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="socketStatus"></div>
+    <div class="form">
+        <input type="text" name="message" id="message" placeholder="Start with method and separate with |" /><br/>
+        <button id="sendMessageBtn">Send</button>
+    </div>
+    
+    <h2>Initial state</h2>
+    <div class="row">
+        <ul id="treeInitialList" class="tree-state-list"></ul>
+    </div>
+
+    <h2>Change log</h2>
+    <div class="row">
+        <ul id="treeChangesList" class="tree-state-list"></ul>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@3.1.3/dist/browser/signalr.min.js"></script>
+
+<script type="text/javascript">
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/larkspurHub").withAutomaticReconnect().build();
+
+    document.getElementById("socketStatus").textContent = "Disconnected";
+
+    connection.on("RawEmberTree", (tree) => {
+        console.log(tree);
+
+        let arr = Object.entries(tree).sort();
+        for (let i = 0; i < arr.length; i++) {
+            let li = buildListItem(arr[i][0], arr[i][1]);
+            li.id = "id_" + arr[i][0].split("/").join("").toLowerCase();
+            document.getElementById("treeInitialList").prepend(li);
+        }
+    });
+
+    connection.on("ChangesInEmberTree", (path, data) => {
+        console.log(path, data);
+        let li = buildListItem(path, data);
+        document.getElementById("treeChangesList").prepend(li);
+    });
+
+    function buildListItem(path, value) {
+        let li = document.createElement("LI");
+
+        let dv1 = document.createElement("div");
+        dv1.classList.add("tree-path");
+        dv1.textContent = path;
+        li.appendChild(dv1);
+
+        let dv2 = document.createElement("div");
+        dv2.classList.add("tree-value");
+        dv2.textContent = value;
+        li.appendChild(dv2);
+
+        return li;
+    }
+
+    connection.start().then(function () {
+        document.getElementById("socketStatus").textContent = "Connected";
+        connection.invoke("RequestInitialState").catch((err) => {
+            return console.error("Could not request initial state", err);
+        });
+    }).catch(function (err) {
+        document.getElementById("socketStatus").textContent = "Error " + err.toString();
+        return console.error(err.toString());
+    });
+
+    document.getElementById("sendMessageBtn").addEventListener("click", function (event) {
+        //var user = document.getElementById("userInput").value;
+        //var message = document.getElementById("messageInput").value;
+        //connection.invoke("SendMessage", user, message).catch(function (err) {
+        //    return console.error(err.toString());
+        //});
+        //event.preventDefault();
+    });
+
+</script>
+</body>
+</html>

@@ -29,9 +29,9 @@
 #endregion copyright
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
 
 namespace LarkspurEmberWebProvider.Hubs
 {
@@ -53,11 +53,16 @@ namespace LarkspurEmberWebProvider.Hubs
             return Task.CompletedTask;
         }
 
-        public async Task SetGpio()
+        public void RequestInitialState()
         {
-            EmberEngine.Engine_SetGpio();
-            //await Clients.All.ChangesInEmberTree("ReceiveMessage", "");
+            EmberEngine.RequestInitialState();
         }
+
+        //public async Task SetGpio()
+        //{
+        //    EmberEngine.Engine_SetGpio();
+        //    //await Clients.All.ChangesInEmberTree("ReceiveMessage", "");
+        //}
     }
 
     /// <summary>
@@ -67,5 +72,6 @@ namespace LarkspurEmberWebProvider.Hubs
     {
         Task ChangesInEmberTree<T>(string path, T value);
         Task SystemStatus(string message);
+        Task RawEmberTree(Dictionary<string, dynamic> obj);
     }
 }

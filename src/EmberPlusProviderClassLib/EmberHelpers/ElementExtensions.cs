@@ -93,6 +93,22 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return node.Children.Where(c => c.Identifier.ToLower() == name) as IEnumerable<Node>;
         }
 
+        public static IEnumerable<ParameterBase> GetAllChildParameters(this Element element)
+        {
+            // Return all parameters
+            var parameters = element.Children.Where(child => child is ParameterBase).OfType<ParameterBase>();
+            foreach (var parameter in parameters)
+            {
+                yield return parameter;
+            }
+
+            // Also return all the child parameters, recursive
+            foreach (var childParameter in element.Children.SelectMany(GetAllChildParameters))
+            {
+                yield return childParameter;
+            }
+        }
+
         public static IEnumerable<ParameterBase> GetWritableChildParameters(this Element element)
         {
             // Return all writable parameters

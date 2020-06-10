@@ -57,7 +57,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             new StringParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description};
         }
 
-        public static void AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, int min, int max, bool isWritable, int value = 0, string description = "")
+        public static void AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, int value = 0, int min = 0, int max = 255, string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
             new IntegerParameter(index, node, identifier, provider.dispatcher, min, max, isWritable) { Value = value, Description = description };

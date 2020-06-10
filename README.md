@@ -17,7 +17,6 @@ have your device or application to be a provider or consumer. This application
 is a provider with a web-API backbone. Make your custom nodes writable or just readable.
 
 ## Roadmap
-- Stability
 - Posibility to add functions
 - Adding the complete template idea, for structuring your custom EmBER+ tree without changing the "code".
 
@@ -29,8 +28,8 @@ EmberLib.net -- .NET implementation of the Ember+ Protocol
 Copyright (c) 2012-2019 Lawo GmbH (http://www.lawo.com).
 Distributed under the Boost Software License, Version 1.0.
 ```
-There has been some modifications to the source code for .NET adaption. And we
-are not running on the latest commit. There is something not working with the
+There has been some modifications to the source code for .NET Standard adaption.
+And we are not running on the latest commit. There is something not working with the
 101 communication implementation. The files in the library that are using an
 older version is marked in the header with 'XXX'.
 
