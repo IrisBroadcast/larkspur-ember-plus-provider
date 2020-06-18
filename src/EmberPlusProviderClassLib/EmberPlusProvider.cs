@@ -67,7 +67,7 @@ namespace EmberPlusProviderClassLib
             try
             {
                 int maxPackageLength = ProtocolParameters.MaximumPackageLength;
-                dispatcher = new Dispatcher { Root = Node.CreateRoot() };
+                dispatcher = new Dispatcher(); // { Root = Node.CreateRoot() };
                 ProviderRoot = new Node(1, dispatcher.Root, identifier) { Description = description };
                 listener = new GlowListener(port, maxPackageLength, dispatcher);
 

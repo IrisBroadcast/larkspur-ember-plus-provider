@@ -42,6 +42,11 @@ namespace EmberPlusProviderClassLib
     {
         public Element Root { get; set; }
 
+        public Dispatcher()
+        {
+            Root = Node.CreateRoot();
+        }
+
         #region GlowRootReady Event
         public class GlowRootReadyArgs : EventArgs
         {
