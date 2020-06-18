@@ -38,7 +38,7 @@ using System.Diagnostics;
 
 namespace EmberPlusProviderClassLib.EmberHelpers
 {
-    public static class NodeExtensions
+    public static class EmberNodeExtensions
     {
         public static EmberNode AddSubNode(this Node node, ValueType identifier, EmberPlusProvider provider)
         {
