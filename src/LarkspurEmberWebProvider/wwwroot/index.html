@@ -8,6 +8,17 @@
         body {
             font-family: arial, sans-serif;
             font-size: 10px;
+            background: #004dca;
+            color: #e7f5ff;
+        }
+
+        h1 {
+            font-size: 4em;
+            letter-spacing: -3px;
+        }
+
+        h2 {
+            font-size: 2em;
         }
 
         .tree-state-list {
@@ -22,7 +33,7 @@
             margin: 0;
             width: 100%;
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 2fr 1fr 0.5fr;
             grid-gap: 2em;
         }
 
@@ -35,16 +46,17 @@
             color: #0bbc0b;
         }
 
+        .tree-option {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
 <div class="container">
-    <div id="socketStatus"></div>
-    <div class="form">
-        <input type="text" name="message" id="message" placeholder="Start with method and separate with |" /><br/>
-        <button id="sendMessageBtn">Send</button>
-    </div>
-    
+    <h1>Socket status <span id="socketStatus"></span></h1>
+
     <h2>Initial state</h2>
     <div class="row">
         <ul id="treeInitialList" class="tree-state-list"></ul>
@@ -70,19 +82,22 @@
 
         let arr = Object.entries(tree).sort();
         for (let i = 0; i < arr.length; i++) {
-            let li = buildListItem(arr[i][0], arr[i][1]);
-            li.id = "id_" + arr[i][0].split("/").join("").toLowerCase();
+            console.log(`Item: '${arr[i][0]}' Value: '${arr[i][1].value}' NumericPath: '${arr[i][1].numericPath}' TypeOf: '${typeof(arr[i][1].value)}'`);
+            let li = buildListItem(arr[i][0], arr[i][1], "id_");
+            li.id = "id_row_" + makeIdFromPath(arr[i][0]);
             document.getElementById("treeInitialList").prepend(li);
         }
     });
 
-    connection.on("ChangesInEmberTree", (path, data) => {
-        console.log(path, data);
-        let li = buildListItem(path, data);
+    connection.on("ChangesInEmberTree", (path, data, pathNumeric) => {
+        console.log(path, data, pathNumeric);
+        let li = buildListItem(path, data, "idrow_");
         document.getElementById("treeChangesList").prepend(li);
+
+        document.getElementById("id_" + makeIdFromPath(path)).innerHTML = data.value;
     });
 
-    function buildListItem(path, value) {
+    function buildListItem(path, value, idPrefix) {
         let li = document.createElement("LI");
 
         let dv1 = document.createElement("div");
@@ -92,10 +107,36 @@
 
         let dv2 = document.createElement("div");
         dv2.classList.add("tree-value");
-        dv2.textContent = value;
+        dv2.textContent = value.value;
+        dv2.id = idPrefix + makeIdFromPath(path);
+        dv2.contentEditable = "true";
+        dv2.addEventListener("input", function(data) {
+            console.log("Content editable: ", data.srcElement.textContent);
+        }, false);
         li.appendChild(dv2);
 
+        let dv3 = document.createElement("a");
+        dv3.classList.add("tree-option");
+        dv3.textContent = "change";
+        if (typeof (value.value) === "string") {
+            let ofn = "emberChangeString(this,'"+path+"','"+value.value+"','"+value.numericPath+"')";
+            dv3.setAttribute("onclick", ofn);
+        }
+        if (typeof (value.value) === "number") {
+            let ofn = "emberChangeNumber(this,'"+path+"','"+value.value+"','"+value.numericPath+"')";
+            dv3.setAttribute("onclick", ofn);
+        }
+        if (typeof (value.value) === "boolean") {
+            let ofn = "emberChangeBoolean(this,'"+path+"','"+value.value+"','"+value.numericPath+"')";
+            dv3.setAttribute("onclick", ofn);
+        }
+        li.appendChild(dv3);
+
         return li;
+    }
+
+    function makeIdFromPath(path) {
+        return path.split("/").join("").toLowerCase();
     }
 
     connection.start().then(function () {
@@ -108,14 +149,77 @@
         return console.error(err.toString());
     });
 
-    document.getElementById("sendMessageBtn").addEventListener("click", function (event) {
-        //var user = document.getElementById("userInput").value;
-        //var message = document.getElementById("messageInput").value;
-        //connection.invoke("SendMessage", user, message).catch(function (err) {
-        //    return console.error(err.toString());
-        //});
-        //event.preventDefault();
-    });
+
+    function emberChangeString(element, path, value, numericPath) {
+        let change = window.prompt(`Change string`, value);
+        if (change !== null) {
+            connection.invoke("ChangeEmberStringParameter", numericPath, change).catch((err) => {
+                return console.error("Could not send change", err);
+            });
+        }
+    }
+
+    function emberChangeNumber(element, path, value, numericPath) {
+        let change = window.prompt(`Change number`, value);
+        if (change !== null) {
+            connection.invoke("ChangeEmberNumberParameter", numericPath, parseInt(change)).catch((err) => {
+                return console.error("Could not send change", err);
+            });
+        }
+    }
+
+    function emberChangeBoolean(element, path, value, numericPath) {
+        let change = window.prompt(`Change boolean`, value);
+        if (change !== null) {
+            let state = change == "true" ? true : false;
+            connection.invoke("ChangeEmberBooleanParameter", numericPath, state ).catch((err) => {
+                return console.error("Could not send change", err);
+            });
+        }
+    }
+
+    /* Custom Event */
+    class UserFeedbackEvent {
+        identifier = null;
+        active = false;
+        error = undefined;
+        timer = undefined;
+
+        constructor(identifier, active, error, timer) {
+            this.identifier = identifier || null;
+            this.active = active;
+            this.error = error;
+            this.timer = timer;
+        }
+
+        getMessage = () => {
+            let message = { detail: {} };
+            message.detail[this.identifier] = {};
+            if (typeof this.active !== "undefined") {
+                message.detail[this.identifier].active = this.active;
+            };
+            if (typeof this.error !== "undefined") {
+                message.detail[this.identifier].error = this.error;
+            };
+            if (typeof this.timer !== "undefined") {
+                message.detail[this.identifier].timer = this.timer;
+            };
+            return message;
+        }
+
+        create = (eventName) => {
+            return new CustomEvent(eventName, this.getMessage());
+        }
+    }
+
+    window.dispatchEvent( new UserFeedbackEvent("EmbertreeChanged", true, "Wooppie", 6000).create("embertree_changed") );
+
+    window.addEventListener("embertree_changedr",
+        function(event) {
+            if (!event) return;
+            let e = event.detail;
+            console.log("Received event:", e);
+        });
 
 </script>
 </body>

@@ -39,5 +39,4 @@ namespace LarkspurEmberWebProvider.Models
         Identity = 0,
         Utilities
     }
-
 }

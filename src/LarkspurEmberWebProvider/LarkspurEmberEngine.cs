@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EmberPlusProviderClassLib;
@@ -155,9 +156,13 @@ namespace LarkspurEmberWebProvider
         /// <summary>
         /// EmBER+ tree events on any changes, use this to persist data or similar.
         /// </summary>
-        private void EmberTreeOnTreeDataAsync(string identifierPath, dynamic message)
+        private void EmberTreeOnTreeDataAsync(string identifierPath, dynamic message, int[] path)
         {
-            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, message);
+            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, new
+            {
+                Value = message,
+                NumericPath = string.Join(".", path)
+            });
             Debug.WriteLine("", message);
 
             // TODO: Persist tree
@@ -177,7 +182,11 @@ namespace LarkspurEmberWebProvider
             foreach (ParameterBase parameter in _emberTree.GetChildParameterElements())
             {
                 log.Debug(parameter.IdentifierPath, parameter.GetValue().ToString());
-                obj.Add(parameter.IdentifierPath, parameter.GetValue());
+                obj.Add(parameter.IdentifierPath, new
+                {
+                    Value = parameter.GetValue(),
+                    NumericPath = string.Join(".", parameter.Path)
+                });
             }
 
             _websocketHub.Clients.All.RawEmberTree(obj);
@@ -198,6 +207,39 @@ namespace LarkspurEmberWebProvider
         public void RequestInitialState()
         {
             EmberTreeInitialState();
+        }
+
+        public void Set_StringParameter(string path, string value)
+        {
+            if (_emberTree != null)
+            {
+                string[] str_arr = path.Split(".").ToArray();
+                int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
+                var item = _emberTree.GetElement<StringParameter>(int_arr);
+                item.SetValue(value);
+            }
+        }
+        
+        public void Set_NumberParameter(string path, int value)
+        {
+            if (_emberTree != null)
+            {
+                string[] str_arr = path.Split(".").ToArray();
+                int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
+                var item = _emberTree.GetElement<IntegerParameter>(int_arr);
+                item.SetValue(value);
+            }
+        }
+
+        public void Set_BooleanParameter(string path, bool value)
+        {
+            if (_emberTree != null)
+            {
+                string[] str_arr = path.Split(".").ToArray();
+                int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
+                var item = _emberTree.GetElement<BooleanParameter>(int_arr);
+                item.SetValue(value);
+            }
         }
 
         //public void Engine_SetGpio()

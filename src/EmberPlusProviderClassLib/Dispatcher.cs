@@ -494,6 +494,38 @@ namespace EmberPlusProviderClassLib
             return glow;
         }
 
+        //GlowContainer IElementVisitor<ElementToGlowOptions, GlowContainer>.Visit(EnumParameter element, ElementToGlowOptions state)
+        //{
+        //    var glow = new GlowQualifiedParameter(element.Path);
+        //    var dirFieldMask = state.DirFieldMask;
+
+        //    if (dirFieldMask.HasBits(GlowFieldFlags.Identifier))
+        //        glow.Identifier = element.Identifier;
+
+        //    if (dirFieldMask.HasBits(GlowFieldFlags.Description)
+        //        && String.IsNullOrEmpty(element.Description) == false)
+        //        glow.Description = element.Description;
+
+        //    if (dirFieldMask.HasBits(GlowFieldFlags.Value))
+        //        glow.Value = new GlowValue(element.Value);
+
+        //    if (dirFieldMask == GlowFieldFlags.All)
+        //    {
+        //        glow.Minimum = new GlowMinMax(element.Minimum);
+        //        glow.Maximum = new GlowMinMax(element.Maximum);
+        //        glow.Enumeration = element.Enumeration;
+
+        //        if (element.IsWritable)
+        //            glow.Access = GlowAccess.ReadWrite;
+        //    }
+
+        //    if ((dirFieldMask == GlowFieldFlags.All)
+        //        && String.IsNullOrEmpty(element.SchemaIdentifier) == false)
+        //        glow.SchemaIdentifiers = element.SchemaIdentifier;
+
+        //    return glow;
+        //}
+
         GlowContainer Model.IElementVisitor<ElementToGlowOptions, GlowContainer>.Visit(RealParameter element, ElementToGlowOptions state)
         {
             var glow = new GlowQualifiedParameter(element.Path);

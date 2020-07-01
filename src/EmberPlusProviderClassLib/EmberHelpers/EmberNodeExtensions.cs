@@ -57,17 +57,26 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             new StringParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description};
         }
 
+        public static void AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
+        {
+            NodeAsserter.AssertIdentifierValid(identifier);
+            new BooleanParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description };
+        }
+
         public static void AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, int value = 0, int min = 0, int max = 255, string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
             new IntegerParameter(index, node, identifier, provider.dispatcher, min, max, isWritable) { Value = value, Description = description };
         }
 
-        public static void AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
-        {
-            NodeAsserter.AssertIdentifierValid(identifier);
-            new BooleanParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description };
-        }
+        //public static void AddEnumParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable = false, Type enumType = null, int value = 0, string description = "")
+        //{
+        //    NodeAsserter.AssertIdentifierValid(identifier);
+        //    if(enumType != null)
+        //    {
+        //        new EnumParameter(index, node, identifier, provider.dispatcher, 0, Enum.GetValues(enumType).Length, isWritable) { Value = value, Description = description };
+        //    }
+        //}
 
         public static void AddFunction(this Node node, ValueType identifier, Tuple<string, int>[] arguments, Tuple<string, int>[] result, Func<GlowValue[], Task<GlowValue[]>> coreFunc)
         {

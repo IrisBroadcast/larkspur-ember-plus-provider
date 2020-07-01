@@ -45,6 +45,7 @@ namespace EmberPlusProviderClassLib.Model
         TResult Visit(DynamicMatrix element, TState state);
         TResult Visit(OneToOneMatrix element, TState state);
         TResult Visit(Function element, TState state);
+        //TResult Visit(EnumParameter enumParameter, TState state);
     }
 
     class InlineElementVisitor : IElementVisitor<object, object>
@@ -83,6 +84,12 @@ namespace EmberPlusProviderClassLib.Model
             _onParameter?.Invoke(element);
             return null;
         }
+
+        //object IElementVisitor<object, object>.Visit(EnumParameter element, object state)
+        //{
+        //    _onParameter?.Invoke(element);
+        //    return null;
+        //}
 
         object IElementVisitor<object, object>.Visit(RealParameter element, object state)
         {

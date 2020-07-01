@@ -53,7 +53,7 @@ namespace EmberPlusProviderClassLib
         /// <summary>
         /// Trigger if any parameter in the EmBER+ tree is changed
         /// </summary>
-        public delegate void ChangedTreeUpdateEventHandler(string identifierPath, dynamic value);
+        public delegate void ChangedTreeUpdateEventHandler(string identifierPath, dynamic value, int[] path);
         public event ChangedTreeUpdateEventHandler ChangedTreeEvent;
 
         /// <summary>
@@ -127,19 +127,19 @@ namespace EmberPlusProviderClassLib
             var stringParameter = parameter as StringParameter;
             if (stringParameter != null)
             {
-                ChangedTreeEvent?.Invoke(identifierPath, stringParameter.Value);
+                ChangedTreeEvent?.Invoke(identifierPath, stringParameter.Value, stringParameter.Path);
             }
 
             var boolParameter = parameter as BooleanParameter;
             if (boolParameter != null)
             {
-                ChangedTreeEvent?.Invoke(identifierPath, boolParameter.Value);
+                ChangedTreeEvent?.Invoke(identifierPath, boolParameter.Value, boolParameter.Path);
             }
 
             var intParameter = parameter as IntegerParameter;
             if (intParameter != null)
             {
-                ChangedTreeEvent?.Invoke(identifierPath, (int)intParameter.Value);
+                ChangedTreeEvent?.Invoke(identifierPath, (int)intParameter.Value, intParameter.Path);
             }
         }
 
@@ -155,6 +155,14 @@ namespace EmberPlusProviderClassLib
             identity.AddStringParameter(3, "version", this, false, version);
         }
 
+        public enum MockEnumParameter
+        {
+            FirstEnum = 0,
+            SecondEnum,
+            ThirdEnum,
+            ForthEnum
+        }
+
         public void InitializeAllNodes(ValueType number)
         {
             // Here would be the p
@@ -162,6 +170,7 @@ namespace EmberPlusProviderClassLib
             node.AddBooleanParameter(1, "booleanParam", this, true);
             node.AddStringParameter(2, "stringParam", this, true, "default");
             node.AddIntegerParameter(3, "integerParam", this, true, 125, 0, 255);
+            //node.AddEnumParameter(4, "enumParameter", this, true, typeof(MockEnumParameter), 0, "");
         }
 
         public EmberNode AddChildNode(ValueType identifier)

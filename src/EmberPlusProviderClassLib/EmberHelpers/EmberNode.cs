@@ -53,11 +53,6 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return new EmberNode(index, this, identifier, Provider);
         }
 
-        public void AddEnumParameter(ValueType emberTreeIdentifiers, Type enumType, bool isWriteable = false, string description = "")
-        {
-            this.AddIntegerParameter((int)emberTreeIdentifiers, emberTreeIdentifiers.ToString(), Provider, isWriteable, 0, 0, Enum.GetValues(enumType).Length, description);
-        }
-
         public void AddStringParameter(ValueType identifier, string value = "", bool isWriteable = false, string description = "")
         {
             this.AddStringParameter((int)identifier, identifier.ToString(), Provider, isWriteable, value, description);
@@ -72,6 +67,11 @@ namespace EmberPlusProviderClassLib.EmberHelpers
         {
             this.AddIntegerParameter((int)identifier, identifier.ToString(), Provider, isWriteable, value, min, max, description);
         }
+
+        //public void AddEnumParameter(ValueType emberTreeIdentifiers, Type enumType, int value = 0, bool isWriteable = false, string description = "")
+        //{
+        //    this.AddIntegerParameter((int)emberTreeIdentifiers, emberTreeIdentifiers.ToString(), Provider, isWriteable, value, 0, Enum.GetValues(enumType).Length, description);
+        //}
 
         public override string ToString()
         {

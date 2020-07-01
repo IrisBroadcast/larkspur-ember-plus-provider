@@ -58,6 +58,21 @@ namespace LarkspurEmberWebProvider.Hubs
             EmberEngine.RequestInitialState();
         }
 
+        public void ChangeEmberStringParameter(string path, string value)
+        {
+            EmberEngine.Set_StringParameter(path, value);
+        }
+
+        public void ChangeEmberNumberParameter(string path, int value)
+        {
+            EmberEngine.Set_NumberParameter(path, value);
+        }
+
+        public void ChangeEmberBooleanParameter(string path, bool value)
+        {
+            EmberEngine.Set_BooleanParameter(path, value);
+        }
+
         //public async Task SetGpio()
         //{
         //    EmberEngine.Engine_SetGpio();
