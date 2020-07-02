@@ -18,6 +18,11 @@ Control and status is represented as nodes in a tree (XML-structure). You can
 have your device or application to be a provider or consumer. This application
 is a provider with a web-API backbone. Make your custom nodes writable or just readable.
 
+
+![Larkspur Ember Provider Web Endpoint Screenshot](readme/webpage-larkspurweb.png)
+
+![Larkspur Ember Provider View Screenshot](readme/larkspur-emberview.png)
+
 ## Roadmap
 - Posibility to add functions
 - Adding the complete template idea, for structuring your custom EmBER+ tree without changing the "code".
