@@ -212,14 +212,16 @@
         }
     }
 
-    window.dispatchEvent( new UserFeedbackEvent("EmbertreeChanged", true, "Wooppie", 6000).create("embertree_changed") );
+    
 
-    window.addEventListener("embertree_changedr",
+    window.addEventListener("embertree_changed",
         function(event) {
             if (!event) return;
             let e = event.detail;
             console.log("Received event:", e);
         });
+
+    window.dispatchEvent( new UserFeedbackEvent("EmbertreeChanged", true, "Wooppie", 6000).create("embertree_changed") );
 
 </script>
 </body>
