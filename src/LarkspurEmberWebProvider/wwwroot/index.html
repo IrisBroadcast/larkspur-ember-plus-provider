@@ -100,11 +100,13 @@
     function buildListItem(path, value, idPrefix) {
         let li = document.createElement("LI");
 
+        // Add path information
         let dv1 = document.createElement("div");
         dv1.classList.add("tree-path");
         dv1.textContent = path;
         li.appendChild(dv1);
 
+        // Add actual values
         let dv2 = document.createElement("div");
         dv2.classList.add("tree-value");
         dv2.textContent = value.value;
@@ -115,6 +117,7 @@
         }, false);
         li.appendChild(dv2);
 
+        // Add edit button
         let dv3 = document.createElement("a");
         dv3.classList.add("tree-option");
         dv3.textContent = "change";
@@ -211,8 +214,6 @@
             return new CustomEvent(eventName, this.getMessage());
         }
     }
-
-    
 
     window.addEventListener("embertree_changed",
         function(event) {
