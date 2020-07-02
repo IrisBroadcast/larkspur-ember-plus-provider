@@ -1,6 +1,6 @@
 ![.NET Core Multi Build](https://github.com/IrisBroadcast/LarkspurEmberPlusProvider/workflows/.NET%20Core%20Multi%20Build/badge.svg?branch=0.1)
 
-Larkspur Ember Web Provider
+Larkspur EmBER+ Plus Provider
 =========================================================
 
 * Web Site: https://www.irisbroadcast.org
