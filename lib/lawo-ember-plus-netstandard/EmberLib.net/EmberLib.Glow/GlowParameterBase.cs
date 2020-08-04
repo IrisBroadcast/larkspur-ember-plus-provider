@@ -109,11 +109,11 @@ namespace EmberLib.Glow
 
             if(access == null)
             {
-               // in glow version prior to 2.5, C-5 was a boolean value field "isWriteable".
+               // in glow version prior to 2.5, C-5 was a boolean value field "isWritable".
                // in glow versions 2.5+ this translates to an access of value "ReadWrite".
-               var isWriteable = GetContentValue<bool>(GlowTags.ParameterContents.Access);
+               var isWritable = GetContentValue<bool>(GlowTags.ParameterContents.Access);
 
-               if(isWriteable == true)
+               if(isWritable == true)
                   return GlowAccess.ReadWrite;
             }
 
@@ -410,7 +410,7 @@ namespace EmberLib.Glow
       /// Gets a value indicating wether the parameter can be written or not.
       /// Depends on the "access" field of GlowParameter.
       /// </summary>
-      public bool IsWriteable
+      public bool IsWritable
       {
          get
          {

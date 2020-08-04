@@ -37,6 +37,7 @@ namespace LarkspurEmberWebProvider.Models
         /// Adding some basic information about the source of the tree.
         /// </summary>
         Identity = 0,
-        Utilities
+        Utilities,
+        Matrix
     }
 }

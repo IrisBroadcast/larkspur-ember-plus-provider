@@ -53,24 +53,24 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return new EmberNode(index, this, identifier, Provider);
         }
 
-        public void AddStringParameter(ValueType identifier, string value = "", bool isWriteable = false, string description = "")
+        public void AddStringParameter(ValueType identifier, string value = "", bool isWritable = false, string description = "")
         {
-            this.AddStringParameter((int)identifier, identifier.ToString(), Provider, isWriteable, value, description);
+            this.AddStringParameter((int)identifier, identifier.ToString(), Provider, isWritable, value, description);
         }
 
-        public void AddBooleanParameter(ValueType identifier, bool isWriteable = false, bool value = false, string description = "")
+        public void AddBooleanParameter(ValueType identifier, bool isWritable = false, bool value = false, string description = "")
         {
-            this.AddBooleanParameter((int)identifier, identifier.ToString(), Provider, isWriteable, value, description);
+            this.AddBooleanParameter((int)identifier, identifier.ToString(), Provider, isWritable, value, description);
         }
 
-        public void AddIntegerParameter(ValueType identifier, bool isWriteable = false, int value = 0, int min = 0, int max = 255, string description = "")
+        public void AddIntegerParameter(ValueType identifier, bool isWritable = false, int value = 0, int min = 0, int max = 255, string description = "")
         {
-            this.AddIntegerParameter((int)identifier, identifier.ToString(), Provider, isWriteable, value, min, max, description);
+            this.AddIntegerParameter((int)identifier, identifier.ToString(), Provider, isWritable, value, min, max, description);
         }
 
-        //public void AddEnumParameter(ValueType emberTreeIdentifiers, Type enumType, int value = 0, bool isWriteable = false, string description = "")
+        //public void AddEnumParameter(ValueType emberTreeIdentifiers, Type enumType, int value = 0, bool isWritable = false, string description = "")
         //{
-        //    this.AddIntegerParameter((int)emberTreeIdentifiers, emberTreeIdentifiers.ToString(), Provider, isWriteable, value, 0, Enum.GetValues(enumType).Length, description);
+        //    this.AddIntegerParameter((int)emberTreeIdentifiers, emberTreeIdentifiers.ToString(), Provider, isWritable, value, 0, Enum.GetValues(enumType).Length, description);
         //}
 
         public override string ToString()

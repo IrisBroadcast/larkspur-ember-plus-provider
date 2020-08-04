@@ -33,7 +33,7 @@
 --       field.
 --     This is useful for parameters that do not specify a current value -
 --     e.g. "trigger" parameters or parameters that have write-only access.
---   - Changed Parameter.isWriteable (BOOLEAN) to an enumeration named
+--   - Changed Parameter.isWritable (BOOLEAN) to an enumeration named
 --     "access".
 --   - More options for Value - now also supports OCTET STRING and BOOLEAN
 --   - Introduces QualifiedParameter and QualifiedNode types

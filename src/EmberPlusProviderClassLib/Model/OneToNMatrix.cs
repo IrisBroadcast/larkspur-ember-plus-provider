@@ -50,14 +50,11 @@ namespace EmberPlusProviderClassLib.Model
 
         protected override bool ConnectOverride(Signal target, IEnumerable<Signal> sources, ConnectOperation operation)
         {
-            if (operation == ConnectOperation.Disconnect)
-            {
+            if(operation == ConnectOperation.Disconnect)
                 target.Connect(Enumerable.Empty<Signal>(), true);
-            }
             else
-            {
                 target.Connect(sources.Take(1), operation == ConnectOperation.Absolute);
-            }
+            
             return true;
         }
 

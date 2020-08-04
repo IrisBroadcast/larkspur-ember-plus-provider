@@ -48,6 +48,8 @@ namespace EmberPlusProviderClassLib.Model
 
         public int ConnectedSourcesCount => _connectedSources.Count;
 
+        public bool HasConnectedSources => _connectedSources.Count > 0;
+
         public void Connect(IEnumerable<Signal> sources, bool isAbsolute)
         {
             if (isAbsolute)

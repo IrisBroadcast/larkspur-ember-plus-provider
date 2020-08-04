@@ -90,6 +90,11 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             new Function(index, node, identifier, arguments, result, coreFunc);
         }
 
+        public static void AddMatrixOneToN(this Node node, ValueType identifier, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix")
+        {
+            AddMatrixOneToN(node, (int)identifier, identifier.ToString(), provider, description, matrixIdentifier);
+        }
+
         public static void AddMatrixOneToN(this Node node, int index, string identifier, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix" )
         {
             
@@ -136,7 +141,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
                sources,
                labels)
             {
-                SchemaIdentifier = "de.l-s-b.emberplus.samples.oneToN"
+                SchemaIdentifier = "de.l-s-b.emberplus.matrix.oneToN"
             };
 
             //foreach (var target in matrix.Targets)

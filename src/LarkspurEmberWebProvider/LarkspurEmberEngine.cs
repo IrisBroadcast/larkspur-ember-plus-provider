@@ -34,8 +34,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EmberLib.Glow;
 using EmberPlusProviderClassLib;
+using EmberPlusProviderClassLib.EmberHelpers;
 using EmberPlusProviderClassLib.Helpers;
+using EmberPlusProviderClassLib.Model;
 using EmberPlusProviderClassLib.Model.Parameters;
 using LarkspurEmberWebProvider.Hubs;
 using NLog;
@@ -111,7 +114,10 @@ namespace LarkspurEmberWebProvider
                         _configuration.EmberTree.Port,
                         _configuration.EmberTree.Identifier,
                         _configuration.EmberTree.Description);
+                    
                     _emberTree.ChangedTreeEvent += EmberTreeOnTreeDataAsync;
+                    _emberTree.MatrixConnectionEvent += ReceivedMatrixConnectionEvent;
+
                     _emberTree.CreateIdentityNode(
                         RootIdentifiers.Identity,
                         _configuration.EmberTree.Product,
@@ -122,6 +128,8 @@ namespace LarkspurEmberWebProvider
                     //var template = TemplateParserHelper.ParseTemplateJsonFile(_configuration.EmberTree.TreeTemplateFile);
                     _emberTree.InitializeAllNodes(RootIdentifiers.Utilities);
 
+                    _emberTree.ProviderRoot.AddMatrixOneToN(RootIdentifiers.Matrix, _emberTree, "", "GPO");
+                    
                     _emberTree.SetUpFinalListeners();
                     EmberTreeState = true;
                     log.Info("EmBER+ tree initiated");
@@ -171,6 +179,14 @@ namespace LarkspurEmberWebProvider
             //        // TODO: Persist tree
             //        Debug.WriteLine("You should save the tree");
             //    }, 200);
+        }
+
+        /// <summary>
+        /// EmBER+ tree matrix event changes
+        /// </summary>
+        private void ReceivedMatrixConnectionEvent(string identifierPath, GlowConnection connection, int[] path)
+        {
+            Debug.WriteLine($"Received Matrix Connection {identifierPath} , Operation: {(ConnectOperation)connection.Operation}, Target: {connection.Target}, First source: {connection.Sources.FirstOrDefault()}");
         }
 
         /// <summary>
