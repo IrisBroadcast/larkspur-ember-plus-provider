@@ -62,7 +62,7 @@ namespace EmberPlusProviderClassLib.Model
                     {
                         signal.Connect(Enumerable.Empty<Signal>(), true);
 
-                        Dispatcher.NotifyMatrixConnection(this, signal, null);
+                        Dispatcher.NotifyMatrixConnection(this, signal, null, ConnectOperation.Disconnect);
                     }
                 }
 

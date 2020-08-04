@@ -55,6 +55,8 @@ namespace EmberPlusProviderClassLib
         /// </summary>
         public delegate void ChangedTreeUpdateEventHandler(string identifierPath, dynamic value, int[] path);
         public event ChangedTreeUpdateEventHandler ChangedTreeEvent;
+        public delegate void MatrixConnectionEventHandler(string identifierPath, GlowConnection connection, int[] path);
+        public event MatrixConnectionEventHandler MatrixConnectionEvent;
 
         /// <summary>
         /// Creates the actual EmBER+ provider tree
@@ -124,6 +126,7 @@ namespace EmberPlusProviderClassLib
                                 foreach(GlowConnection connection in gqm.Connections)
                                 {
                                     Console.WriteLine($"Target {connection.Target}, Source {connection.Sources.FirstOrDefault()} ");
+                                    MatrixConnectionEvent?.Invoke(changedElement.IdentifierPath, connection, changedElement.Path); 
                                 }
                                 
                                 // TODO: Add event for saving tree
@@ -163,6 +166,7 @@ namespace EmberPlusProviderClassLib
                 ChangedTreeEvent?.Invoke(identifierPath, (int)intParameter.Value, intParameter.Path);
             }
         }
+
 
         public void CreateIdentityNode(ValueType number, string product, string company, string version)
         {

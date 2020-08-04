@@ -116,7 +116,7 @@ namespace EmberPlusProviderClassLib
             OnGlowRootReady(new GlowRootReadyArgs(glow, null));
         }
 
-        public void NotifyMatrixConnection(Matrix matrix, Signal target, object state)
+        public void NotifyMatrixConnection(Matrix matrix, Signal target, object state, ConnectOperation operation)
         {
             var glow = GlowRootElementCollection.CreateRoot();
             var glowMatrix = new GlowQualifiedMatrix(matrix.Path);
@@ -124,6 +124,7 @@ namespace EmberPlusProviderClassLib
             {
                 Sources = target.ConnectedSources.Select(signal => signal.Number).ToArray(),
                 Disposition = GlowConnectionDisposition.Modified,
+                Operation = (int)operation
             };
 
             glowMatrix.EnsureConnections().Insert(glowConnection);

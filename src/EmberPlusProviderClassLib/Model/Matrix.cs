@@ -100,7 +100,7 @@ namespace EmberPlusProviderClassLib.Model
             var result = ConnectOverride(target, sources, operation);
 
             if(result)
-                Dispatcher.NotifyMatrixConnection(this, target, state);
+                Dispatcher.NotifyMatrixConnection(this, target, state, operation);
 
             return result;
         }
