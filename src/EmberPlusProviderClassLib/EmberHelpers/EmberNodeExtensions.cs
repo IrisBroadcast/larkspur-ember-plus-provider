@@ -35,6 +35,7 @@ using EmberLib.Glow;
 using EmberPlusProviderClassLib.Model;
 using EmberPlusProviderClassLib.Model.Parameters;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace EmberPlusProviderClassLib.EmberHelpers
 {
@@ -87,6 +88,59 @@ namespace EmberPlusProviderClassLib.EmberHelpers
         {
             NodeAsserter.AssertIdentifierValid(identifier);
             new Function(index, node, identifier, arguments, result, coreFunc);
+        }
+
+        public static void AddMatrixOneToN(this Node node, int index, string identifier, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix" )
+        {
+            
+            var oneToN = new Node(index, node, identifier )
+            {
+                Description = description,
+            };
+
+            var labels = new Node(1, oneToN, "labels")
+            {
+                SchemaIdentifier = "de.l-s-b.emberplus.matrix.labels"
+            };
+
+            var targetLabels = new Node(1, labels, "targets");
+            var sourceLabels = new Node(2, labels, "sources");
+
+            var targets = new List<Signal>();
+            var sources = new List<Signal>();
+
+            for (int number = 0; number < 1; number++)
+            {
+                var sourceParameter = new StringParameter(number, sourceLabels, $"s-{number}", provider.dispatcher, isWritable: true)
+                {
+                    Value = $"Source-{number}"
+                };
+
+                sources.Add(new Signal(number, sourceParameter));
+            }
+            for (int number = 0; number < 20; number++)
+            {
+                var targetParameter = new StringParameter(number, targetLabels, $"t-{number}", provider.dispatcher, isWritable: true)
+                {
+                    Value = $"Target-{number}"
+                };
+
+                targets.Add(new Signal(number, targetParameter));
+            }
+            var matrix = new OneToNMatrix(
+               2,
+               oneToN,
+               matrixIdentifier,
+               provider.dispatcher,
+               targets,
+               sources,
+               labels)
+            {
+                SchemaIdentifier = "de.l-s-b.emberplus.samples.oneToN"
+            };
+
+            //foreach (var target in matrix.Targets)
+            //    matrix.Connect(target, new[] { matrix.GetSource(target.Number) }, null);
         }
 
         public static T GetParameter<T>(this Node node, int index) where T : ParameterBase

@@ -95,20 +95,41 @@ namespace EmberPlusProviderClassLib
             Console.WriteLine("OnEmberTreeChanged");
             try
             {
-                GlowQualifiedParameter glowParameter = e.Root.FirstOrDefault() as GlowQualifiedParameter;
-                ParameterBase changedParameter = GetElement<ParameterBase>(glowParameter?.Path);
-
-                if (glowParameter != null)
+                switch(e.Root.FirstOrDefault())
                 {
-                    Console.WriteLine($"EmberTree node {glowParameter.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
-                    Debug.WriteLine($"INFO {glowParameter.GetType().ToString()}");
-                    Task.Run(async () =>
-                    {
-                        Console.WriteLine($"EmberTree node {glowParameter.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
-                        await OnHandleValuesChanged(changedParameter);
+                    case GlowQualifiedParameter gqp:
+                        ParameterBase changedParameter = GetElement<ParameterBase>(gqp?.Path);
+                        if (gqp != null)
+                        {
+                            Console.WriteLine($"EmberTree node {gqp.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
+                            Debug.WriteLine($"INFO {gqp.GetType().ToString()}");
+                            Task.Run(async () =>
+                            {
+                                Console.WriteLine($"EmberTree node {gqp.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
+                                await OnHandleValuesChanged(changedParameter);
 
-                        // TODO: Add event for saving tree
-                    });
+                                // TODO: Add event for saving tree
+                            });
+                        }
+                        break;
+
+                    case GlowQualifiedMatrix gqm:
+                        Element changedElement = GetElement<Element>(gqm?.Path);
+                        if (gqm != null)
+                        {
+                            Console.WriteLine($"EmberTree node {changedElement?.Identifier} //IdentifierPath changed. {changedElement?.IdentifierPath}");
+                            Debug.WriteLine($"INFO {gqm.GetType().ToString()}");
+                            Task.Run(async () =>
+                            {
+                                foreach(GlowConnection connection in gqm.Connections)
+                                {
+                                    Console.WriteLine($"Target {connection.Target}, Source {connection.Sources.FirstOrDefault()} ");
+                                }
+                                
+                                // TODO: Add event for saving tree
+                            });
+                        }
+                        break;
                 }
             }
             catch (Exception ex)
