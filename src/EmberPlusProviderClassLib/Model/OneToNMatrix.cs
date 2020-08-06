@@ -42,9 +42,10 @@ namespace EmberPlusProviderClassLib.Model
                             IEnumerable<Signal> targets,
                             IEnumerable<Signal> sources,
                             Node labelsNode,
+                            bool? isWritable = true,
                             int? targetCount = null,
                             int? sourceCount = null)
-        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, targetCount, sourceCount)
+        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, targetCount, sourceCount)
         {
         }
 

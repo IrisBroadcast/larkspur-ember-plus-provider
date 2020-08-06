@@ -32,15 +32,15 @@ namespace EmberPlusProviderClassLib.Model.Parameters
 {
 	public abstract class ParameterBase : Element
 	{
-		public Dispatcher Dispatcher { get; }
-		public bool IsWritable { get; }
+        protected ParameterBase(int number, Element parent, string identifier, Dispatcher dispatcher, bool isWritable)
+            : base(number, parent, identifier)
+        {
+            Dispatcher = dispatcher;
+            IsWritable = isWritable;
+        }
 
-		protected ParameterBase(int number, Element parent, string identifier, Dispatcher dispatcher, bool isWritable)
-		: base(number, parent, identifier)
-		{
-			Dispatcher = dispatcher;
-			IsWritable = isWritable;
-		}
+        public Dispatcher Dispatcher { get; }
+		public bool IsWritable { get; }
 
 		public abstract object GetValue();
 

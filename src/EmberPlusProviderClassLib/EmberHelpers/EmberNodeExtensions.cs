@@ -90,12 +90,12 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             new Function(index, node, identifier, arguments, result, coreFunc);
         }
 
-        public static void AddMatrixOneToN(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix")
+        public static void AddMatrixOneToN(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
         {
-            AddMatrixOneToN(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, provider, description, matrixIdentifier);
+            AddMatrixOneToN(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, provider, isWritable, description, matrixIdentifier);
         }
 
-        public static void AddMatrixOneToN(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix" )
+        public static void AddMatrixOneToN(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
         {
             
             var oneToN = new Node(index, node, identifier )
@@ -139,7 +139,8 @@ namespace EmberPlusProviderClassLib.EmberHelpers
                provider.dispatcher,
                targets,
                sources,
-               labels)
+               labels,
+               isWritable)
             {
                 SchemaIdentifier = "de.l-s-b.emberplus.matrix.oneToN"
             };

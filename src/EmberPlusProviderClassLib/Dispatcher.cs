@@ -352,7 +352,7 @@ namespace EmberPlusProviderClassLib
                 IDynamicPathHandler dummy;
                 var matrix = _dispatcher.Root.ResolveChild(path, out dummy) as Matrix;
 
-                if (matrix != null)
+                if (matrix != null && matrix.IsWritable)
                 {
                     var connections = glow.Connections;
 

@@ -41,8 +41,9 @@ namespace EmberPlusProviderClassLib.Model
                             IEnumerable<Signal> targets,
                             IEnumerable<Signal> sources,
                             Node labelsNode,
-                            Node parametersNode)
-        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, null, null)
+                            Node parametersNode,
+                            bool? isWritable = true)
+        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, null, null)
         {
             ParametersNode = parametersNode;
         }

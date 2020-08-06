@@ -43,12 +43,15 @@ namespace EmberPlusProviderClassLib.Model
                         IEnumerable<Signal> targets,
                         IEnumerable<Signal> sources,
                         Node labelsNode,
+                        bool? isWritable,
                         int? targetCount,
                         int? sourceCount)
         : base(number, parent, identifier)
         {
             Dispatcher = dispatcher;
             LabelsNode = labelsNode;
+
+            IsWritable = isWritable ?? true;
 
             _targets = new List<Signal>(targets);
             _sources = new List<Signal>(sources);
@@ -59,6 +62,7 @@ namespace EmberPlusProviderClassLib.Model
 
         public Dispatcher Dispatcher { get; }
         public Node LabelsNode { get; }
+        public bool IsWritable { get; }
 
         public IEnumerable<Signal> Targets => _targets;
 
