@@ -128,7 +128,9 @@ namespace LarkspurEmberWebProvider
                     //var template = TemplateParserHelper.ParseTemplateJsonFile(_configuration.EmberTree.TreeTemplateFile);
                     _emberTree.InitializeAllNodes(RootIdentifiers.Utilities);
 
-                    _emberTree.ProviderRoot.AddMatrixOneToN(RootIdentifiers.Matrix, _emberTree, "", "GPO");
+                    string[] sourceNames = { "S1", "S2" };
+                    string[] targetNames = { "T1", "T2" };
+                    _emberTree.ProviderRoot.AddMatrixOneToN(RootIdentifiers.Matrix, sourceNames, targetNames, _emberTree, true, "", "GPO");
                     
                     _emberTree.SetUpFinalListeners();
                     EmberTreeState = true;
