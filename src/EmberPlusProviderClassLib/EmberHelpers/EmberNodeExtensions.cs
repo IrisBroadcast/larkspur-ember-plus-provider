@@ -55,7 +55,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
         public static void AddStringParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, string value = "", string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
-            new StringParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description};
+            new StringParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description };
         }
 
         public static void AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
@@ -90,12 +90,12 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             new Function(index, node, identifier, arguments, result, coreFunc);
         }
 
-        public static void AddMatrixOneToN(this Node node, ValueType identifier, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix")
+        public static void AddMatrixOneToN(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix")
         {
-            AddMatrixOneToN(node, (int)identifier, identifier.ToString(), provider, description, matrixIdentifier);
+            AddMatrixOneToN(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, provider, description, matrixIdentifier);
         }
 
-        public static void AddMatrixOneToN(this Node node, int index, string identifier, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix" )
+        public static void AddMatrixOneToN(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, string description = "", string matrixIdentifier = "matrix" )
         {
             
             var oneToN = new Node(index, node, identifier )
@@ -114,20 +114,20 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             var targets = new List<Signal>();
             var sources = new List<Signal>();
 
-            for (int number = 0; number < 1; number++)
+            for (int number = 0; number < sourceNames.Length; number++)
             {
                 var sourceParameter = new StringParameter(number, sourceLabels, $"s-{number}", provider.dispatcher, isWritable: true)
                 {
-                    Value = $"Source-{number}"
+                    Value = sourceNames[number]
                 };
 
                 sources.Add(new Signal(number, sourceParameter));
             }
-            for (int number = 0; number < 20; number++)
+            for (int number = 0; number < targetNames.Length; number++)
             {
                 var targetParameter = new StringParameter(number, targetLabels, $"t-{number}", provider.dispatcher, isWritable: true)
                 {
-                    Value = $"Target-{number}"
+                    Value = targetNames[number]
                 };
 
                 targets.Add(new Signal(number, targetParameter));
