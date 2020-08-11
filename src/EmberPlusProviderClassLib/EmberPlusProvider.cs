@@ -77,28 +77,26 @@ namespace EmberPlusProviderClassLib
                 ProviderRoot = new Node(1, dispatcher.Root, identifier) { Description = description };
                 listener = new GlowListener(port, maxPackageLength, dispatcher);
 
-                string message = $"Initializing the EmBER+ provider on port: {port}, identifier: {identifier}, description: {description}";
+                string message = $"EmberPlusProvider: Initializing the EmBER+ provider on port: {port}, identifier: {identifier}, description: {description}";
                 Console.WriteLine(message);
                 Debug.WriteLine(message);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Exception: EmberPlusProviderCLassLib / EmberPlusProvider: ", ex.Message);
+                Debug.WriteLine("EmberPlusProvider: Exception: ", ex.Message);
             }
         }
 
         public void SetUpFinalListeners()
         {
-            string message = $"Setting up final listeners";
-            Console.WriteLine(message);
-            Debug.WriteLine(message);
+            Console.WriteLine($"EmberPlusProvider: Setting up final listeners");
             dispatcher.GlowRootReady += OnEmberTreeChanged;
         }
 
         protected void OnEmberTreeChanged(object sender, Dispatcher.GlowRootReadyArgs e)
         {
             // Triggered on EmBER+ tree change
-            Console.WriteLine("OnEmberTreeChanged");
+            Console.WriteLine("EmberPlusProvider: OnEmberTreeChanged");
             try
             {
                 switch(e.Root.FirstOrDefault())
@@ -106,11 +104,9 @@ namespace EmberPlusProviderClassLib
                     case GlowQualifiedParameter gqp:
                         ParameterBase changedParameter = GetElement<ParameterBase>(gqp?.Path);
 
-                        Console.WriteLine($"EmberTree node {gqp.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
-                        Debug.WriteLine($"INFO {gqp.GetType().ToString()}");
+                        Console.WriteLine($"EmberPlusProvider: EmberTree node {gqp.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
                         Task.Run(async () =>
                         {
-                            Console.WriteLine($"EmberTree node {gqp.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
                             await OnHandleValuesChanged(changedParameter);
 
                             // TODO: Add event for saving tree
@@ -120,14 +116,11 @@ namespace EmberPlusProviderClassLib
                     case GlowQualifiedMatrix gqm:
                         Element changedElement = GetElement<Element>(gqm?.Path);
 
-                        Console.WriteLine($"EmberTree node {changedElement?.Identifier} //IdentifierPath changed. {changedElement?.IdentifierPath}");
-                        Debug.WriteLine($"INFO {gqm.GetType().ToString()}");
+                        Console.WriteLine($"EmberPlusProvider: EmberTree node {changedElement?.Identifier} //IdentifierPath changed. {changedElement?.IdentifierPath}");
                         Task.Run(async () =>
                         {
-                            //foreach (GlowConnection connection in gqm.Connections)
                             foreach (GlowConnection connection in gqm.TypedConnections)
                             {
-                                Console.WriteLine($"Target {connection.Target}, Source {connection.Sources.FirstOrDefault()} ");
                                 MatrixConnectionEvent?.Invoke(changedElement.IdentifierPath, connection, changedElement.Path); 
                             }
                             
@@ -138,7 +131,7 @@ namespace EmberPlusProviderClassLib
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR parsing tree");
+                Console.WriteLine("EmberPlusProvider: ERROR parsing tree");
                 Console.Write(ex);
             }
         }
