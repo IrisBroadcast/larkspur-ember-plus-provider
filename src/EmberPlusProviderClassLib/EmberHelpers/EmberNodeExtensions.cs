@@ -90,12 +90,12 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             new Function(index, node, identifier, arguments, result, coreFunc);
         }
 
-        public static void AddMatrixOneToN(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
+        public static OneToNMatrix AddMatrixOneToN(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
         {
-            AddMatrixOneToN(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, provider, isWritable, description, matrixIdentifier);
+            return AddMatrixOneToN(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, provider, isWritable, description, matrixIdentifier);
         }
 
-        public static void AddMatrixOneToN(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
+        public static OneToNMatrix AddMatrixOneToN(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
         {
             
             var oneToN = new Node(index, node, identifier )
@@ -147,6 +147,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
             //foreach (var target in matrix.Targets)
             //    matrix.Connect(target, new[] { matrix.GetSource(target.Number) }, null);
+            return matrix;
         }
 
         public static T GetParameter<T>(this Node node, int index) where T : ParameterBase
