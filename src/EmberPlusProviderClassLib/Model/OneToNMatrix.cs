@@ -58,12 +58,21 @@ namespace EmberPlusProviderClassLib.Model
             }
             else if (operation == ConnectOperation.Connect)
             {
-                target.Connect(sources.Take(1), false);
+                target.Connect(sources.Take(1), true);
             }
             else if (target.HasConnectedSources)
             {
-                target.Disconnect(sources.Take(1));
-                //target.Connect(Enumerable.Empty<Signal>(), operation == ConnectOperation.Absolute);
+                if (target.ConnectedSources.Contains(sources.FirstOrDefault()))
+                {
+                    //target.Connect(Enumerable.Empty<Signal>(), operation == ConnectOperation.Absolute);
+                    target.Disconnect(sources);
+                    operation = ConnectOperation.Disconnect;
+                }
+                else
+                {
+                    target.Connect(sources.Take(1), operation == ConnectOperation.Absolute);
+                    operation = ConnectOperation.Connect;
+                }
             }
             else
             {

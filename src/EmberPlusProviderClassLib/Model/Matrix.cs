@@ -119,6 +119,9 @@ namespace EmberPlusProviderClassLib.Model
 
     public enum ConnectOperation
     {
+        /// <summary>
+        /// Absolute makes sure that there is only the sources selected that gets connected.
+        /// </summary>
         Absolute,
         Connect,
         Disconnect,

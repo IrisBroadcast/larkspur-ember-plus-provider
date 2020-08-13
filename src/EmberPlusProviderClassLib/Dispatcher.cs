@@ -591,7 +591,7 @@ namespace EmberPlusProviderClassLib
             var glow = MatrixToGlow(element, state);
 
             glow.AddressingMode = GlowMatrixAddressingMode.Linear;
-            glow.MatrixType = GlowMatrixType.NToN;
+            glow.MatrixType = GlowMatrixType.OneToN;
 
             if (state.DirFieldMask == GlowFieldFlags.All
                 && state.IsCompleteMatrixEnquired)
