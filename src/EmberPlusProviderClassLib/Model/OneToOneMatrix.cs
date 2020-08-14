@@ -45,7 +45,7 @@ namespace EmberPlusProviderClassLib.Model
                                 bool? isWritable = true,
                                 int? targetCount = null,
                                 int? sourceCount = null)
-        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, targetCount, sourceCount)
+        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, targetCount, sourceCount, null)
         {
         }
 

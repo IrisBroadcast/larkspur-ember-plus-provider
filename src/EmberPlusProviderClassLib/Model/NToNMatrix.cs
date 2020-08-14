@@ -43,7 +43,7 @@ namespace EmberPlusProviderClassLib.Model
                             Node labelsNode,
                             Node parametersNode,
                             bool? isWritable = true)
-        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, null, null)
+        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, null, null, null)
         {
             ParametersNode = parametersNode;
         }

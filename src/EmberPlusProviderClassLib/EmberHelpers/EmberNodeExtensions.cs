@@ -105,7 +105,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
             var labels = new Node(1, oneToN, "labels")
             {
-                SchemaIdentifier = "de.l-s-b.emberplus.matrix.labels"
+                //SchemaIdentifier = "de.l-s-b.emberplus.matrix.labels"
             };
 
             var targetLabels = new Node(1, labels, "targets");
@@ -142,11 +142,87 @@ namespace EmberPlusProviderClassLib.EmberHelpers
                labels,
                isWritable)
             {
-                SchemaIdentifier = "de.l-s-b.emberplus.matrix.oneToN"
+                //SchemaIdentifier = "de.l-s-b.emberplus.matrix.oneToN"
             };
 
             //foreach (var target in matrix.Targets)
             //    matrix.Connect(target, new[] { matrix.GetSource(target.Number) }, null);
+            return matrix;
+        }
+
+
+        public static OneToNBlindSourceMatrix AddMatrixOneToNBlindSource(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, string blindSourceName, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
+        {
+            return AddMatrixOneToNBlindSource(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, blindSourceName, provider, isWritable, description, matrixIdentifier);
+        }
+
+        public static OneToNBlindSourceMatrix AddMatrixOneToNBlindSource(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, string blindSourceName, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
+        {
+
+            var oneToN = new Node(index, node, identifier)
+            {
+                Description = description,
+            };
+
+            var labels = new Node(1, oneToN, "labels")
+            {
+                //SchemaIdentifier = "de.l-s-b.emberplus.matrix.labels"
+            };
+
+            var targetLabels = new Node(1, labels, "targets");
+            var sourceLabels = new Node(2, labels, "sources");
+
+            var targets = new List<Signal>();
+            var sources = new List<Signal>();
+
+            // Add sources
+            for (int number = 0; number < sourceNames.Length; number++)
+            {
+                var sourceParameter = new StringParameter(number, sourceLabels, $"s-{number}", provider.dispatcher, isWritable: true)
+                {
+                    Value = sourceNames[number]
+                };
+
+                sources.Add(new Signal(number, sourceParameter));
+            }
+
+            // Add the blind source
+            var blindIndex = sources.Count();
+            var blindParameter = new StringParameter(blindIndex, sourceLabels, $"b-{blindIndex}", provider.dispatcher, isWritable: true)
+            {
+                Value = blindSourceName
+            };
+            var blindSignal = new Signal(blindIndex, blindParameter);
+            sources.Add(blindSignal);
+
+            // Add targets
+            for (int number = 0; number < targetNames.Length; number++)
+            {
+                var targetParameter = new StringParameter(number, targetLabels, $"t-{number}", provider.dispatcher, isWritable: true)
+                {
+                    Value = targetNames[number]
+                };
+
+                targets.Add(new Signal(number, targetParameter));
+            }
+
+            var matrix = new OneToNBlindSourceMatrix(
+               2,
+               oneToN,
+               matrixIdentifier,
+               provider.dispatcher,
+               targets,
+               sources,
+               blindSignal,
+               labels,
+               isWritable)
+            {
+                //SchemaIdentifier = "de.l-s-b.emberplus.matrix.oneToN"
+            };
+
+            foreach (var target in matrix.Targets)
+                matrix.Connect(target, new[] { matrix.BlindSource }, null);
+
             return matrix;
         }
 

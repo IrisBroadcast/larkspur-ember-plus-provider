@@ -44,7 +44,7 @@ namespace EmberPlusProviderClassLib.Model
                             IEnumerable<Signal> sources,
                             Node labelsNode,
                             bool? isWritable = true)
-        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, null, null)
+        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, null, null, null)
         {
             _xpointParameters = new Dictionary<int,Dictionary<int,XpointParams>>();
             foreach(var target in targets)

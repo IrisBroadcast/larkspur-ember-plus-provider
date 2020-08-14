@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EmberPlusProviderClassLib.Model.Parameters;
 
 namespace EmberPlusProviderClassLib.Model
 {
@@ -45,7 +46,8 @@ namespace EmberPlusProviderClassLib.Model
                         Node labelsNode,
                         bool? isWritable,
                         int? targetCount,
-                        int? sourceCount)
+                        int? sourceCount,
+                        Signal? blindSource)
         : base(number, parent, identifier)
         {
             Dispatcher = dispatcher;
@@ -58,6 +60,8 @@ namespace EmberPlusProviderClassLib.Model
 
             _targetCount = targetCount ?? _targets.Count;
             _sourceCount = sourceCount ?? _sources.Count;
+
+            _blindSource = blindSource ?? null;
         }
 
         public Dispatcher Dispatcher { get; }
@@ -67,6 +71,8 @@ namespace EmberPlusProviderClassLib.Model
         public IEnumerable<Signal> Targets => _targets;
 
         public IEnumerable<Signal> Sources => _sources;
+
+        public Signal? BlindSource => _blindSource;
 
         public int TargetCount => _targetCount;
 
@@ -97,14 +103,22 @@ namespace EmberPlusProviderClassLib.Model
 
             if(firstSource != null)
             {
-                if(_sources.Contains(firstSource) == false)
+                if(_sources.Contains(firstSource) == false) {
                     throw new ArgumentException("sources");
+                }
             }
 
             var result = ConnectOverride(target, sources, operation);
 
-            if(result)
-                Dispatcher.NotifyMatrixConnection(this, target, state, operation);
+            if (result)
+            {
+                // absolute(0)
+                // Default.This value indicates that the list of source numbers in the sources property of
+                // the encompassing Connection object is absolute.When a provider tallies a connection, it
+                // must always use this value, independent of the value of the disposition property.
+                // Dispatcher.NotifyMatrixConnection(this, target, state, operation);
+                Dispatcher.NotifyMatrixConnection(this, target, state, ConnectOperation.Absolute);
+            }
 
             return result;
         }
@@ -113,6 +127,7 @@ namespace EmberPlusProviderClassLib.Model
 
         readonly List<Signal> _targets;
         readonly List<Signal> _sources;
+        readonly Signal? _blindSource;
         readonly int _targetCount;
         readonly int _sourceCount;
     }
@@ -121,6 +136,9 @@ namespace EmberPlusProviderClassLib.Model
     {
         /// <summary>
         /// Absolute makes sure that there is only the sources selected that gets connected.
+        /// Default. This value indicates that the list of source numbers in the sources property of
+        /// the encompassing Connection object is absolute. When a provider tallies a connection, it
+        /// must always use this value, independent of the value of the disposition property.
         /// </summary>
         Absolute,
         Connect,

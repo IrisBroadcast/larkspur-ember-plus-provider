@@ -218,8 +218,9 @@ namespace EmberPlusProviderClassLib
                                 else
                                 {
                                     var glowChildren = from element in node.Children select _dispatcher.ElementToGlow(element, options);
-                                    foreach (var glowChild in glowChildren)
+                                    foreach (var glowChild in glowChildren) {
                                         glowRoot.Insert(glowChild);
+                                    }
                                 }
                             },
                             parameter =>
@@ -592,6 +593,38 @@ namespace EmberPlusProviderClassLib
 
             glow.AddressingMode = GlowMatrixAddressingMode.Linear;
             glow.MatrixType = GlowMatrixType.OneToN;
+            glow.MaximumConnectsPerTarget = 1;
+
+            if (state.DirFieldMask == GlowFieldFlags.All
+                && state.IsCompleteMatrixEnquired)
+            {
+                if (element.Targets.Count() < element.TargetCount)
+                {
+                    var glowTargets = glow.EnsureTargets();
+
+                    foreach (var signal in element.Targets)
+                        glowTargets.Insert(new GlowTarget(signal.Number));
+                }
+
+                if (element.Sources.Count() < element.SourceCount)
+                {
+                    var glowSources = glow.EnsureSources();
+
+                    foreach (var signal in element.Sources)
+                        glowSources.Insert(new GlowSource(signal.Number));
+                }
+            }
+
+            return glow;
+        }
+
+        GlowContainer IElementVisitor<ElementToGlowOptions, GlowContainer>.Visit(OneToNBlindSourceMatrix element, ElementToGlowOptions state)
+        {
+            var glow = MatrixToGlow(element, state);
+
+            glow.AddressingMode = GlowMatrixAddressingMode.Linear;
+            glow.MatrixType = GlowMatrixType.OneToN;
+            glow.MaximumConnectsPerTarget = 1;
 
             if (state.DirFieldMask == GlowFieldFlags.All
                 && state.IsCompleteMatrixEnquired)

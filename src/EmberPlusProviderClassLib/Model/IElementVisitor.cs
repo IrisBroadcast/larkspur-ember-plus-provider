@@ -41,6 +41,7 @@ namespace EmberPlusProviderClassLib.Model
         TResult Visit(RealParameter element, TState state);
         TResult Visit(StringParameter element, TState state);
         TResult Visit(OneToNMatrix element, TState state);
+        TResult Visit(OneToNBlindSourceMatrix element, TState state);
         TResult Visit(NToNMatrix element, TState state);
         TResult Visit(DynamicMatrix element, TState state);
         TResult Visit(OneToOneMatrix element, TState state);
@@ -104,6 +105,12 @@ namespace EmberPlusProviderClassLib.Model
         }
 
         object IElementVisitor<object, object>.Visit(OneToNMatrix element, object state)
+        {
+            _onMatrix?.Invoke(element);
+            return null;
+        }
+
+        object IElementVisitor<object, object>.Visit(OneToNBlindSourceMatrix element, object state)
         {
             _onMatrix?.Invoke(element);
             return null;

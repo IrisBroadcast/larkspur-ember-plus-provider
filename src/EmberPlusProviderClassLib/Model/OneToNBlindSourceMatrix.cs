@@ -34,19 +34,25 @@ using System.Linq;
 
 namespace EmberPlusProviderClassLib.Model
 {
-    public class OneToNMatrix : Matrix
+    /// <summary>
+    /// The One To N Blind Source Matrix implements a blind source. The blind source is being used as
+    /// a default source to be connected to a target. The blind source is connected when any other source
+    /// is disconnected from the target. 
+    /// </summary>
+    public class OneToNBlindSourceMatrix : Matrix
     {
-        public OneToNMatrix(int number,
+        public OneToNBlindSourceMatrix(int number,
                             Element parent,
                             string identifier,
                             Dispatcher dispatcher,
                             IEnumerable<Signal> targets,
                             IEnumerable<Signal> sources,
+                            Signal blindSource,
                             Node labelsNode,
                             bool? isWritable = true,
                             int? targetCount = null,
                             int? sourceCount = null)
-        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, targetCount, sourceCount, null)
+        : base(number, parent, identifier, dispatcher, targets, sources, labelsNode, isWritable, targetCount, sourceCount, blindSource)
         {
         }
 
@@ -54,7 +60,7 @@ namespace EmberPlusProviderClassLib.Model
         {
             if (operation == ConnectOperation.Disconnect)
             {
-                target.Disconnect(sources);
+                target.Connect(new Signal[] { BlindSource }, true);
             }
             else if (operation == ConnectOperation.Connect)
             {
@@ -64,16 +70,22 @@ namespace EmberPlusProviderClassLib.Model
             {
                 if (target.ConnectedSources.Contains(sources.FirstOrDefault()))
                 {
-                    target.Disconnect(sources);
+                    // Trying to connect a connected source
+                    target.Connect(sources.Take(1), true);
+                }
+                else if(sources.Any() == false)
+                {
+                    // On "right-click disconnect" in ember viewer sources might be empty
+                    target.Connect(new Signal[] { BlindSource }, true);
                 }
                 else
                 {
-                    target.Connect(sources.Take(1), operation == ConnectOperation.Absolute);
+                    target.Connect(sources.Take(1), true);
                 }
             }
             else
             {
-                target.Connect(sources.Take(1), operation == ConnectOperation.Absolute);
+                target.Connect(sources.Take(1), true);
             }
 
             return true;
