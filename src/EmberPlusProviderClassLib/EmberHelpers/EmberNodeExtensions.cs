@@ -52,16 +52,31 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return new EmberNode(index, node, identifier, provider);
         }
 
+        public static void AddStringParameter(this Node node, ValueType identifier, EmberPlusProvider provider, bool isWritable, string value = "", string description = "")
+        {
+            AddStringParameter(node, (int)identifier, identifier.ToString(), provider, isWritable, value, description);
+        }
+
         public static void AddStringParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, string value = "", string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
             new StringParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description };
         }
 
+        public static void AddBooleanParameter(this Node node, ValueType identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
+        {
+            AddBooleanParameter(node, (int)identifier, identifier.ToString(), provider, isWritable, value, description);
+        }
+
         public static void AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
         {
             NodeAsserter.AssertIdentifierValid(identifier);
             new BooleanParameter(index, node, identifier, provider.dispatcher, isWritable) { Value = value, Description = description };
+        }
+
+        public static void AddIntegerParameter(this Node node, ValueType identifier, EmberPlusProvider provider, bool isWritable, int value = 0, int min = 0, int max = 255, string description = "")
+        {
+            AddIntegerParameter(node, (int) identifier, identifier.ToString(), provider, isWritable, value, min, max, description);
         }
 
         public static void AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, int value = 0, int min = 0, int max = 255, string description = "")
@@ -232,6 +247,9 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return node.ResolveChild(new int[] { index }, out dph) as T;
         }
 
+        /// <summary>
+        /// Updates a string value node
+        /// </summary>
         public static bool UpdateParameter(this Node node, ValueType identifier, string newValue)
         {
             return node.UpdateParameter((int)identifier, newValue);
@@ -249,6 +267,9 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return false;
         }
 
+        /// <summary>
+        /// Updates a boolean value node
+        /// </summary>
         public static bool UpdateParameter(this Node node, ValueType identifier, bool newValue)
         {
             return node.UpdateParameter((int)identifier, newValue);
@@ -266,6 +287,9 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             return false;
         }
 
+        /// <summary>
+        /// Updates a long value node
+        /// </summary>
         public static bool UpdateParameter(this Node node, ValueType identifier, long newValue)
         {
             return node.UpdateParameter((int)identifier, newValue);

@@ -181,16 +181,6 @@ namespace EmberPlusProviderClassLib
             ForthEnum
         }
 
-        public void InitializeAllNodes(ValueType number)
-        {
-            // Here would be the p
-            var node = AddChildNode(number);
-            node.AddBooleanParameter(1, "booleanParam", this, true);
-            node.AddStringParameter(2, "stringParam", this, true, "default");
-            node.AddIntegerParameter(3, "integerParam", this, true, 125, 0, 255);
-            //node.AddEnumParameter(4, "enumParameter", this, true, typeof(MockEnumParameter), 0, "");
-        }
-
         public EmberNode AddChildNode(ValueType identifier)
         {
             return ProviderRoot.AddSubNode(identifier, this);

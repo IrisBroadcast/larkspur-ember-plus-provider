@@ -56,6 +56,7 @@ namespace LarkspurEmberWebProvider
 
         public static LarkspurEmberEngine SingleInstance { get; private set; }
         private static EmberPlusProvider _emberTree;
+        private static OneToNBlindSourceMatrix _gpioMatrix;
 
         private readonly ApplicationSettings _configuration;
         private readonly IServiceProvider _serviceProvider;
@@ -126,11 +127,18 @@ namespace LarkspurEmberWebProvider
 
                     // Get saved values
                     //var template = TemplateParserHelper.ParseTemplateJsonFile(_configuration.EmberTree.TreeTemplateFile);
-                    _emberTree.InitializeAllNodes(RootIdentifiers.Utilities);
 
-                    string[] sourceNames = { "S1", "S2" };
+                    // Initialize the actual tree
+                    var node = _emberTree.AddChildNode(RootIdentifiers.Utilities);
+                    node.AddBooleanParameter(1, "booleanParam", _emberTree, true, true);
+                    node.AddStringParameter(2, "stringParam", _emberTree, true, "default");
+                    node.AddIntegerParameter(3, "integerParam", _emberTree, true, 125, 0, 255);
+                    //node.AddEnumParameter(4, "enumParameter", this, true, typeof(MockEnumParameter), 0, "");
+
+                    string[] sourceNames = { "On" };
+                    string blindSourceName = "Off";
                     string[] targetNames = { "T1", "T2" };
-                    _emberTree.ProviderRoot.AddMatrixOneToN(RootIdentifiers.Matrix, sourceNames, targetNames, _emberTree, true, "", "GPO");
+                    _gpioMatrix = _emberTree.ProviderRoot.AddMatrixOneToNBlindSource(RootIdentifiers.Matrix, sourceNames, targetNames, blindSourceName, _emberTree, true, "", "GPO");
                     
                     _emberTree.SetUpFinalListeners();
                     EmberTreeState = true;
@@ -189,6 +197,8 @@ namespace LarkspurEmberWebProvider
         private void ReceivedMatrixConnectionEvent(string identifierPath, GlowConnection connection, int[] path)
         {
             Debug.WriteLine($"Received Matrix Connection {identifierPath} , Operation: {(ConnectOperation)connection.Operation}, Target: {connection.Target}, First source: {connection.Sources.FirstOrDefault()}");
+
+
         }
 
         /// <summary>
