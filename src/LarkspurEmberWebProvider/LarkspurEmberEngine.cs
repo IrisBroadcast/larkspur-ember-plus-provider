@@ -222,7 +222,8 @@ namespace LarkspurEmberWebProvider
                 tree.Add(parameter.IdentifierPath, new ClientTreeParameterViewModel() {
                     Type = parameter.GetType().ToString(),
                     Value = parameter.GetValue(),
-                    NumericPath = string.Join(".", parameter.Path)
+                    NumericPath = string.Join(".", parameter.Path),
+                    IsWritable = parameter.IsWritable
                 });
             }
 
@@ -288,7 +289,9 @@ namespace LarkspurEmberWebProvider
                 string[] str_arr = path.Split(".").ToArray();
                 int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
                 var item = _emberTree.GetElement<StringParameter>(int_arr);
-                item.SetValue(value);
+                if (item.IsWritable) {
+                    item.SetValue(value);
+                }
             }
         }
         
@@ -299,7 +302,10 @@ namespace LarkspurEmberWebProvider
                 string[] str_arr = path.Split(".").ToArray();
                 int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
                 var item = _emberTree.GetElement<IntegerParameter>(int_arr);
-                item.SetValue(value);
+                if (item.IsWritable)
+                {
+                    item.SetValue(value);
+                }
             }
         }
 
@@ -310,15 +316,12 @@ namespace LarkspurEmberWebProvider
                 string[] str_arr = path.Split(".").ToArray();
                 int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
                 var item = _emberTree.GetElement<BooleanParameter>(int_arr);
-                item.SetValue(value);
+                if (item.IsWritable)
+                {
+                    item.SetValue(value);
+                }
             }
         }
-
-        //public void Engine_SetGpio()
-        //{
-        //    Debug.WriteLine("Setting GPIO...");
-        //}
-
     }
 
     public class ClientTreeParameterViewModel
@@ -326,6 +329,7 @@ namespace LarkspurEmberWebProvider
         public string Type { get; set; }
         public dynamic Value { get; set; }
         public string NumericPath { get; set; }
+        public bool IsWritable { get; set; }
     }
 
     public class ClientMatrixViewModel

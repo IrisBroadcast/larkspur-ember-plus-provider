@@ -72,12 +72,6 @@ namespace LarkspurEmberWebProvider.Hubs
         {
             EmberEngine.Set_BooleanParameter(path, value);
         }
-
-        //public async Task SetGpio()
-        //{
-        //    EmberEngine.Engine_SetGpio();
-        //    //await Clients.All.ChangesInEmberTree("ReceiveMessage", "");
-        //}
     }
 
     /// <summary>
