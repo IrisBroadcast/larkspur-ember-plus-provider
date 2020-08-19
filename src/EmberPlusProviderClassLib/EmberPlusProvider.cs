@@ -208,6 +208,11 @@ namespace EmberPlusProviderClassLib
             return dispatcher.Root.GetAllChildParameters().ToList();
         }
 
+        public IList<Matrix> GetChildMatrixElements()
+        {
+            return dispatcher.Root.GetAllChildMatrices().ToList();
+        }
+
         public void Dispose()
         {
             if (listener != null)

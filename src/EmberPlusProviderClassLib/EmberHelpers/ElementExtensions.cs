@@ -109,6 +109,22 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             }
         }
 
+        public static IEnumerable<Matrix> GetAllChildMatrices(this Element element)
+        {
+            // Return all parameters
+            var matrices = element.Children.Where(child => child is Matrix).OfType<Matrix>();
+            foreach (var matrix in matrices)
+            {
+                yield return matrix;
+            }
+
+            // Also return all the child matrices, recursive
+            foreach (var childMatrix in element.Children.SelectMany(GetAllChildMatrices))
+            {
+                yield return childMatrix;
+            }
+        }
+
         public static IEnumerable<ParameterBase> GetWritableChildParameters(this Element element)
         {
             // Return all writable parameters
