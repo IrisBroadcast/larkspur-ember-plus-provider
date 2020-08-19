@@ -85,8 +85,10 @@ namespace LarkspurEmberWebProvider.Hubs
     /// </summary>
     public interface ILarkspurHub
     {
-        Task ChangesInEmberTree<T>(string path, T value);
         Task SystemStatus(string message);
-        Task RawEmberTree(Dictionary<string, dynamic> obj);
+        Task InitialEmberTree(Dictionary<string, ClientTreeParameterViewModel> obj);
+        Task ChangesInEmberTree(string path, ClientTreeParameterViewModel obj);
+        Task InitialEmberTreeMatrix(Dictionary<string, ClientMatrixViewModel> obj);
+        Task ChangesInEmberTreeMatrix(string path, ClientMatrixSignalViewModel obj);
     }
 }

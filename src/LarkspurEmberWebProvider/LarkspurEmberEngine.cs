@@ -176,12 +176,13 @@ namespace LarkspurEmberWebProvider
         /// </summary>
         private void EmberTreeOnTreeDataAsync(string identifierPath, dynamic message, int[] path)
         {
-            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, new
+            _websocketHub.Clients.All.ChangesInEmberTree(identifierPath, new ClientTreeParameterViewModel()
             {
+                Type = message.GetType().ToString(),
                 Value = message,
                 NumericPath = string.Join(".", path)
             });
-            Debug.WriteLine("", message);
+            Debug.WriteLine("Ember ", message);
 
             // TODO: Persist tree
             //    return EventHandlerHelper.ThrottledEventHandler((sender, e) =>
@@ -198,7 +199,14 @@ namespace LarkspurEmberWebProvider
         {
             Debug.WriteLine($"Received Matrix Connection {identifierPath} , Operation: {(ConnectOperation)connection.Operation}, Target: {connection.Target}, First source: {connection.Sources.FirstOrDefault()}");
 
+            // Send out the target state
+            var signal = new ClientMatrixSignalViewModel()
+            {
+                Index = connection.Target,
+                ConnectedSources = connection.Sources
+            };
 
+            _websocketHub.Clients.All.ChangesInEmberTreeMatrix(identifierPath, signal);
         }
 
         /// <summary>
@@ -206,18 +214,54 @@ namespace LarkspurEmberWebProvider
         /// </summary>
         private void EmberTreeInitialState()
         {
-            Dictionary<string, dynamic> obj = new Dictionary<string, dynamic>();
+            // Send out the regular nodes/parameters from the tree
+            Dictionary<string, ClientTreeParameterViewModel> tree = new Dictionary<string, ClientTreeParameterViewModel>();
             foreach (ParameterBase parameter in _emberTree.GetChildParameterElements())
             {
                 log.Debug(parameter.IdentifierPath, parameter.GetValue().ToString());
-                obj.Add(parameter.IdentifierPath, new
-                {
+                tree.Add(parameter.IdentifierPath, new ClientTreeParameterViewModel() {
+                    Type = parameter.GetType().ToString(),
                     Value = parameter.GetValue(),
                     NumericPath = string.Join(".", parameter.Path)
                 });
             }
 
-            _websocketHub.Clients.All.RawEmberTree(obj);
+            _websocketHub.Clients.All.InitialEmberTree(tree);
+
+            // Send out the matrices in the tree
+            Dictionary<string, ClientMatrixViewModel> matrices = new Dictionary<string, ClientMatrixViewModel>();
+            foreach (Matrix treeMatrix in _emberTree.GetChildMatrixElements())
+            {
+                ClientMatrixViewModel matrix = new ClientMatrixViewModel()
+                {
+                    NumericPath = string.Join(".", treeMatrix.Path)
+                };
+
+                foreach (var target in treeMatrix.Targets)
+                {
+                    var item = new ClientMatrixSignalViewModel()
+                    {
+                        Index = target.Number,
+                        Name = target.LabelParameter.Value,
+                        ConnectedSources = target.ConnectedSources.Select((x) => x.Number).ToArray()
+                    };
+                    matrix.Targets.Add(item);
+                }
+
+                foreach (var source in treeMatrix.Sources)
+                {
+                    var item = new ClientMatrixSignalViewModel()
+                    {
+                        Index = source.Number,
+                        Name = source.LabelParameter.Value
+                    };
+                    matrix.Sources.Add(item);
+                }
+
+                matrices.Add(treeMatrix.IdentifierPath, matrix);
+            }
+
+            _websocketHub.Clients.All.InitialEmberTreeMatrix(matrices);
         }
 
         /// <summary>
@@ -275,5 +319,26 @@ namespace LarkspurEmberWebProvider
         //    Debug.WriteLine("Setting GPIO...");
         //}
 
+    }
+
+    public class ClientTreeParameterViewModel
+    {
+        public string Type { get; set; }
+        public dynamic Value { get; set; }
+        public string NumericPath { get; set; }
+    }
+
+    public class ClientMatrixViewModel
+    {
+        public string NumericPath { get; set; }
+        public List<ClientMatrixSignalViewModel> Targets { get; set; } = new List<ClientMatrixSignalViewModel>();
+        public List<ClientMatrixSignalViewModel> Sources { get; set; } = new List<ClientMatrixSignalViewModel>();
+    }
+
+    public class ClientMatrixSignalViewModel
+    {
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public int[] ConnectedSources { get; set; }
     }
 }
