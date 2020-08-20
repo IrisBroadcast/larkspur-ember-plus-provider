@@ -181,9 +181,14 @@ namespace EmberPlusProviderClassLib
             ForthEnum
         }
 
+        public EmberNode AddChildNode(int index, string identifier)
+        {
+            return ProviderRoot.AddSubNode(index, identifier, this);
+        }
+
         public EmberNode AddChildNode(ValueType identifier)
         {
-            return ProviderRoot.AddSubNode(identifier, this);
+            return ProviderRoot.AddSubNode((int)identifier, identifier.ToString(), this);
         }
 
         public T GetElement<T>(int[] path) where T : class
