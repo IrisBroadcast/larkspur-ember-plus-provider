@@ -53,13 +53,6 @@ namespace LarkspurEmberWebProvider
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Get general settings from appsettings.json
-            services.Configure<ApplicationSettings>(Configuration.GetSection("App"));
-
-            // Get web server settings
-            services.Configure<KestrelServerOptions>(
-                Configuration.GetSection("Kestrel"));
-
             // Add websockets
             services.AddSignalR();
 

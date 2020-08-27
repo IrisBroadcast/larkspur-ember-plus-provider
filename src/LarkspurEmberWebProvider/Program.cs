@@ -31,6 +31,7 @@
 using System;
 using EmberPlusProviderClassLib;
 using System.Diagnostics;
+using LarkspurEmberWebProvider.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -81,6 +82,9 @@ namespace LarkspurEmberWebProvider
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
+                    // Get general settings from appsettings.json
+                    services.Configure<ApplicationSettings>(context.Configuration.GetSection("App"));
+
                     // Set up the EmBER+ provider
                     services.AddHostedService<LarkspurEmberEngine>();
 
