@@ -235,8 +235,8 @@ namespace EmberPlusProviderClassLib.EmberHelpers
                 //SchemaIdentifier = "de.l-s-b.emberplus.matrix.oneToN"
             };
 
-            foreach (var target in matrix.Targets)
-                matrix.Connect(target, new[] { matrix.BlindSource }, null);
+            //foreach (var target in matrix.Targets)
+            //    matrix.Connect(target, new[] { matrix.BlindSource }, null);
 
             return matrix;
         }
