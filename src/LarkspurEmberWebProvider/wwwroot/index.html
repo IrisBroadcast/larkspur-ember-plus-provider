@@ -347,7 +347,7 @@
     }
 
     function treeIdFromStringPath(path) {
-        return path.split("/").join("").toLowerCase();
+        return path.split("/").join("").toLowerCase().replace(" ", "");
     }
 
     function emberChangeString(element, path, value, numericPath) {
