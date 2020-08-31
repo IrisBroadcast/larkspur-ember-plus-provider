@@ -190,25 +190,26 @@ namespace EmberPlusProviderClassLib.EmberHelpers
             var targets = new List<Signal>();
             var sources = new List<Signal>();
 
-            // Add sources
-            for (int number = 0; number < sourceNames.Length; number++)
-            {
-                var sourceParameter = new StringParameter(number, sourceLabels, $"s-{number}", provider.dispatcher, isWritable: true)
-                {
-                    Value = sourceNames[number]
-                };
-
-                sources.Add(new Signal(number, sourceParameter));
-            }
-
             // Add the blind source
-            var blindIndex = sources.Count();
+            var blindIndex = 0;
             var blindParameter = new StringParameter(blindIndex, sourceLabels, $"b-{blindIndex}", provider.dispatcher, isWritable: true)
             {
                 Value = blindSourceName
             };
             var blindSignal = new Signal(blindIndex, blindParameter);
             sources.Add(blindSignal);
+
+            // Add sources
+            var numberOfBlinds = sources.Count();
+            for (int number = 0; number < sourceNames.Length; number++)
+            {
+                var sourceParameter = new StringParameter(number + numberOfBlinds, sourceLabels, $"s-{number}", provider.dispatcher, isWritable: true)
+                {
+                    Value = sourceNames[number]
+                };
+
+                sources.Add(new Signal(number + numberOfBlinds, sourceParameter));
+            }
 
             // Add targets
             for (int number = 0; number < targetNames.Length; number++)

@@ -58,34 +58,47 @@ namespace EmberPlusProviderClassLib.Model
 
         protected override bool ConnectOverride(Signal target, IEnumerable<Signal> sources, ConnectOperation operation)
         {
-            if (operation == ConnectOperation.Disconnect)
+            switch (operation)
             {
-                target.Connect(new Signal[] { BlindSource }, true);
-            }
-            else if (operation == ConnectOperation.Connect)
-            {
-                target.Connect(sources.Take(1), true);
-            }
-            else if (target.HasConnectedSources)
-            {
-                if (target.ConnectedSources.Contains(sources.FirstOrDefault()))
-                {
-                    // Trying to connect a connected source
+                case ConnectOperation.Absolute:
+
+                    // Get the first source that should be "On"
+                    var onSource = sources.Take(1);
+                    if (target.HasConnectedSources)
+                    {
+                        if (target.ConnectedSources.Contains(onSource.FirstOrDefault()))
+                        {
+                            // Trying to connect a connected source
+                            target.Connect(onSource, true);
+                        }
+                        else if (sources.Any() == false)
+                        {
+                            // On "right-click disconnect" in ember viewer sources might be empty
+                            target.Connect(new Signal[] { BlindSource }, true);
+                        }
+                        else
+                        {
+                            target.Connect(onSource, true);
+                        }
+                    }
+                    else
+                    {
+                        target.Connect(onSource, true);
+                    }
+                    break;
+  
+                case ConnectOperation.Connect:
+
+                    // Connect to the first source that is not blind
                     target.Connect(sources.Take(1), true);
-                }
-                else if(sources.Any() == false)
-                {
-                    // On "right-click disconnect" in ember viewer sources might be empty
+                    break;
+
+                case ConnectOperation.Disconnect:
                     target.Connect(new Signal[] { BlindSource }, true);
-                }
-                else
-                {
-                    target.Connect(sources.Take(1), true);
-                }
-            }
-            else
-            {
-                target.Connect(sources.Take(1), true);
+                    break;
+
+                default:
+                    break;
             }
 
             return true;
