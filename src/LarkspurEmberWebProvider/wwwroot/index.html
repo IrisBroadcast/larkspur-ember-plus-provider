@@ -135,6 +135,7 @@
 
     connection.on("InitialEmberTree", (tree) => {
         console.log(tree);
+        document.getElementById("treeInitialList").innerHTML = "";
         let arr = Object.entries(tree).sort();
         for (let i = 0; i < arr.length; i++) {
             //console.log(`Item: '${arr[i][0]}' Value: '${arr[i][1].value}' TypeOf: '${typeof(arr[i][1].value)}'`);
@@ -152,6 +153,7 @@
 
     connection.on("InitialEmberTreeMatrix", (matrices) => {
         console.log(matrices);
+        document.getElementById("matrixInitialTable").innerHTML = "";
         let arr = Object.entries(matrices).sort();
         for (let i = 0; i < arr.length; i++) {
             let frag = buildMatrixView(arr[i][0], arr[i][1]);
