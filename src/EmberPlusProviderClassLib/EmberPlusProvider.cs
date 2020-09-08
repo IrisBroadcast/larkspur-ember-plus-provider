@@ -142,20 +142,17 @@ namespace EmberPlusProviderClassLib
             var identifierPath = parameter.IdentifierPath;
 
             // Check if it is string parameter
-            var stringParameter = parameter as StringParameter;
-            if (stringParameter != null)
+            if (parameter is StringParameter stringParameter)
             {
                 ChangedTreeEvent?.Invoke(identifierPath, stringParameter.Value, stringParameter.Path);
             }
 
-            var boolParameter = parameter as BooleanParameter;
-            if (boolParameter != null)
+            if (parameter is BooleanParameter boolParameter)
             {
                 ChangedTreeEvent?.Invoke(identifierPath, boolParameter.Value, boolParameter.Path);
             }
 
-            var intParameter = parameter as IntegerParameter;
-            if (intParameter != null)
+            if (parameter is IntegerParameter intParameter)
             {
                 ChangedTreeEvent?.Invoke(identifierPath, (int)intParameter.Value, intParameter.Path);
             }
