@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
@@ -134,7 +133,7 @@
     setSocketConnectionFeedback("Disconnected");
 
     connection.on("InitialEmberTree", (tree) => {
-        console.log(tree);
+        console.log(`Event 'InitialEmberTree': ${JSON.stringify(tree)}`);
         document.getElementById("treeInitialList").innerHTML = "";
         let arr = Object.entries(tree).sort();
         for (let i = 0; i < arr.length; i++) {
@@ -146,13 +145,13 @@
     });
 
     connection.on("ChangesInEmberTree", (path, data) => {
-        console.log(path, data);
+        console.log(`Event 'ChangesInEmberTree', path:${JSON.stringify(path)}, data:${JSON.stringify(data)}`);
         let li = buildTreeListItem(path, data, "idrow_");
         document.getElementById("id_" + treeIdFromStringPath(path)).innerHTML = data.value;
     });
 
     connection.on("InitialEmberTreeMatrix", (matrices) => {
-        console.log(matrices);
+        console.log(`Event 'InitialEmberTreeMatrix': ${JSON.stringify(matrices)}`);
         document.getElementById("matrixInitialTable").innerHTML = "";
         let arr = Object.entries(matrices).sort();
         for (let i = 0; i < arr.length; i++) {
@@ -162,8 +161,7 @@
     });
 
     connection.on("ChangesInEmberTreeMatrix", (path, target) => {
-        console.log(path, target);
-
+        console.log(`Event 'ChangesInEmberTree', path:${JSON.stringify(path)}, target:${JSON.stringify(target)}`);
         // Remove all connected sources from target
         var targetBoxes = document.querySelectorAll(".matrix-signal_" + target.index + "_" + treeIdFromStringPath(path));
         targetBoxes.forEach(function(item) {
@@ -237,7 +235,6 @@
             for (let i = 0; i < targets.length; i++) {
                 // Target label
                 let div = document.createElement("DIV");
-                // div.id = "id_target_" + targets[i].index;
                 div.textContent = targets[i].name;
                 div.classList.add("matrix-label--target");
                 box.append(div);
@@ -247,7 +244,6 @@
             for (let i = 0; i < sources.length; i++) {
                 // Source label
                 let div = document.createElement("DIV");
-                // div.id = "id_source_" + sources[i].index;
                 div.textContent = sources[i].name;
                 div.classList.add("matrix-label--source");
                 box.append(div);
@@ -330,7 +326,7 @@
                 let linkfalse = document.createElement("A");
                 linkfalse.classList.add("tree-option");
                 linkfalse.textContent = "false";
-                let ofnfalse = "emberChangeBoolean(this,'"+path+"','false','"+data.numericPath+"')";
+                let ofnfalse = `emberChangeBoolean(this,'${path}','false','${data.numericPath}')`;
                 linkfalse.setAttribute("onclick", ofnfalse);
                 dvo.append(linkfalse);
             }
@@ -378,47 +374,47 @@
     }
 
     /* Custom Event */
-    class UserFeedbackEvent {
-        identifier = null;
-        active = false;
-        error = undefined;
-        timer = undefined;
+    // class UserFeedbackEvent {
+    //     identifier = null;
+    //     active = false;
+    //     error = undefined;
+    //     timer = undefined;
 
-        constructor(identifier, active, error, timer) {
-            this.identifier = identifier || null;
-            this.active = active;
-            this.error = error;
-            this.timer = timer;
-        }
+    //     constructor(identifier, active, error, timer) {
+    //         this.identifier = identifier || null;
+    //         this.active = active;
+    //         this.error = error;
+    //         this.timer = timer;
+    //     }
 
-        getMessage = () => {
-            let message = { detail: {} };
-            message.detail[this.identifier] = {};
-            if (typeof this.active !== "undefined") {
-                message.detail[this.identifier].active = this.active;
-            };
-            if (typeof this.error !== "undefined") {
-                message.detail[this.identifier].error = this.error;
-            };
-            if (typeof this.timer !== "undefined") {
-                message.detail[this.identifier].timer = this.timer;
-            };
-            return message;
-        }
+    //     getMessage = () => {
+    //         let message = { detail: {} };
+    //         message.detail[this.identifier] = {};
+    //         if (typeof this.active !== "undefined") {
+    //             message.detail[this.identifier].active = this.active;
+    //         };
+    //         if (typeof this.error !== "undefined") {
+    //             message.detail[this.identifier].error = this.error;
+    //         };
+    //         if (typeof this.timer !== "undefined") {
+    //             message.detail[this.identifier].timer = this.timer;
+    //         };
+    //         return message;
+    //     }
 
-        create = (eventName) => {
-            return new CustomEvent(eventName, this.getMessage());
-        }
-    }
+    //     create = (eventName) => {
+    //         return new CustomEvent(eventName, this.getMessage());
+    //     }
+    // }
 
-    window.addEventListener("embertree_changed",
-        function(event) {
-            if (!event) return;
-            let e = event.detail;
-            console.log("Received event:", e);
-        });
+    // window.addEventListener("embertree_changed",
+    //     function(event) {
+    //         if (!event) return;
+    //         let e = event.detail;
+    //         console.log("Received event:", e);
+    //     });
 
-    window.dispatchEvent( new UserFeedbackEvent("EmbertreeChanged", true, "Wooppie", 6000).create("embertree_changed") );
+    // window.dispatchEvent( new UserFeedbackEvent("EmbertreeChanged", true, "Wooppie", 6000).create("embertree_changed") );
 
 </script>
 </body>
