@@ -43,7 +43,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
     {
         public static EmberNode AddSubNode(this Node node, ValueType identifier, EmberPlusProvider provider)
         {
-            return AddSubNode(node, (int)identifier, identifier.ToString(), provider);
+            return AddSubNode(node, (int)identifier, identifier.ToString().Replace("_", " "), provider);
         }
 
         public static EmberNode AddSubNode(this Node node, int index, string identifier, EmberPlusProvider provider)
@@ -54,7 +54,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public static StringParameter AddStringParameter(this Node node, ValueType identifier, EmberPlusProvider provider, bool isWritable, string value = "", string description = "")
         {
-            return AddStringParameter(node, (int)identifier, identifier.ToString(), provider, isWritable, value, description);
+            return AddStringParameter(node, (int)identifier, identifier.ToString().Replace("_", " "), provider, isWritable, value, description);
         }
 
         public static StringParameter AddStringParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, string value = "", string description = "")
@@ -65,7 +65,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public static BooleanParameter AddBooleanParameter(this Node node, ValueType identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
         {
-            return AddBooleanParameter(node, (int)identifier, identifier.ToString(), provider, isWritable, value, description);
+            return AddBooleanParameter(node, (int)identifier, identifier.ToString().Replace("_", " "), provider, isWritable, value, description);
         }
 
         public static BooleanParameter AddBooleanParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, bool value = false, string description = "")
@@ -76,7 +76,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public static IntegerParameter AddIntegerParameter(this Node node, ValueType identifier, EmberPlusProvider provider, bool isWritable, int value = 0, int min = 0, int max = 255, string description = "")
         {
-            return AddIntegerParameter(node, (int) identifier, identifier.ToString(), provider, isWritable, value, min, max, description);
+            return AddIntegerParameter(node, (int) identifier, identifier.ToString().Replace("_", " "), provider, isWritable, value, min, max, description);
         }
 
         public static IntegerParameter AddIntegerParameter(this Node node, int index, string identifier, EmberPlusProvider provider, bool isWritable, int value = 0, int min = 0, int max = 255, string description = "")
@@ -96,7 +96,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public static void AddFunction(this Node node, ValueType identifier, Tuple<string, int>[] arguments, Tuple<string, int>[] result, Func<GlowValue[], Task<GlowValue[]>> coreFunc)
         {
-            node.AddFunction((int)identifier, identifier.ToString(), arguments, result, coreFunc);
+            node.AddFunction((int)identifier, identifier.ToString().Replace("_", " "), arguments, result, coreFunc);
         }
 
         public static void AddFunction(this Node node, int index, string identifier, Tuple<string, int>[] arguments, Tuple<string, int>[] result, Func<GlowValue[], Task<GlowValue[]>> coreFunc)
@@ -107,7 +107,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public static OneToNMatrix AddMatrixOneToN(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
         {
-            return AddMatrixOneToN(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, provider, isWritable, description, matrixIdentifier);
+            return AddMatrixOneToN(node, (int)identifier, identifier.ToString().Replace("_", " "), sourceNames, targetNames, provider, isWritable, description, matrixIdentifier);
         }
 
         public static OneToNMatrix AddMatrixOneToN(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
@@ -168,7 +168,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public static OneToNBlindSourceMatrix AddMatrixOneToNBlindSource(this Node node, ValueType identifier, string[] sourceNames, string[] targetNames, string blindSourceName, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")
         {
-            return AddMatrixOneToNBlindSource(node, (int)identifier, identifier.ToString(), sourceNames, targetNames, blindSourceName, provider, isWritable, description, matrixIdentifier);
+            return AddMatrixOneToNBlindSource(node, (int)identifier, identifier.ToString().Replace("_", " "), sourceNames, targetNames, blindSourceName, provider, isWritable, description, matrixIdentifier);
         }
 
         public static OneToNBlindSourceMatrix AddMatrixOneToNBlindSource(this Node node, int index, string identifier, string[] sourceNames, string[] targetNames, string blindSourceName, EmberPlusProvider provider, bool isWritable = true, string description = "", string matrixIdentifier = "matrix")

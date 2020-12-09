@@ -158,7 +158,7 @@ namespace EmberPlusProviderClassLib
             }
         }
 
-        public void CreateIdentityNode(ValueType number, string product, string company, string version)
+        public void CreateIdentityNode(ValueType number, string product, string company, string version = "0.0.0", string serial = "0F", string role = "unknown")
         {
             var identity = new Node((int)number, ProviderRoot, "identity")
             {
@@ -167,7 +167,9 @@ namespace EmberPlusProviderClassLib
 
             identity.AddStringParameter(1, "product", this, false, product);
             identity.AddStringParameter(2, "company", this, false, company);
-            identity.AddStringParameter(3, "version", this, false, version);
+            identity.AddStringParameter(3, "serial", this, false, serial);
+            identity.AddStringParameter(4, "version", this, false, version);
+            identity.AddStringParameter(5, "role", this, false, role);
         }
 
         public enum MockEnumParameter
@@ -185,7 +187,7 @@ namespace EmberPlusProviderClassLib
 
         public EmberNode AddChildNode(ValueType identifier)
         {
-            return ProviderRoot.AddSubNode((int)identifier, identifier.ToString(), this);
+            return ProviderRoot.AddSubNode((int)identifier, identifier.ToString().Replace("_", " "), this);
         }
 
         public T GetElement<T>(int[] path) where T : class

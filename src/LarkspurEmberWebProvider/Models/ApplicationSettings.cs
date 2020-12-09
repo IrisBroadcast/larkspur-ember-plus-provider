@@ -51,6 +51,8 @@ namespace LarkspurEmberWebProvider.Models
         public string Identifier { get; set; } = "Larkspur";
         public string Description { get; set; } = "Larkspur";
         public string Product { get; set; } = "Larkspur EmBER+ Provider";
+        public string Serial { get; set; } = "00-FF-00-FF-00-FF-00-FF";
+        public string Role { get; set; } = "localhost-pc";
         public string Company { get; set; } = "IRIS Broadcast";
         public string Version { get; set; } = "0.0.1";
         public string TreeTemplateFile { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "treeTemplate.json");

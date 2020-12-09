@@ -44,7 +44,7 @@ namespace EmberPlusProviderClassLib.EmberHelpers
 
         public EmberNode AddSubNode(ValueType emberTreeIdentifier)
         {
-            return AddSubNode((int)emberTreeIdentifier, emberTreeIdentifier.ToString());
+            return AddSubNode((int)emberTreeIdentifier, emberTreeIdentifier.ToString().Replace("_", " "));
         }
 
         public EmberNode AddSubNode(int index, string identifier)
