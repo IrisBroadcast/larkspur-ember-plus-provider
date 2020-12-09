@@ -80,8 +80,8 @@ namespace LarkspurEmberWebProvider
             log.Info("Execute async running Larkspur EmbBER+ Engine");
 
             // Initiate EmBER+ tree
-            InitEmberTree().ContinueWith(task =>
-            {
+            _ = InitEmberTree().ContinueWith(task =>
+              {
                 // TODO: do some essentials, like checking up on static data
             });
             
@@ -235,6 +235,7 @@ namespace LarkspurEmberWebProvider
             {
                 ClientMatrixViewModel matrix = new ClientMatrixViewModel()
                 {
+                    Name = treeMatrix.Parent.Parent.Identifier + " " + treeMatrix.Parent.Identifier,
                     NumericPath = string.Join(".", treeMatrix.Path)
                 };
 
@@ -244,6 +245,7 @@ namespace LarkspurEmberWebProvider
                     {
                         Index = target.Number,
                         Name = target.LabelParameter.Value,
+                        LabelPath = target.LabelParameter.IdentifierPath,
                         ConnectedSources = target.ConnectedSources.Select((x) => x.Number).ToArray()
                     };
                     matrix.Targets.Add(item);
@@ -299,9 +301,9 @@ namespace LarkspurEmberWebProvider
         {
             if (_emberTree != null)
             {
-                string[] str_arr = path.Split(".").ToArray();
-                int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
-                var item = _emberTree.GetElement<IntegerParameter>(int_arr);
+                string[] strArr = path.Split(".").ToArray();
+                int[] intArr = Array.ConvertAll(strArr, Int32.Parse);
+                var item = _emberTree.GetElement<IntegerParameter>(intArr);
                 if (item.IsWritable)
                 {
                     item.SetValue(value);
@@ -313,9 +315,9 @@ namespace LarkspurEmberWebProvider
         {
             if (_emberTree != null)
             {
-                string[] str_arr = path.Split(".").ToArray();
-                int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
-                var item = _emberTree.GetElement<BooleanParameter>(int_arr);
+                string[] strArr = path.Split(".").ToArray();
+                int[] intArr = Array.ConvertAll(strArr, Int32.Parse);
+                var item = _emberTree.GetElement<BooleanParameter>(intArr);
                 if (item.IsWritable)
                 {
                     item.SetValue(value);
@@ -334,6 +336,7 @@ namespace LarkspurEmberWebProvider
 
     public class ClientMatrixViewModel
     {
+        public string Name { get; set; }
         public string NumericPath { get; set; }
         public List<ClientMatrixSignalViewModel> Targets { get; set; } = new List<ClientMatrixSignalViewModel>();
         public List<ClientMatrixSignalViewModel> Sources { get; set; } = new List<ClientMatrixSignalViewModel>();
@@ -343,6 +346,24 @@ namespace LarkspurEmberWebProvider
     {
         public int Index { get; set; }
         public string Name { get; set; }
+        public string LabelPath { get; set; }
         public int[] ConnectedSources { get; set; }
+    }
+
+    public class ParameterInfo
+    {
+        public ParameterInfo(ParameterBase parameterBase)
+        {
+            Identifier = parameterBase.IdentifierPath;
+            Value = parameterBase.GetValue();
+        }
+
+        public string Identifier { get; set; }
+        public object Value { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Identifier}={Value}";
+        }
     }
 }
