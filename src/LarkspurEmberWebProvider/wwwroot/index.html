@@ -260,12 +260,13 @@
             width: 100%;
         }
         .tree-state-list li {
-            padding: 0;
+            padding: 0.2rem 0;
             margin: 0;
             width: 100%;
             display: grid;
             grid-template-columns: 2fr 1fr 0.5fr;
             grid-gap: 2em;
+            border-bottom: 1px solid #0c449e;
         }
         .tree-path {
             font-weight: normal;
@@ -276,13 +277,33 @@
         }
         .tree-option {
             cursor: pointer;
-            text-decoration: underline;
-            padding: 0 0.3em;
+            text-decoration: none;
+            padding: 0 0.3rem;
+            background: white;
+            color: #000000;
+            display: block;
+            text-align: center;
+            border-radius: 2px;
         }
-        .tree-option--non-writable {
+        .tree-option:hover {
+            color: #000000;
+            background-color: #4a8fff;
+            text-decoration: none;
+        }
+        .tree-option.non-writable {
             cursor: not-allowed;
             text-decoration: line-through;
             padding: 0 0.3em;
+        }
+        .tree-option.state-on {
+            background: #30ce29 !important;
+            color: black;
+            border-color: #4CAF50 !important;
+        }
+        .tree-option.state-on:hover {
+            background: #58e252 !important;
+            color: black;
+            border-color: #4CAF50 !important;
         }
         .tree-state-matrix {
             padding: 0;
@@ -377,7 +398,7 @@
         <h1>Larkspur</h1>
         <h3>Socket status "<span id="socketStatus"></span>"</h3>
     </div>
-
+    <span class="tree-option state-on" data-id="rubygpiospowercorelinkinput_signalsgp_pc_32state">toggle</span>
     <div class="conf-container">
         <div class="matrix-title">Tree</div>
         <div class="unit">
@@ -431,9 +452,10 @@
             let selectedElements = document.querySelectorAll("[data-key]");
             selectedElements.forEach(function(item) {
                 let obj = JSON.parse(item.dataset.key);
-                // console.log(obj);
+                // console.log(obj.id);
                 if (obj.id === id) {
                     window.requestAnimationFrame(function() {
+                        item.setAttribute("data-value", value);
                         switch(obj.type) {
                             case "class":
                                 if (value) {
@@ -445,9 +467,21 @@
                                 }
                                 break;
                             default:
+                                // Actually update DOM node
                                 item.innerHTML = value;
                                 break;
                         }
+                    });
+                }
+            });
+
+            let $vls = document.querySelectorAll("[data-id]");
+            $vls.forEach(function(item) {
+                
+                if (item.dataset.id === id) {
+                    window.requestAnimationFrame(function() {
+                        item.innerHTML = value;
+                        item.classList.toggle("on");
                     });
                 }
             });
@@ -562,8 +596,8 @@
             let dv2 = document.createElement("DIV");
             dv2.classList.add("tree-value");
             dv2.textContent = data.value;
-            dv2.id = idPrefix + this.treeIdFromStringPath(path);
-            dv2.contentEditable = "true";
+            dv2.setAttribute("data-key", new DataKey(this.treeIdFromStringPath(path), "text"));
+
             dv2.addEventListener("input", function(data) {
                 console.log("Content editable: ", data.srcElement.textContent);
             }, false);
@@ -591,26 +625,28 @@
                     dvo.append(dvlink);
                 }
                 if (typeof (data.value) === "boolean") {
-                    let linktrue = document.createElement("A");
-                    linktrue.classList.add("tree-option");
-                    linktrue.textContent = "true";
-                    let ofntrue = "emberChangeBoolean(this,'"+path+"','true','"+data.numericPath+"')";
-                    linktrue.setAttribute("onclick", ofntrue);
-                    dvo.append(linktrue);
+                    let link = document.createElement("A");
+                    link.classList.add("tree-option");
+                    link.setAttribute("data-key", new DataKey(this.treeIdFromStringPath(path), "class", "state-on"));
+                    link.setAttribute("data-value", data.value);
+                    link.setAttribute("data-id", this.treeIdFromStringPath(path));
+                    link.textContent = "toggle";
 
-                    let linkfalse = document.createElement("A");
-                    linkfalse.classList.add("tree-option");
-                    linkfalse.textContent = "false";
-                    let ofnfalse = "emberChangeBoolean(this,'"+path+"','false','"+data.numericPath+"')";
-                    linkfalse.setAttribute("onclick", ofnfalse);
-                    dvo.append(linkfalse);
+                    if (data.value) {
+                        link.classList.add("state-on");
+                    }
+
+                    let ofnfalse = "emberChangeBoolean(this,'"+path+"','"+data.numericPath+"')";
+                    link.setAttribute("onclick", ofnfalse);
+                    dvo.append(link);
                 }
                 li.appendChild(dvo);
             } else {
                 let dvo = document.createElement("DIV");
                 dvo.classList.add("tree-options");
                 let dvlink = document.createElement("SPAN");
-                dvlink.classList.add("tree-option--non-writable");
+                dvlink.classList.add("tree-option");
+                dvlink.classList.add("non-writable");
                 dvlink.textContent = "change";
                 dvo.append(dvlink);
                 li.appendChild(dvo);
@@ -674,8 +710,9 @@
     setSocketConnectionFeedback("Disconnected");
 
     connection.on("InitialEmberTree", (tree) => {
-        console.log(`Event 'InitialEmberTree': ${JSON.stringify(tree)}`);
-        let arr = Object.entries(tree).sort();
+        console.log(`Event 'InitialEmberTree':`, tree);
+        document.getElementById("treeInitialList").innerHTML = "";
+        let arr = Object.entries(tree);
         for (let i = 0; i < arr.length; i++) {
             //console.log(`Item: '${arr[i][0]}' Value: '${arr[i][1].value}' TypeOf: '${typeof(arr[i][1].value)}'`);
             // Build an object for each
@@ -697,8 +734,8 @@
         console.log(emberTree.getNode(path));
 
         // Update DOM object
-        let li = emberTree.buildDomListItem(path, "idrow_");
-        document.getElementById("id_" + emberTree.treeIdFromStringPath(path)).innerHTML = data.value;
+        // let li = emberTree.buildDomListItem(path, "idrow_");
+        // document.getElementById("id_" + emberTree.treeIdFromStringPath(path)).innerHTML = data.value;
     });
 
     connection.on("InitialEmberTreeMatrix", (matrices) => {
@@ -731,9 +768,7 @@
     connection.start()
         .then(function () {
             setSocketConnectionFeedback(connection.connectionState);
-            connection.invoke("RequestInitialState").catch((err) => {
-                return console.error("Could not request initial state", err);
-            });
+            commandRequestInitialState();
         })
         .catch(function (err) {
             setSocketConnectionFeedback("Error " + err.toString());
@@ -754,10 +789,16 @@
         console.log("connection onreconnected");
         setSocketConnectionFeedback(connection.connectionState);
 
-        connection.invoke("RequestInitialState").catch((err) => {
-            return console.error("Could not request initial state", err);
-        });
+        commandRequestInitialState();
     });
+
+    function commandRequestInitialState() {
+        if (connection) {
+            connection.invoke("RequestInitialState").catch((err) => {
+                return console.error("Could not request initial state", err);
+            });
+        }
+    }
 
     function setSocketConnectionFeedback(message) {
         document.getElementById("socketStatus").textContent = message;
@@ -773,16 +814,17 @@
 
             if (matrix.hasOwnProperty("sources") && matrix.hasOwnProperty("targets")) {
 
-                // Add matrix label
+                // Add matrix title label
                 let lbl = document.createElement("DIV");
                 lbl.classList.add("matrix-title");
                 lbl.style.gridColumn = `1 / span ${matrix.sources.length + 1}`;
                 lbl.textContent = matrix.name;
-                let state = document.createElement("SPAN");
-                state.classList.add("matrix-connection");
-                state.setAttribute("data-key", new DataKey(emberTree.treeIdParentFromStringPath(path, 2) + "connection", "class", "matrix-connection--on"));
-                state.textContent = "Connection";
-                lbl.append(state);
+
+                // let state = document.createElement("SPAN");
+                // state.classList.add("matrix-connection");
+                // state.setAttribute("data-key", new DataKey(emberTree.treeIdParentFromStringPath(path, 2) + "connection", "class", "matrix-connection--on"));
+                // state.textContent = "Connection";
+                // lbl.append(state);
                 box.append(lbl);
 
                 // Add top left corner
@@ -861,11 +903,13 @@
         }
     }
 
-    function emberChangeBoolean(element, path, value, numericPath) {
-        let state = value == "true" ? true : false;
-        connection.invoke("ChangeEmberBooleanParameter", numericPath, state ).catch((err) => {
-            return console.error("Could not send change", err);
-        });
+    function emberChangeBoolean(element, path, numericPath) {
+        if (typeof element.dataset.value !== undefined) {
+            let state = element.dataset.value == "true" ? false : true; // inverse
+            connection.invoke("ChangeEmberBooleanParameter", numericPath, state ).catch((err) => {
+                return console.error("Could not send change", err);
+            });
+        }
     }
 
     /* Custom Event */
