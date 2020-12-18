@@ -15,17 +15,6 @@
             background: #004dca;
             color: #e7f5ff;
         }
-
-        /* body, html {
-            margin: 0;
-            padding: 0;
-            font-family: roboto, Arial, Helvetica, sans-serif !important;
-            -webkit-font-smoothing: subpixel-antialiased;
-            -ms-text-size-adjust: 100%;
-            -webkit-text-size-adjust: 100%;
-            line-height: 1;
-            background: #ffffff;
-        } */
         .conf-container {
             margin: 0 auto;
             padding: 3vh 5vw;
@@ -284,6 +273,7 @@
             display: block;
             text-align: center;
             border-radius: 2px;
+            user-select: none;
         }
         .tree-option:hover {
             color: #000000;
@@ -293,7 +283,7 @@
         .tree-option.non-writable {
             cursor: not-allowed;
             text-decoration: line-through;
-            padding: 0 0.3em;
+            background: #3781f9;
         }
         .tree-option.state-on {
             background: #30ce29 !important;
@@ -312,7 +302,6 @@
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
             gap: 0.2em;
-
         }
         .tree-state-matrix div {
             padding: 0;
@@ -375,7 +364,6 @@
                 transform: scale(1, 1);
             }
         }
-
         .matrix-connection {
             display: block;
             font-size: 0.8em;
@@ -394,6 +382,53 @@
 </head>
 <body>
 <div class="container">
+
+    <div class="wrapper-body--col wrapper-body--col--clock" id="btnOpenCallStatusOverlay">
+        <svg id="clock-box" version="1.1" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="-50 -50 100 100">
+            <circle id="clock-face" cx="0" cy="0" r="49" />
+
+            <g id="mark-minute">
+                <line x1="0" y1="-46" x2="0" y2="-46" stroke-width="1.8" stroke-linecap="round" />
+            </g>
+
+            <g id="mark-five-minute">
+                <line x1="0" y1="-43" x2="0" y2="-43" stroke-width="2" stroke-linecap="round" /> <!-- y1: position from center, y2: position from edge -->
+            </g>
+
+            <g id="marks-five">
+                <use xlink:href="#mark-five-minute" transform="rotate(0)"  />
+                <use xlink:href="#mark-minute" transform="rotate(0)"  />
+                <use xlink:href="#mark-minute" transform="rotate(6)" />
+                <use xlink:href="#mark-minute" transform="rotate(12)" />
+                <use xlink:href="#mark-minute" transform="rotate(18)" />
+                <use xlink:href="#mark-minute" transform="rotate(24)" />
+            </g>
+
+            <use xlink:href="#marks-five" transform="rotate(30)" />
+            <use xlink:href="#marks-five" transform="rotate(60)" />
+            <use xlink:href="#marks-five" transform="rotate(90)" />
+            <use xlink:href="#marks-five" transform="rotate(120)" />
+            <use xlink:href="#marks-five" transform="rotate(150)" />
+            <use xlink:href="#marks-five" transform="rotate(180)" />
+            <use xlink:href="#marks-five" transform="rotate(210)" />
+            <use xlink:href="#marks-five" transform="rotate(240)" />
+            <use xlink:href="#marks-five" transform="rotate(270)" />
+            <use xlink:href="#marks-five" transform="rotate(300)" />
+            <use xlink:href="#marks-five" transform="rotate(330)" />
+
+            <g id="hands">
+                <line id="hand-sec-ball" x1="0" y1="-46" x2="0" y2="-46" stroke-width="2" stroke-linecap="round" />
+            </g>
+
+            <g id="marks-seconds">
+
+            </g>
+        </svg>
+        <div class="status-call--clock vertical-align">
+            <span id="hours">00</span><span>:</span><span id="minutes">00</span><span>:</span><span id="seconds">00</span>
+        </div>
+    </div>
+
     <div class="conf-container">
         <h1>Larkspur</h1>
         <h3>Socket status "<span id="socketStatus"></span>"</h3>
@@ -434,8 +469,9 @@
     class EmberTree {
 
         constructor() {
-            this.nodes = {};
             this.treeRoot = {};
+            this.nodes = {};
+            this.matrices = {};
         }
 
         getNode(path) {
@@ -477,7 +513,6 @@
 
             let $vls = document.querySelectorAll("[data-id]");
             $vls.forEach(function(item) {
-                
                 if (item.dataset.id === id) {
                     window.requestAnimationFrame(function() {
                         item.innerHTML = value;
@@ -487,7 +522,7 @@
             });
         }
 
-        updateAllDomElements() {
+        updateInitialElements() {
             let elements = Object.entries(this.nodes);
             if (elements.length != 0) {
                 elements.forEach((key, value) => {
@@ -597,10 +632,6 @@
             dv2.classList.add("tree-value");
             dv2.textContent = data.value;
             dv2.setAttribute("data-key", new DataKey(this.treeIdFromStringPath(path), "text"));
-
-            dv2.addEventListener("input", function(data) {
-                console.log("Content editable: ", data.srcElement.textContent);
-            }, false);
             li.appendChild(dv2);
 
             // Add edit button
@@ -612,7 +643,7 @@
                     let dvlink = document.createElement("A");
                     dvlink.classList.add("tree-option");
                     dvlink.textContent = "change";
-                    let ofn = "emberChangeString(this,'"+path+"','"+data.value+"','"+data.numericPath+"')";
+                    let ofn = `emberChangeString(this,'${path}','${data.value}','${data.numericPath}')`;
                     dvlink.setAttribute("onclick", ofn);
                     dvo.append(dvlink);
                 }
@@ -620,7 +651,7 @@
                     let dvlink = document.createElement("A");
                     dvlink.classList.add("tree-option");
                     dvlink.textContent = "change";
-                    let ofn = "emberChangeNumber(this,'"+path+"','"+data.value+"','"+data.numericPath+"')";
+                    let ofn = `emberChangeNumber(this,'${path}','${data.value}','${data.numericPath}')`;
                     dvlink.setAttribute("onclick", ofn);
                     dvo.append(dvlink);
                 }
@@ -636,7 +667,7 @@
                         link.classList.add("state-on");
                     }
 
-                    let ofnfalse = "emberChangeBoolean(this,'"+path+"','"+data.numericPath+"')";
+                    let ofnfalse = `emberChangeBoolean(this,'${path}','${data.numericPath}')`;
                     link.setAttribute("onclick", ofnfalse);
                     dvo.append(link);
                 }
@@ -654,6 +685,114 @@
 
             return li;
         }
+
+        buildTreeView(tree) {
+            try {
+                let frag = document.createDocumentFragment();
+                let arr = Object.entries(tree);
+                for (let i = 0; i < arr.length; i++) {
+                    //console.log(`Item: '${arr[i][0]}' Value: '${arr[i][1].value}' TypeOf: '${typeof(arr[i][1].value)}'`);
+                    // Build an object for each
+                    this.addNode(arr[i][0], arr[i][1].numericPath, arr[i][1].value, arr[i][1].isWritable);
+
+                    // Add DOM objects
+                    let li = this.buildDomListItem(arr[i][0], "id_");
+                    li.id = "id_row_" + this.treeIdFromStringPath(arr[i][0]);
+                    frag.prepend(li);
+                }
+                return frag;
+            } catch(err) {
+                console.warn(err);
+                return document.createDocumentFragment();
+            }
+        }
+
+        // Matrices
+        buildMatrixView(path, matrix) {
+            try {
+                let frag = document.createDocumentFragment();
+
+                let box = document.createElement("DIV");
+                box.classList.add("tree-state-matrix");
+                box.id = emberTree.treeIdFromStringPath(path);
+
+                if (matrix.hasOwnProperty("sources") && matrix.hasOwnProperty("targets")) {
+
+                    // Add matrix title label
+                    let lbl = document.createElement("DIV");
+                    lbl.classList.add("matrix-title");
+                    lbl.style.gridColumn = `1 / span ${matrix.sources.length + 1}`;
+                    lbl.textContent = matrix.name;
+                    box.append(lbl);
+
+                    // Add top left corner
+                    let div = document.createElement("DIV");
+                    div.classList.add("matrix-origo");
+                    box.append(div);
+
+                    // Add matrix
+                    let sources = matrix.sources;
+                    for (let i = 0; i < sources.length; i++) {
+                        // Source label
+                        let div = document.createElement("DIV");
+                        div.textContent = sources[i].name;
+                        div.classList.add("matrix-label--source");
+                        div.setAttribute("data-key", new DataKey(this.treeIdFromStringPath(sources[i].labelPath)));
+                        box.append(div);
+                    }
+
+                    let targets = matrix.targets;
+                    for (let i = 0; i < targets.length; i++) {
+                        // Target label
+                        let div = document.createElement("DIV");
+                        div.textContent = targets[i].name;
+                        div.classList.add("matrix-label--target");
+                        div.setAttribute("data-key", new DataKey(this.treeIdFromStringPath(targets[i].labelPath)));
+                        box.append(div);
+
+                        // Signals
+                        for (let y = 0; y < sources.length; y++) {
+                            let signal = document.createElement("DIV");
+                            signal.classList.add("matrix-signal");
+                            signal.classList.add("source_" + y);
+                            signal.classList.add("matrix-signal_" + targets[i].index + "_" + this.treeIdFromStringPath(path));
+                            signal.id = "id_signal_" + sources[y].index + "_" + targets[i].index + "_" + this.treeIdFromStringPath(path);
+
+                            // Actually connect
+                            if (targets[i].connectedSources.length !== 0) {
+                                targets[i].connectedSources.forEach((item) => {
+                                    if (item === sources[y].index) {
+                                        signal.classList.add("matrix-signal--connected");
+                                    }
+                                });
+                            }
+
+                            box.append(signal);
+                        }
+                    }
+                }
+
+                box.style.gridTemplateColumns = `2fr repeat(${matrix.sources.length}, 1fr)`;
+                frag.append(box);
+                return frag;
+            } catch(err) {
+                console.warn(err);
+                return document.createDocumentFragment();
+            }
+        }
+
+        updateMatrixSignal(path, target) {
+            // Remove all connected sources from target
+            let targetBoxes = document.querySelectorAll(".matrix-signal_" + target.index + "_" + this.treeIdFromStringPath(path));
+            targetBoxes.forEach(function(item) {
+                item.classList.remove("matrix-signal--connected");
+            });
+
+            // Connect target with source
+            for (let i = 0; i < target.connectedSources.length; i++) {
+                document.getElementById("id_signal_" + target.connectedSources[i] + "_" + target.index + "_" + this.treeIdFromStringPath(path)).classList.add("matrix-signal--connected");
+            }
+        }
     }
 
     class EmberNode {
@@ -668,11 +807,11 @@
             this.path = path;
             this.numericPath = numericPath;
             this.value = value;
-            this.typeToDef(value);
+            this.valueTypeToDefinition(value);
             this.isWritable = isWritable;
         }
 
-        typeToDef(type) {
+        valueTypeToDefinition(type) {
             switch(typeof(type)) {
                 case EMBER_NODE_TYPES.STRING:
                     this.type = EMBER_NODE_TYPES.STRING;
@@ -687,6 +826,12 @@
                     this.type = EMBER_NODE_TYPES.UNKNOWN;
                     break;
             }
+        }
+    }
+
+    class EmberMatrixElement {
+        constructor() {
+
         }
     }
 
@@ -712,30 +857,16 @@
     connection.on("InitialEmberTree", (tree) => {
         console.log(`Event 'InitialEmberTree':`, tree);
         document.getElementById("treeInitialList").innerHTML = "";
-        let arr = Object.entries(tree);
-        for (let i = 0; i < arr.length; i++) {
-            //console.log(`Item: '${arr[i][0]}' Value: '${arr[i][1].value}' TypeOf: '${typeof(arr[i][1].value)}'`);
-            // Build an object for each
-            emberTree.addNode(arr[i][0], arr[i][1].numericPath, arr[i][1].value, arr[i][1].isWritable);
-
-            // Add DOM objects
-            let li = emberTree.buildDomListItem(arr[i][0], "id_");
-            li.id = "id_row_" + emberTree.treeIdFromStringPath(arr[i][0]);
-            document.getElementById("treeInitialList").prepend(li);
-        }
-
+        let frag = emberTree.buildTreeView(tree);
+        document.getElementById("treeInitialList").append(frag);
         console.log(emberTree.nodes);
     });
 
     connection.on("ChangesInEmberTree", (path, data) => {
         console.log(`Event 'ChangesInEmberTree', path:${JSON.stringify(path)}, data:${JSON.stringify(data)}`);
-        // Update internal object
+        // Update internal object and DOM
         emberTree.updateNode(path, data.value);
-        console.log(emberTree.getNode(path));
-
-        // Update DOM object
-        // let li = emberTree.buildDomListItem(path, "idrow_");
-        // document.getElementById("id_" + emberTree.treeIdFromStringPath(path)).innerHTML = data.value;
+        console.log("Changes:", emberTree.getNode(path));
     });
 
     connection.on("InitialEmberTreeMatrix", (matrices) => {
@@ -743,26 +874,15 @@
         document.getElementById("matrixInitialTable").innerHTML = "";
         let arr = Object.entries(matrices).sort();
         for (let i = 0; i < arr.length; i++) {
-            let frag = buildMatrixView(arr[i][0], arr[i][1]);
+            let frag = emberTree.buildMatrixView(arr[i][0], arr[i][1]);
             document.getElementById("matrixInitialTable").append(frag);
         }
-
-        emberTree.updateAllDomElements();
+        // emberTree.updateInitialElements(); // TODO: a bit weird?? here
     });
 
     connection.on("ChangesInEmberTreeMatrix", (path, target) => {
         console.log(`Event 'ChangesInEmberTree', path:${JSON.stringify(path)}, target:${JSON.stringify(target)}`);
-
-        // Remove all connected sources from target
-        let targetBoxes = document.querySelectorAll(".matrix-signal_" + target.index + "_" + emberTree.treeIdFromStringPath(path));
-        targetBoxes.forEach(function(item) {
-            item.classList.remove("matrix-signal--connected");
-        });
-
-        // Connect target with source
-        for (let i = 0; i < target.connectedSources.length; i++) {
-            document.getElementById("id_signal_" + target.connectedSources[i] + "_" + target.index + "_" + emberTree.treeIdFromStringPath(path)).classList.add("matrix-signal--connected");
-        }
+        emberTree.updateMatrixSignal(path, target);
     });
 
     connection.start()
@@ -802,87 +922,6 @@
 
     function setSocketConnectionFeedback(message) {
         document.getElementById("socketStatus").textContent = message;
-    }
-
-    function buildMatrixView(path, matrix) {
-        try {
-            let frag = document.createDocumentFragment();
-
-            let box = document.createElement("DIV");
-            box.classList.add("tree-state-matrix");
-            box.id = emberTree.treeIdFromStringPath(path);
-
-            if (matrix.hasOwnProperty("sources") && matrix.hasOwnProperty("targets")) {
-
-                // Add matrix title label
-                let lbl = document.createElement("DIV");
-                lbl.classList.add("matrix-title");
-                lbl.style.gridColumn = `1 / span ${matrix.sources.length + 1}`;
-                lbl.textContent = matrix.name;
-
-                // let state = document.createElement("SPAN");
-                // state.classList.add("matrix-connection");
-                // state.setAttribute("data-key", new DataKey(emberTree.treeIdParentFromStringPath(path, 2) + "connection", "class", "matrix-connection--on"));
-                // state.textContent = "Connection";
-                // lbl.append(state);
-                box.append(lbl);
-
-                // Add top left corner
-                let div = document.createElement("DIV");
-                div.classList.add("matrix-origo");
-                box.append(div);
-
-                // Add matrix
-                let sources = matrix.sources;
-                for (let i = 0; i < sources.length; i++) {
-                    // Source label
-                    let div = document.createElement("DIV");
-                    // div.id = "id_source_" + sources[i].index;
-                    div.textContent = sources[i].name;
-                    div.classList.add("matrix-label--source");
-                    div.setAttribute("data-key", new DataKey(emberTree.treeIdFromStringPath(sources[i].labelPath)));
-                    box.append(div);
-                }
-
-                let targets = matrix.targets;
-                for (let i = 0; i < targets.length; i++) {
-                    // Target label
-                    let div = document.createElement("DIV");
-                    // div.id = "id_target_" + targets[i].index;
-                    div.textContent = targets[i].name;
-                    div.classList.add("matrix-label--target");
-                    div.setAttribute("data-key", new DataKey(emberTree.treeIdFromStringPath(targets[i].labelPath)));
-                    box.append(div);
-
-                    // Signals
-                    for (let y = 0; y < sources.length; y++) {
-                        let signal = document.createElement("DIV");
-                        signal.classList.add("matrix-signal");
-                        signal.classList.add("source_" + y);
-                        signal.classList.add("matrix-signal_" + targets[i].index + "_" + emberTree.treeIdFromStringPath(path));
-                        signal.id = "id_signal_" + sources[y].index + "_" + targets[i].index + "_" + emberTree.treeIdFromStringPath(path);
-
-                        // Actually connect
-                        if (targets[i].connectedSources.length !== 0) {
-                            targets[i].connectedSources.forEach((item) => {
-                                if (item === sources[y].index) {
-                                    signal.classList.add("matrix-signal--connected");
-                                }
-                            });
-                        }
-
-                        box.append(signal);
-                    }
-                }
-            }
-
-            box.style.gridTemplateColumns = `2fr repeat(${matrix.sources.length}, 1fr)`;
-            frag.append(box);
-            return frag;
-        } catch(err) {
-            console.warn(err);
-            return document.createDocumentFragment();
-        }
     }
 
     function emberChangeString(element, path, value, numericPath) {
