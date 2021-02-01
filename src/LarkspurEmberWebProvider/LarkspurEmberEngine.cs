@@ -197,7 +197,7 @@ namespace LarkspurEmberWebProvider
         /// </summary>
         private void ReceivedMatrixConnectionEvent(string identifierPath, GlowConnection connection, int[] path)
         {
-            Debug.WriteLine($"Received Matrix Connection {identifierPath} , Operation: {(ConnectOperation)connection.Operation}, Target: {connection.Target}, First source: {connection.Sources.FirstOrDefault()}");
+            log.Debug($"Received Matrix Connection {identifierPath} , Operation: {(ConnectOperation)connection.Operation}, Target: {connection.Target}, First source: {connection.Sources.FirstOrDefault()}");
 
             // Send out the target state
             var signal = new ClientMatrixSignalViewModel()
@@ -219,11 +219,16 @@ namespace LarkspurEmberWebProvider
             foreach (ParameterBase parameter in _emberTree.GetChildParameterElements())
             {
                 log.Debug(parameter.IdentifierPath, parameter.GetValue().ToString());
+
                 tree.Add(parameter.IdentifierPath, new ClientTreeParameterViewModel() {
                     Type = parameter.GetType().ToString(),
                     Value = parameter.GetValue(),
                     NumericPath = string.Join(".", parameter.Path),
-                    IsWritable = parameter.IsWritable
+                    IsWritable = parameter.IsWritable,
+                    Options = new
+                    {
+
+                    }
                 });
             }
 
@@ -286,7 +291,7 @@ namespace LarkspurEmberWebProvider
 
         public void Set_StringParameter(string path, string value)
         {
-            if (_emberTree != null)
+            if (_emberTree != null && path != null)
             {
                 string[] str_arr = path.Split(".").ToArray();
                 int[] int_arr = Array.ConvertAll(str_arr, Int32.Parse);
@@ -299,7 +304,7 @@ namespace LarkspurEmberWebProvider
         
         public void Set_NumberParameter(string path, int value)
         {
-            if (_emberTree != null)
+            if (_emberTree != null && path != null)
             {
                 string[] strArr = path.Split(".").ToArray();
                 int[] intArr = Array.ConvertAll(strArr, Int32.Parse);
@@ -313,7 +318,7 @@ namespace LarkspurEmberWebProvider
 
         public void Set_BooleanParameter(string path, bool value)
         {
-            if (_emberTree != null)
+            if (_emberTree != null && path != null)
             {
                 string[] strArr = path.Split(".").ToArray();
                 int[] intArr = Array.ConvertAll(strArr, Int32.Parse);
@@ -324,6 +329,15 @@ namespace LarkspurEmberWebProvider
                 }
             }
         }
+
+        public async void Set_PulseBooleanParameter(string path, bool value = true, int delay = 400)
+        {
+            Set_BooleanParameter(path, value);
+            await Task.Delay(delay).ContinueWith(_ =>
+            {
+                Set_BooleanParameter(path, !value);
+            });
+        }
     }
 
     public class ClientTreeParameterViewModel
@@ -332,6 +346,7 @@ namespace LarkspurEmberWebProvider
         public dynamic Value { get; set; }
         public string NumericPath { get; set; }
         public bool IsWritable { get; set; }
+        public dynamic Options { get; set; }
     }
 
     public class ClientMatrixViewModel

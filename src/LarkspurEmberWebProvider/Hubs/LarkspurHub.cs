@@ -72,6 +72,11 @@ namespace LarkspurEmberWebProvider.Hubs
         {
             EmberEngine.Set_BooleanParameter(path, value);
         }
+
+        public void PulseEmberBooleanParameter(string path)
+        {
+            EmberEngine.Set_PulseBooleanParameter(path);
+        }
     }
 
     /// <summary>

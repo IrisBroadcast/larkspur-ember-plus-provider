@@ -45,7 +45,7 @@ namespace LarkspurEmberWebProvider.Helpers
                 return null;
             }
 
-            using StreamReader r = new StreamReader(filePath);
+            StreamReader r = new StreamReader(filePath);
             var json = r.ReadToEnd();
 
             var options = new JsonSerializerOptions

@@ -134,7 +134,6 @@ namespace EmberPlusProviderClassLib
             else
             {
                 Debug.WriteLine($"Unexpected Ember Root: Client/GlowReader_RootReady: {e.Root} Type: {e.Root.GetType()}");
-                Console.WriteLine($"Unexpected Ember Root: Client/GlowReader_RootReady: {e.Root} Type: {e.Root.GetType()}");
             }
         }
 

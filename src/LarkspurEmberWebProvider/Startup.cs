@@ -53,6 +53,9 @@ namespace LarkspurEmberWebProvider
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Cross Origin support for localhost
+            services.AddCors();
+
             // Add websockets
             services.AddSignalR();
 
@@ -75,6 +78,13 @@ namespace LarkspurEmberWebProvider
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            // Set global CORS policy
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) // allow any origin
+                .AllowCredentials()); // allow credentials
 
             app.UseEndpoints(endpoints =>
             {

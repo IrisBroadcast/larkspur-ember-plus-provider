@@ -78,8 +78,8 @@ namespace EmberPlusProviderClassLib
                 listener = new GlowListener(port, maxPackageLength, dispatcher);
 
                 string message = $"EmberPlusProvider: Initializing the EmBER+ provider on port: {port}, identifier: {identifier}, description: {description}";
-                Console.WriteLine(message);
-                Debug.WriteLine(message);
+                //Console.WriteLine(message);
+                //Debug.WriteLine(message);
             }
             catch (Exception ex)
             {
@@ -89,14 +89,14 @@ namespace EmberPlusProviderClassLib
 
         public void SetUpFinalListeners()
         {
-            Console.WriteLine($"EmberPlusProvider: Setting up final listeners");
+            Debug.WriteLine($"EmberPlusProvider: Setting up final listeners");
             dispatcher.GlowRootReady += OnEmberTreeChanged;
         }
 
         protected void OnEmberTreeChanged(object sender, Dispatcher.GlowRootReadyArgs e)
         {
             // Triggered on EmBER+ tree change
-            Console.WriteLine("EmberPlusProvider: OnEmberTreeChanged");
+            Debug.WriteLine("EmberPlusProvider: OnEmberTreeChanged");
             try
             {
                 switch(e.Root.FirstOrDefault())
@@ -104,7 +104,7 @@ namespace EmberPlusProviderClassLib
                     case GlowQualifiedParameter gqp:
                         ParameterBase changedParameter = GetElement<ParameterBase>(gqp?.Path);
 
-                        Console.WriteLine($"EmberPlusProvider: EmberTree node {gqp.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
+                        Debug.WriteLine($"EmberPlusProvider: EmberTree node {gqp.Value.ToString()} //IdentifierPath changed. {changedParameter?.IdentifierPath}");
                         Task.Run(async () =>
                         {
                             await OnHandleValuesChanged(changedParameter);
@@ -116,7 +116,7 @@ namespace EmberPlusProviderClassLib
                     case GlowQualifiedMatrix gqm:
                         Element changedElement = GetElement<Element>(gqm?.Path);
 
-                        Console.WriteLine($"EmberPlusProvider: EmberTree node {changedElement?.Identifier} //IdentifierPath changed. {changedElement?.IdentifierPath}");
+                        Debug.WriteLine($"EmberPlusProvider: EmberTree node {changedElement?.Identifier} //IdentifierPath changed. {changedElement?.IdentifierPath}");
                         Task.Run(async () =>
                         {
                             foreach (GlowConnection connection in gqm.TypedConnections)
@@ -131,8 +131,8 @@ namespace EmberPlusProviderClassLib
             }
             catch (Exception ex)
             {
-                Console.WriteLine("EmberPlusProvider: ERROR parsing tree");
-                Console.Write(ex);
+                Debug.WriteLine("EmberPlusProvider: ERROR parsing tree");
+                Debug.Write(ex);
             }
         }
 

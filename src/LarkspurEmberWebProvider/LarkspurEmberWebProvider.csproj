@@ -4,7 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeIdentifiers>win10-x64;</RuntimeIdentifiers>
     <OutputType>Exe</OutputType>
-
     <UserSecretsId>dotnet-LarkspurEmberWebProvider-59BE5017-B225-4FCE-BC53-73F3B3C59F2A</UserSecretsId>
   </PropertyGroup>
 
@@ -22,6 +21,16 @@
   <ItemGroup>
     <None Update="wwwroot\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 

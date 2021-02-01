@@ -333,6 +333,12 @@
 
         <button class="tree-option"
             data-id="1.4.1.4.30.1"
+            data-event="pulse:1.4.1.4.30.1"
+            data-text="depulse|pulse">Pulse</button>
+
+
+        <button class="tree-option"
+            data-id="1.4.1.4.30.1"
             data-event="click:1.4.1.4.30.1"
             data-text="on|off"
             data-style="state-on">toggle</button>
@@ -380,9 +386,10 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@microsoft/signalr@3.1.3/dist/browser/signalr.min.js"></script>
+<script src="/signalr.js"></script>
 
 <script>
+
 
 </script>
 
@@ -840,6 +847,13 @@
                         });
                         break;
 
+                    case "pulse":
+                        elm.addEventListener("click", (event) => {
+                            console.log("event pulse", event);
+                            emberPulseBoolean(event.target, item[1]);
+                        });
+                        break;
+
                     case "input":
                         elm.addEventListener(item[0], (event) => {
                             console.log("event input", event);
@@ -1070,7 +1084,7 @@
     function emberToggleBoolean(element, numericPath) {
         try {
             let item = emberTree.GetNode(numericPath);
-            console.log(item)
+            console.log(item);
             let state = !item.value; // inverse
             connection.send("ChangeEmberBooleanParameter", numericPath, state ).catch((err) => {
                 return console.error("Could not send change", err);
@@ -1080,17 +1094,27 @@
         }
     }
 
+    function emberPulseBoolean(element, numericPath) {
+        try {
+            connection.send("PulseEmberBooleanParameter", numericPath ).catch((err) => {
+                return console.error("Could not send change", err);
+            });
+        } catch(error) {
+            console.error("EmberPulseBoolean: ", error);
+        }
+    }
+
     function emberChangeBool(value, numericPath) {
         if (element.dataset.id !== undefined) {
             try {
                 let item = emberTree.GetNode(element.dataset.id);
-                console.log(item)
+                console.log(item);
                 let state = !item.value; // inverse
                 connection.send("ChangeEmberBooleanParameter", numericPath, state).catch((err) => {
                     return console.error("Could not send change", err);
                 });
             } catch(error) {
-                console.error("EmberToggleBoolean: ", error);
+                console.error("EmberChangeBool: ", error);
             }
         }
     }
