@@ -37,7 +37,7 @@ namespace LarkspurEmberWebProvider.Models
     {
         public string Name { get; set; }
         public string LogFolder { get; set; }
-        public string ReleaseDate { get; set; }
+        public string ReleaseDate { get; set; } = new DateTime().ToString();
         public string Version { get; set; }
         public string Environment { get; set; }
         public string Server { get; set; }
