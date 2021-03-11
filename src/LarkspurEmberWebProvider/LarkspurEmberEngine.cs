@@ -30,23 +30,21 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EmberLib.Glow;
 using EmberPlusProviderClassLib;
 using EmberPlusProviderClassLib.EmberHelpers;
-using EmberPlusProviderClassLib.Helpers;
 using EmberPlusProviderClassLib.Model;
 using EmberPlusProviderClassLib.Model.Parameters;
 using LarkspurEmberWebProvider.Hubs;
-using NLog;
+using LarkspurEmberWebProvider.Helpers;
 using LarkspurEmberWebProvider.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Timer = System.Timers.Timer;
+using NLog;
 
 namespace LarkspurEmberWebProvider
 {
@@ -89,7 +87,6 @@ namespace LarkspurEmberWebProvider
             {
                 while (!stoppingToken.IsCancellationRequested) // Keep the thread alive
                 {
-                    // TODO: add an infinite delay?
                     await Task.Delay(1000, stoppingToken);
                 }
             }
@@ -108,7 +105,6 @@ namespace LarkspurEmberWebProvider
                 try
                 {
                     log.Info("Initializing EmBER+ tree");
-                    Debug.WriteLine("Initializing EmBER+ tree");
 
                     // Initiate EmBER+ tree
                     _emberTree = new EmberPlusProvider(

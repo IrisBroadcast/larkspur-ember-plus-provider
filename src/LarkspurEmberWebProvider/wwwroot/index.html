@@ -1,24 +1,38 @@
 ﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width, user-scalable=no">
     <title>Larkspur</title>
     <style type="text/css">
+        @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap');
         body, html {
             margin: 0;
             padding: 0;
-            font-family: roboto, Arial, Helvetica, sans-serif !important;
+            font-family: 'Lexend Deca', Arial, Helvetica, sans-serif !important;
             -webkit-font-smoothing: subpixel-antialiased;
             -ms-text-size-adjust: 100%;
             -webkit-text-size-adjust: 100%;
-            line-height: 1;
-            background: #004dca;
+            background: #3769bb;
+            background: linear-gradient(to bottom, #379fbb 0%, #3769bb 100%);
             color: #e7f5ff;
         }
+        .container {
+            padding: 2rem 1rem 300px 1rem;
+            margin: 0 auto 0 auto;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+        }
         .conf-container {
-            margin: 0 auto;
-            padding: 3vh 5vw;
-            margin: 0;
+            padding: 0.8rem 2rem;
+            line-height: 1.8rem;
+        }
+        code {
+            font-family: 'Lexend Deca', Arial, Helvetica, sans-serif !important;
+            background: #56c1de;
+            color: #3769bb;
+            padding: 0 0.3rem;
         }
         a {
             color: #4263e6;
@@ -28,6 +42,14 @@
         a:hover {
             color: #9a42ce;
             text-decoration: underline;
+        }
+        h1 {
+            font-size: 4rem;
+            text-shadow: 1px 1px 2px #3386ae;
+        }
+        h2 {
+            font-size: 1.6rem;
+            text-shadow: 1px 1px 2px #3386ae;
         }
         .small {
             font-size: 12px;
@@ -50,6 +72,14 @@
         }
         button:hover {
             background: #333333;
+        }
+        .larkspur-logo {
+            width: 7rem;
+            height: 7rem;
+            position: absolute;
+            top: 1.2rem;
+            left: 20.6rem;
+            opacity: 0.8;
         }
         input, select {
             border: 0;
@@ -119,56 +149,37 @@
             background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
             background-repeat: no-repeat;
         }
-        .screen {
-            color: #67fcc7;
-            animation: animation_green 1s linear infinite;
-        }
-        @keyframes animation_green {
-            0% {
-                fill: rgb(66 219 113 / 100%);
-            }
-            50% {
-                fill: rgb(66 219 113 / 30%);
-            }
-            100% {
-                fill: rgb(66 219 113 / 100%);
-            }
-        }
-        @keyframes animation_red {
-            0% {
-                fill: rgb(219 66 66 / 100%);
-            }
-            50% {
-                fill: rgb(219 66 66 / 30%);
-            }
-            100% {
-                fill: rgb(219 66 66 / 100%);
-            }
-        }
         .tree-state-list {
             padding: 0;
             margin: 0;
             width: 100%;
+            border-collapse: collapse;
         }
-        .tree-state-list li {
-            padding: 0.2rem 0;
+        .tree-state-list tr td {
+            padding: 0.2rem 0.1rem;
             margin: 0;
             width: 100%;
-            display: grid;
-            grid-template-columns: 2fr 1fr 0.5fr;
-            grid-gap: 0.5rem;
             border-bottom: 1px solid #0c449e;
         }
         .tree-path {
             font-weight: normal;
-            grid-column: 1 / 4 span;
+            font-size: 0.8rem;
+            color: #1b2a78;
+        }
+        .tree-path span:nth-last-child(-n+2) {
+            font-weight: bold;
+            color: #b2b2ff;
         }
         .tree-numeric-path {
 
         }
+        .tree-node-name {
+            color: #1c1378;
+        }
         .tree-value {
             font-weight: bold;
-            color: #0bbc0b;
+            min-width: 10rem;
+            color: #1ecc1e;
         }
         .tree-option {
             cursor: pointer;
@@ -239,7 +250,7 @@
         }
         .matrix-title {
             font-weight: 400;
-            font-size: 1.6em;
+            font-size: 1.6rem;
             padding: 5px 0 !important;
             text-align: left;
             justify-content: left !important;
@@ -317,6 +328,28 @@
         svg:hover, svg:active {
             fill: #b1b1b1;
         }
+        .doc-table {
+            width: 100%;
+        }
+        .doc-table td {
+            padding: 0.5rem;
+            line-height: 1rem;
+            overflow-wrap: anywhere;
+        }
+        .doc-table tr td:first-child {
+            color: #0b2857;
+            min-width: 140px;
+            text-shadow: 1px 1px 2px #3386ae;
+        }
+        .doc-table .attribute {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #151030 !important;
+        }
+
+
+        /* INSERT YOUR CUSTOM CSS */
+
     </style>
 </head>
 <body>
@@ -324,53 +357,93 @@
     <div class="conf-container">
         <h1>Larkspur</h1>
         <h3>Socket status "<span id="socketStatus"></span>"</h3>
-    </div>
-    <div class="conf-container">
-        <button class="tree-option"
-            data-id="1.4.1.4.30.1"
-            data-event="click:1.4.1.4.30.1"
-            data-text="deactivate|activate">On#Off</button>
-
-        <button class="tree-option"
-            data-id="1.4.1.4.30.1"
-            data-event="pulse:1.4.1.4.30.1"
-            data-text="depulse|pulse">Pulse</button>
-
-
-        <button class="tree-option"
-            data-id="1.4.1.4.30.1"
-            data-event="click:1.4.1.4.30.1"
-            data-text="on|off"
-            data-style="state-on">toggle</button>
-
-        <h3>Data-event</h3>
-        <input type="range" min="-200" max="0" data-event="input:1.4.1.8.8.1" />
-
-        <h3>Data-id <span data-id="1.4.1.8.8.1"></span></h3>
-        <input type="range" min="-200" max="0" data-id="1.4.1.8.8.1" />
-
-        <h3>Different Data-id and Data-event</h3>
-        <input type="range" min="-200" max="0"
-            data-id="1.4.1.8.8.1"
-            data-event="input:1.4.1.8.7.1" />
-
-        <h3>Same Data-id and Data-event</h3>
-        <input type="range" min="-200" max="0"
-            data-id="1.4.1.8.8.1"
-            data-event="input:1.4.1.8.8.1" />
-
-        <div class="navigation--levelcontrol">
-            <div class="drag--box" id="level-container">
-                <div class="drag--handle" id="level-handle"></div>
-            </div>
+        <div class="larkspur-logo">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" enable-background="new 0 0 50 50" xml:space="preserve">
+                <g>
+                    <g>
+                        <path fill="#693091" d="M23.1,26.5c-0.8,0.2-5.5-6-5.2-11.3c0.4-6.2,6.2-13.3,7.6-13.5s9.6,8,7.4,14.3C30.2,23.7,24.2,26.2,23.1,26.5z"/>
+                        <path fill="#593194" d="M23.2,26.9c0.6-1.2-4-12.2-8-13.6C10.2,11.5,2.9,15.3,2.5,17c-0.4,1.7,1.6,11.4,8,12.3C15.2,29.9,22.8,27.8,23.2,26.9z"/>
+                        <path fill="#813194" d="M22.9,26.1c0-1,4.9-8.6,11.9-8.9c8.5-0.4,12.7,8.5,12.7,9.1s-4.8,8.8-12.7,8.4C27.1,34.4,22.9,27.3,22.9,26.1z"/>
+                        <path fill="#923288" d="M23,26.7c1.5-0.6,7.4,1,9.2,3.9C36.7,37.9,35,47,33,48.2c-1.3,0.8-11.1-2.8-12.7-12.1C19.5,31.9,22,27.1,23,26.7z"/>
+                        <path fill="#493390" d="M22.8,26.8c1.1,1.1,0,13.2-3.8,15.4s-13.7,2.9-14.5,2c-0.7-1,0-10.8,4.3-13.9C14.1,26.4,21.6,25.6,22.8,26.8z"/>
+                    </g>
+                    <path fill="#612FA8" d="M19.5,26.7c0.2-1.1,0.6-4.3,3.3-4c2.7,0.3,4.8,3.1,4.3,5.2c-0.5,2.1-3.2,3.3-5.2,3.3C19.9,31.2,19.4,27.8,19.5,26.7z"/>
+                </g>
+                </svg>
         </div>
+    </div>
+
+    <div class="conf-container">
+        <h2>The OUI-kit</h2>
+        <p>
+            I've created a very simple javascript library to interact with the EmBER+ parameters. You could implement your own if you feel comfortable with that. All interactions with the gateway is done using SignalR (websockets).
+            Listen to the following events <code>InitialEmberTree | ChangesInEmberTree | InitialEmberTreeMatrix | ChangesInEmberTreeMatrix</code>. Get started by requesting the full tree with the <code>RequestInitialState</code> command.
+            Use the following messages to then control the EmBER+ parameters <code>ChangeEmberStringParameter | ChangeEmberNumberParameter | ChangeEmberBooleanParameter | PulseEmberBooleanParameter</code>. The command also needs the EmBER+ parameters <code>numeric path</code> and the <code>value</code> that is requested.
+        </p>
+        <p>
+            To get started right away, use the provided javascript library. 
+            Just add the <code>data-id</code> attribute with the numeric EmBER+ path to attach the value to a HTMLElement <code>&lt;div data-id='1.2.3.4.1'&gt;&lt;/div&gt;</code>.
+            To control parameters in the EmBER+ tree, just add the <code>data-event</code> with type to listen to. If it's an HTMLInputElement add <code>&lt;div data-event='input:1.2.3.4.1'&gt;&lt;/div&gt;</code>.
+            For the <code>data-event</code> attribute, valid arguments is <code>input | click | pulse</code>. The pulse is toggling an EmBER+ boolean parameter.
+            The <code>data-id</code> is used together with <code>data-event</code> attribute for a two way binding.
+        </p>
+        <table class="doc-table">
+            <tr>
+                <td colspan="2" class="attribute">data-id</td>
+            </tr>
+            <tr>
+                <td>value</td><td>x.x.x.x</td>
+            </tr>
+            <tr>
+            </tr>
+                <td>description</td><td>Use the numeric path of the EmBER+ node you are interested in.</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="attribute">data-event</td>
+            </tr>
+            <tr>
+                <td>value</td><td>input:x.x.x.x|click:x.x.x.x|pulse:x.x.x.x</td>
+            </tr>
+            </tr>
+                <td>description</td><td>Bind the requested type of HTMLEventListener to use for setting the numeric path EmBER+ parameter. Separate the event and path with ':'.</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="attribute">data-show</td>
+            </tr>
+            <tr>
+                <td>value</td><td>block|flex|...</td>
+            </tr>
+            <tr>
+                <td>description</td><td>Toggle the visibility of an object with the added css property. This is based on the data-id and on boolean EmBER+ parameter.</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="attribute">data-text</td>
+            </tr>
+            <tr>
+                <td>value</td><td>text-true|text-false</td>
+            </tr>
+            <tr>
+                <td>description</td><td>Add a text that will be changed depending on an boolean EmBER+ parameter</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="attribute">data-style</td>
+            <tr>
+                <td>value</td><td>css-class-name</td>
+            <tr>
+                <td>description</td><td>Add the css class style that will be applied to boolean EmBER+ parameters, on true.</td>
+            </tr>
+        </table>
     </div>
 
     <div class="conf-container">
         <div class="matrix-title">Tree</div>
         <div class="unit">
             <div class="row">
-                <ul id="treeInitialList" class="tree-state-list"></ul>
+                <table id="treeInitialList" class="tree-state-list"></table>
             </div>
         </div>
     </div>
@@ -387,11 +460,6 @@
 </div>
 
 <script src="/signalr.js"></script>
-
-<script>
-
-
-</script>
 
 <script type="text/javascript">
     "use strict";
@@ -417,7 +485,7 @@
         }
 
         /**
-         * setup subscribers for initiated event
+         * Setup subscribers for initiated event
          */
         setup(callback) {
             this.onInitiated = callback;
@@ -464,7 +532,6 @@
         }
 
         addNodeElement(emberElement, pathArr, currentPointer) {
-            //console.log(pathArr)
             if (pathArr.length == 0) {
                 return true;
             }
@@ -481,6 +548,13 @@
                 }
                 return this.addNodeElement(emberElement, pathArr.slice(1), currentPointer[pathArr[0]])
             }
+        }
+
+        treeIdFromStringPath(path) {
+            if (!path) {
+                return "no_path_available";
+            }
+            return path.split("/").join("").toLowerCase().replace(" ", "_");
         }
 
         // GetNodeChildren(pathArr) {
@@ -501,13 +575,6 @@
         //     }
         // }
 
-        treeIdFromStringPath(path) {
-            if (!path) {
-                return "no_path_available";
-            }
-            return path.split("/").join("").toLowerCase().replace(" ", "_");
-        }
-
         // treeIdParentFromStringPath(path, parentCount) {
         //     let arr = path.split("/");
         //     parentCount = parentCount || 1;
@@ -515,7 +582,6 @@
         //     return arr.join("").toLowerCase().replace(" ", "_");
         // }
 
-        // Tree
         buildTreeView(tree) {
             try {
                 let frag = document.createDocumentFragment();
@@ -528,22 +594,29 @@
                     try {
                         let data = this.GetNode(arr[i][1].numericPath);
 
-                        let li = document.createElement("LI");
-
-                        // Add path information
-                        let dv1 = document.createElement("DIV");
-                        dv1.classList.add("tree-path");
-                        dv1.textContent = data.path;
-                        li.appendChild(dv1);
+                        // Create first row
+                        let tr = document.createDocumentFragment();
+                        let li = document.createElement("TR");
 
                         // Add numeric path
-                        let dvp = document.createElement("DIV");
+                        let dvp = document.createElement("TD");
                         dvp.classList.add("tree-numeric-path");
-                        dvp.textContent = data.numericPath;
+                        dvp.innerHTML = `${data.numericPath} <span class="tree-node-name">${data.name}</span>`;
+                        dvp.setAttribute("colspan", "3");
                         li.appendChild(dvp);
 
+                        // Append first row
+                        tr.append(li);
+                        li = document.createElement("TR");
+
+                        // Add path information
+                        let dv1 = document.createElement("TD");
+                        dv1.classList.add("tree-path");
+                        dv1.innerHTML = data.GetHTMLReadablePath();
+                        li.appendChild(dv1);
+
                         // Add actual values
-                        let dv2 = document.createElement("DIV");
+                        let dv2 = document.createElement("TD");
                         dv2.classList.add("tree-value");
                         dv2.textContent = data.value;
                         dv2.setAttribute("data-key", new DataKey(data.numericPath, "text"));
@@ -552,7 +625,7 @@
 
                         // Add edit button
                         if (data.isWritable) {
-                            let dvo = document.createElement("DIV");
+                            let dvo = document.createElement("TD");
                             dvo.classList.add("tree-options");
 
                             if (typeof (data.value) === "string") {
@@ -588,7 +661,7 @@
                             }
                             li.appendChild(dvo);
                         } else {
-                            let dvo = document.createElement("DIV");
+                            let dvo = document.createElement("TD");
                             dvo.classList.add("tree-options");
                             let dvlink = document.createElement("SPAN");
                             dvlink.classList.add("tree-option");
@@ -599,7 +672,8 @@
                         }
 
                         li.id = "id_row_" + this.treeIdFromStringPath(data.path);
-                        frag.prepend(li);
+                        tr.append(li);
+                        frag.prepend(tr);
                     } catch(error) {
                         console.error(error);
                     }
@@ -639,7 +713,6 @@
             let selectedElements = document.querySelectorAll("[data-key]");
             selectedElements.forEach(function(item) {
                 let obj = JSON.parse(item.dataset.key);
-                // console.log(obj.id, "IIIIS", path);
                 if (obj.id === path) {
                     window.requestAnimationFrame(function() {
                         switch(obj.type) {
@@ -662,7 +735,9 @@
             });
         }
 
-        // Matrices
+        /*
+         * Matrices
+         */
         buildMatrixView(path, matrix) {
             try {
                 let frag = document.createDocumentFragment();
@@ -759,13 +834,13 @@
             this.path = path;
             this.numericPath = numericPath;
             this.readablePath = path.split("/").join("").toLowerCase().replace(" ", "_");
+            this.name = this.getNodeNameFromPath(path);
             this.value = value;
-
-            this.valueTypeToDefinition(value);
+            this.type = this.valueTypeToDefinition(value);
             this.isWritable = isWritable;
 
             this.$elements = Array.from(document.querySelectorAll(`[data-id='${this.numericPath}']`))
-                .map((element) => new UIElement(element));
+                .map((element) => new UIElement(element, this.type));
 
             this.Update(value);
         }
@@ -783,41 +858,39 @@
 
             if (this.$elements.length > 0) {
                 this.$elements.forEach((item) => {
-                    switch(this.type) {
-                        case EMBER_NODE_TYPES.NUMBER:
-                            item.SetValue(this.value);
-                            break;
-
-                        case EMBER_NODE_TYPES.BOOLEAN:
-                            item.SetClass(this.value);
-                            item.SetText(this.value);
-                            break;
-
-                        case EMBER_NODE_TYPES.STRING:
-                            item.SetValue(this.value);
-                            break;
-
-                        default:
-                            console.warn(`Unknown EmBER+ type ${this.type}, will not update DOM`);
-                            break;
-                    };
+                    item.Update(this.value);
                 });
+            }
+        }
+
+        GetHTMLReadablePath() {
+            return this.path.split("/").reduce((prev, curr) => {
+                return `${prev} <span>${curr}</span>`;
+            });
+        }
+
+        getNodeNameFromPath(path) {
+            let split = path.split("/");
+            if (Array.isArray(split)) {
+                return split[split.length-1];
+            } else {
+                return "unknown";
             }
         }
 
         valueTypeToDefinition(type) {
             switch(typeof(type)) {
                 case EMBER_NODE_TYPES.STRING:
-                    this.type = EMBER_NODE_TYPES.STRING;
+                    return EMBER_NODE_TYPES.STRING;
                     break;
                 case EMBER_NODE_TYPES.NUMBER:
-                    this.type = EMBER_NODE_TYPES.NUMBER;
+                    return EMBER_NODE_TYPES.NUMBER;
                     break;
                 case EMBER_NODE_TYPES.BOOLEAN:
-                    this.type = EMBER_NODE_TYPES.BOOLEAN;
+                    return EMBER_NODE_TYPES.BOOLEAN;
                     break;
                 default:
-                    this.type = EMBER_NODE_TYPES.UNKNOWN;
+                    return EMBER_NODE_TYPES.UNKNOWN;
                     break;
             }
         }
@@ -830,46 +903,57 @@
 
         initiateListeners() {
             let $lsn = document.querySelectorAll("[data-event]");
-            $lsn.forEach(function(elm) {
-                let item = elm.dataset.event.split(":") || ["click", elm.dataset.event];
+            $lsn.forEach(function (elm) {
+                try {
+                    let item = elm.dataset.event.split(":") || ["click", elm.dataset.event];
 
-                console.log("Init listener for:", item);
-                console.log(emberTree.GetNode(item[1]));
+                    console.log("Init listener for:", item);
+                    console.log(emberTree.GetNode(item[1]));
 
-                // Generate unique element identification
-                elm.guid = createGuid();
+                    // Generate unique element identification
+                    elm.guid = createGuid();
 
-                switch(item[0]) {
+                    switch (item[0]) {
                     case "click":
-                        elm.addEventListener(item[0], (event) => {
-                            console.log("event click", event);
-                            emberToggleBoolean(event.target, item[1]);
-                        });
+                        elm.addEventListener(item[0],
+                            (event) => {
+                                console.log("event click", event);
+                                emberToggleBoolean(event.target, item[1]);
+                            });
                         break;
 
                     case "pulse":
-                        elm.addEventListener("click", (event) => {
-                            console.log("event pulse", event);
-                            emberPulseBoolean(event.target, item[1]);
-                        });
+                        elm.addEventListener("click",
+                            (event) => {
+                                console.log("event pulse", event);
+                                emberPulseBoolean(event.target, item[1]);
+                            });
                         break;
 
                     case "input":
-                        elm.addEventListener(item[0], (event) => {
-                            console.log("event input", event);
+                        elm.addEventListener(item[0],
+                            (event) => {
+                                console.log("event input", event);
 
-                            // Check if data-id is the same binding as event
-                            // to determine what is actually being modified
-                            // if (event.target.dataset.id && event.target.dataset.id !== item[1]) {
-                            //     console.log(`Not same listener id ${item[1]} as data id ${event.target.dataset.id}`);
-                            //     emberTree.SetNodeChanging(event.target.dataset.id, elm.guid);
-                            // }
+                                // Check if data-id is the same binding as event
+                                // to determine what is actually being modified
+                                // if (event.target.dataset.id && event.target.dataset.id !== item[1]) {
+                                //     console.log(`Not same listener id ${item[1]} as data id ${event.target.dataset.id}`);
+                                //     emberTree.SetNodeChanging(event.target.dataset.id, elm.guid);
+                                // }
 
-                            // Set actual value and say its changing
-                            emberTree.SetNodeChanging(item[1], elm.guid);
-                            emberChangeInt(event.target.value, item[1]);
-                        });
+                                // Set actual value and say its changing
+                                emberTree.SetNodeChanging(item[1], elm.guid);
+                                emberChangeInt(event.target.value, item[1]);
+                            });
                         break;
+
+                    default:
+                        console.warn(`Could not find event: '${item[0]}' to set up listener for with parameter: '${item[1]}'`);
+                        break;
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
             });
 
@@ -877,18 +961,12 @@
         }
     }
 
-    function createGuid() {
-        function randNum() {
-            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-        }
-        return randNum() + randNum() + '-' + randNum() + '-' + randNum() + '-' + randNum() + '-' + randNum() + randNum() + randNum();
-    }
-
     class UIElement {
-        constructor(element) {
+        constructor(element, type) {
             this.element = element;
             this.elementType = element.nodeName.toLowerCase();
             this.guid = element.guid;
+            this.type = type;
 
             this.isChanging = false;
             this.changingTimeout = null;
@@ -911,11 +989,11 @@
                 this.elementStyle = "state-on";
             }
 
-            // Set up listeners for change detection
-            // also make sure the listener is here..
-            // if (this.element.dataset.event) {
-            //     console.log("HAS EVENTS", this.element.dataset.event, this.element)
-            // }
+            // Set up visibility
+            if (this.element.dataset.visibility) {
+                this.elementVisibilityValue = this.element.dataset.visibility; // Should be flex, block or any display properties
+                this.element.style.display = "none";
+            }
         }
 
         UserIsChanging() {
@@ -927,8 +1005,33 @@
             }, 200);
         }
 
-        SetValue(value) {
+        Update(value) {
             this.value = value;
+            this.setVisibility(this.value);
+            switch(this.type) {
+            case EMBER_NODE_TYPES.NUMBER:
+                this.setValue(this.value);
+                break;
+
+            case EMBER_NODE_TYPES.BOOLEAN:
+                this.setClass(this.value);
+                this.setText(this.value);
+                break;
+
+            case EMBER_NODE_TYPES.STRING:
+                this.setValue(this.value);
+                break;
+
+            default:
+                console.warn(`Unknown EmBER+ type ${this.type}, will not update DOM`);
+                break;
+            };
+        }
+
+        /*
+         * The node value changes, depending on type, different actions might be relevant
+         */
+        setValue(value) {
             if (!this.isChanging) {
                 this.drawValue();
             }
@@ -937,17 +1040,17 @@
         drawValue() {
             window.requestAnimationFrame(() => {
                 switch(this.elementType) {
-                    case "input":
-                        this.element.value = this.value;
-                        break;
-                    default:
-                        this.element.innerHTML = this.value;
-                        break;
-                }
+                case "input":
+                    this.element.value = this.value;
+                    break;
+                default:
+                    this.element.innerHTML = this.value;
+                    break;
+                };
             });
         }
 
-        SetText(value) {
+        setText(value) {
             if (this.elementText) {
                 if (value) {
                     this.element.innerHTML = this.elementText[0];
@@ -957,13 +1060,30 @@
             }
         }
 
-        SetClass(value) {
+        setClass(value) {
             if (value) {
                 this.element.classList.add(this.elementStyle);
             } else {
                 this.element.classList.remove(this.elementStyle);
             }
         }
+
+        setVisibility(value) {
+            if (this.elementVisibilityValue) {
+                if (value) {
+                    this.element.style.display = this.elementVisibilityValue;
+                } else {
+                    this.element.style.display = "none";
+                }
+            }
+        }
+    }
+
+    function createGuid() {
+        function randNum() {
+            return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        }
+        return randNum() + randNum() + '-' + randNum() + '-' + randNum() + '-' + randNum() + '-' + randNum() + randNum() + randNum();
     }
 
     function DataKey(id, type, value) {
@@ -976,10 +1096,14 @@
         return JSON.stringify(this);
     }
 
-    var ui = new UserInterface();
     var emberTree = new EmberTree();
     emberTree.setup(() => {
-        ui.initiateListeners();
+        try {
+            var ui = new UserInterface();
+            ui.initiateListeners();
+        } catch (error) {
+            console.error(error);
+        }
     });
 
     var connection = new signalR.HubConnectionBuilder()
@@ -991,10 +1115,17 @@
 
     connection.on("InitialEmberTree", (tree) => {
         console.log(`Event 'InitialEmberTree':`, tree);
-        let $doc = document.getElementById("treeInitialList") || document.createElement("DIV");
-        $doc.innerHTML = "";
-        let frag = emberTree.buildTreeView(tree);
-        $doc.append(frag);
+        try {
+            let $doc = document.getElementById("treeInitialList") || document.createElement("TABLE");
+            $doc.innerHTML = "";
+            let $tbody = document.createElement("TBODY");
+
+            let frag = emberTree.buildTreeView(tree);
+            $tbody.append(frag);
+            $doc.append($tbody);
+        } catch (error) {
+            console.error(error);
+        }
     });
 
     connection.on("ChangesInEmberTree", (path, data) => {
@@ -1019,19 +1150,32 @@
         emberTree.updateMatrixSignal(path, target);
     });
 
-    connection.start()
-        .then(function () {
-            setSocketConnectionFeedback(connection.connectionState);
-            commandRequestInitialState();
-        })
-        .catch(function (err) {
-            setSocketConnectionFeedback("Error " + err.toString());
-            return console.error(err.toString());
-        });
+    var started;
+    function reconnect() {
+        clearTimeout(started);
+        started = setTimeout(() => {
+            connect();
+        }, 3000);
+    }
+
+    function connect() {
+        connection.start()
+            .then(function () {
+                setSocketConnectionFeedback(connection.connectionState);
+                commandRequestInitialState();
+            })
+            .catch(function (err) {
+                setSocketConnectionFeedback("Error " + err.toString());
+                console.error(err.toString());
+                reconnect();
+            });
+    }
+    connect();
 
     connection.onclose(function() {
         console.log("connection onclose");
         setSocketConnectionFeedback(connection.connectionState);
+        reconnect();
     });
 
     connection.onreconnecting(function(error) {
@@ -1086,7 +1230,7 @@
             let item = emberTree.GetNode(numericPath);
             console.log(item);
             let state = !item.value; // inverse
-            connection.send("ChangeEmberBooleanParameter", numericPath, state ).catch((err) => {
+            connection.send("ChangeEmberBooleanParameter", numericPath, state).catch((err) => {
                 return console.error("Could not send change", err);
             });
         } catch(error) {
@@ -1096,7 +1240,7 @@
 
     function emberPulseBoolean(element, numericPath) {
         try {
-            connection.send("PulseEmberBooleanParameter", numericPath ).catch((err) => {
+            connection.send("PulseEmberBooleanParameter", numericPath).catch((err) => {
                 return console.error("Could not send change", err);
             });
         } catch(error) {
@@ -1118,147 +1262,6 @@
             }
         }
     }
-
-    class OUIFader {
-        constructor() {
-            console.log("constructor me");
-            this.domContainerId = "level-container"
-            this.domHandleId = "level-handle";
-            this.domHandleMoving = false;
-            this.monitorLevel = 100;
-
-            this.mouseClickHandlerMove = null;
-            this.mouseClickHandlerUp = null;
-            this.mouseClickHandlerScroll = null;
-
-            this.incomingLevelValue = new Debouncer(200, () => {
-                this.sliderYPosition = this.monitorLevel;
-                this.setHandleOnPath();
-            });
-
-            this.sliderYPosition = this.monitorLevel;
-            this.setHandleOnPath();
-            this.setUpDomListeners();
-        }
-
-        levelControlChanged(data) {
-            this.monitorLevel = data;
-
-            if (!this.domHandleMoving) {
-                this.incomingLevelValue.trigger();
-            }
-        }
-
-        setUpDomListeners() {
-            console.log("setupdomlisteners");
-            document.getElementById(this.domHandleId).addEventListener("mousedown", this.goMouseDown.bind(this), false);
-        }
-
-        goMouseDown(e) {
-            console.log("goMouseDown", e, this.domHandleId);
-            document.getElementById(this.domHandleId).classList.add("drag--handle--moving");
-
-            // Remove previous existing listeners to avoid collision
-            this.goRemoveEventListeners();
-            this.domHandleMoving = true;
-
-            // Set up new event listeners
-            this.mouseClickHandlerUp = this.goMouseUp.bind(this);
-            window.addEventListener("mouseup", this.mouseClickHandlerUp, true);
-
-            this.mouseClickHandlerMove = this.divMove.bind(this);
-            window.addEventListener("mousemove", this.mouseClickHandlerMove, true);
-        }
-
-        goMouseUp(e) {
-            console.log("goMouseUp", e, this.domHandleId);
-            if (this.domHandleId !== undefined && this.domHandleId !== null) {
-                document.getElementById(this.domHandleId).classList.remove("drag--handle--moving");
-            }
-            this.goRemoveEventListeners();
-            this.incomingLevelValue.trigger();
-        }
-
-        goRemoveEventListeners() {
-            console.log("removeeventlisteners");
-            window.removeEventListener("mousemove", this.mouseClickHandlerMove, true);
-            window.removeEventListener("mouseup", this.mouseClickHandlerUp, true);
-            this.domHandleMoving = false;
-        }
-
-        divMove(e) {
-            console.log("divmove");
-            let positionY = e.clientY;
-            let svgContainer = document.getElementById(this.domContainerId).getBoundingClientRect();
-            this.sliderYPosition = 100 - ((positionY - svgContainer.top) * (100 / svgContainer.height ));
-            this.sliderYPosition = positionY >= svgContainer.bottom ? 0 : this.sliderYPosition;
-            this.sliderYPosition = positionY <= svgContainer.top ? 100 : this.sliderYPosition;
-            this.setHandleOnPath();
-            this.setFaderLevel();
-        }
-
-        setFaderLevel() {
-            let level = this.sliderYPosition / 100;
-            console.log(this.monitorLevel, level);
-            // this.controlEngineHub.invokeMessage(
-            //     ControlEngineCommands.Monitor_SetLevel,
-            //     this.controlEngineAppModelId,
-            //     this.monitorLevel().identifier,
-            //     level,
-            //     );
-        }
-
-        setHandleOnPath() {
-            if (this.sliderYPosition === 0) {
-                document.getElementById(this.domHandleId).textContent = "MUTE";
-            } else {
-                document.getElementById(this.domHandleId).textContent = Math.round(this.sliderYPosition).toString() + "%";
-            }
-            document.getElementById(this.domHandleId).style.bottom = this.sliderYPosition.toString() + "%";
-        }
-
-    }
-
-    class Debouncer {
-        constructor(updateInterval, callbackUpdate) {
-            this.updateInterval = updateInterval;
-            this.update = callbackUpdate;
-
-            this.timeoutHandle = null;
-        }
-
-        trigger(executeNow = false) {
-            if (executeNow) {
-                this.clear();
-                this.execute();
-            } else {
-                this.startTimeout();
-            }
-        }
-
-        clear() {
-            clearTimeout(this.timeoutHandle);
-        }
-
-        startTimeout() {
-            this.clear();
-            this.timeoutHandle = setTimeout(() => {
-                this.execute();
-                this.timeoutHandle = null;
-                console.log("Timeout runned");
-            }, this.updateInterval);
-        }
-
-        execute() {
-            this.update();
-        }
-    }
-
-try {
-    const fader1 = new OUIFader();
-} catch(error) {
-    console.error(error)
-}
 
 </script>
 </body>
